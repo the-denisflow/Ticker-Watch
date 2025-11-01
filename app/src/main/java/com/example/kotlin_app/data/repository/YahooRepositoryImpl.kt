@@ -13,7 +13,7 @@ class YahooRepositoryImpl @Inject constructor(
 ) : YahooRepository {
     override suspend fun getChart(ticker: StockTicker, range: String, interval: String): Result<YahooResult> {
       return try {
-          val yahooResult = api.getChart(ticker.symbol, range =range, interval = interval)
+          val yahooResult = api.getChart(ticker.symbol, range = range, interval = interval)
           Result.success(yahooResult)
       } catch (e: Exception) {
           Result.failure(e)

@@ -20,6 +20,7 @@ import com.example.kotlin_app.data.repository.DbRepository
 import com.example.kotlin_app.domain.repository.FinnHubRepository
 import com.example.kotlin_app.domain.network.NetworkMonitor
 import com.example.kotlin_app.domain.repository.model.Interval
+import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.domain.repository.model.toStockItem
@@ -28,8 +29,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import java.time.Period
-
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class MarketViewModel @Inject constructor(
@@ -39,14 +41,20 @@ class MarketViewModel @Inject constructor(
     private val dbRepository: DbRepository,
     private val networkMonitor: NetworkMonitor
 ): ViewModel() {
-    private val _currentTicker = MutableStateFlow<StockTicker>(allTickers.first())
-    val currentTicker: StateFlow<StockTicker> = _currentTicker
 
-    private val _currentStockItem = MutableStateFlow<StockItem>(createPlaceholderStockItem())
-    val currentItem: StateFlow<StockItem> = _currentStockItem
+    private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
+    private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
 
-    private val _currentRange = MutableStateFlow<Range>(Range.ONE_YEAR)
-    val currentRange: StateFlow<Range> = _currentRange
+    val displayedStockProperties: StateFlow<DisplayedStockProperties> =
+        combine(
+            _currentTicker,
+            _displayedRange
+        ) {
+                item, range ->
+            DisplayedStockProperties(item, range)
+        }.stateIn(viewModelScope, SharingStarted.Eagerly,
+            DisplayedStockProperties(createPlaceholderStockItem(), Range.ONE_YEAR)
+        )
 
     private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
     val currentStockList: StateFlow<List<StockItem>> = _currentStockList
@@ -70,25 +78,10 @@ class MarketViewModel @Inject constructor(
                 val stockList = coroutineScope {
                     allTickers.map { ticker ->
                         async {
-                            val chartResult = yahooRepository.getChart(ticker = ticker,range =  Range.ONE_YEAR.value, interval = Interval.ONE_DAY.value)
-                            val chart = chartResult.getOrNull()
-
-                            if (chart != null && chartResult.isSuccess) {
-                                val logoUrl = if (ticker.logoRes != null) null else runCatching {
-                                    fetchLogoUrl(ticker)
-                                }.getOrNull()
-
-                                chart.toStockItem(
-                                    ticker = ticker,
-                                    logoRes = ticker.logoRes,
-                                    logoUrl = logoUrl
-                                )
-
-
-                            } else {
-                                logger.error("Failed to fetch chart for ${ticker.symbol}: ${chartResult.exceptionOrNull()?.message}")
-                                createPlaceholderStockItem()
-                            }
+                            getStockItem(
+                                ticker = ticker,
+                                range = _displayedRange.value
+                            )
                         }
                     }.awaitAll()
                 }
@@ -100,25 +93,25 @@ class MarketViewModel @Inject constructor(
         }
     }
 
-    private fun fetchCurrentItem() {
-        viewModelScope.launch {
-            val result = yahooRepository.getChart(ticker = _currentTicker.value, range =  Range.ONE_YEAR.value, interval = Interval.ONE_DAY.value )
-            val stockData = result.getOrNull()?.toStockItem(_currentTicker.value, fetchLogoUrl(_currentTicker.value))
 
-            if (stockData != null) {
-                _currentStockItem.value = stockData
-                logger.info("Stock data updated for symbol: ${_currentTicker.value}")
-            } else {
-                logger.error("Failed to convert YahooResult to StockData for symbol: ${_currentTicker.value}")
-            }
+    fun updateCurrentSymbol(stockTicker: StockItem) {
+        _currentTicker.value = stockTicker
+        updateDisplayedRange(Range.ONE_YEAR)
+    }
 
+    fun updateDisplayedRange(range: Range) {
+        logger.info("Update Displayed Range: ${range.value}")
+        _displayedRange.value = range
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val stockItem = getStockItem(
+                ticker = _currentTicker.value.ticker,
+                range = range
+            )
+            _currentTicker.value = stockItem
         }
     }
 
-    fun updateCurrentSymbol(stockTicker: StockTicker) {
-        _currentTicker.value = stockTicker
-        fetchCurrentItem()
-    }
 
     fun unregisterNetworkObserver() {
         networkMonitor.unregisterNetworkCallback()
@@ -149,4 +142,29 @@ class MarketViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun getStockItem(ticker: StockTicker, range: Range): StockItem {
+        val chartResult = yahooRepository.getChart(ticker = ticker,range = range.value, interval = getValidIntervalsFor(range).value)
+        val chart = chartResult.getOrNull()
+
+        if (chart != null && chartResult.isSuccess) {
+            val logoUrl = if (ticker.logoRes != null) null else runCatching {
+                fetchLogoUrl(ticker)
+            }.getOrNull()
+
+            return chart.toStockItem(
+                ticker = ticker,
+                logoRes = ticker.logoRes,
+                logoUrl = logoUrl
+            )
+
+        }
+        return createPlaceholderStockItem()
+    }
 }
+
+data class DisplayedStockProperties(
+    val item: StockItem,
+    val range: Range
+)
+

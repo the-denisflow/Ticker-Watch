@@ -15,5 +15,5 @@ enum class Range(val value: String) {
     SIX_MONTHS("6mo"),
     ONE_YEAR("1y"),
     FIVE_YEARS("5y"),
-    MAX("max")
+    //MAX("max")
 }

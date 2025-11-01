@@ -1,6 +1,5 @@
 package com.example.kotlin_app.presentation.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,28 +20,35 @@ import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 
 @Composable
-fun StockList(list: List<StockItem>,
-              marketViewModel: MarketViewModel) {
+fun StockList(
+    list: List<StockItem>,
+    marketViewModel: MarketViewModel
+) {
     var itemIsSelected by remember { mutableStateOf<Boolean>(false) }
     var selectedItem by remember { mutableStateOf<StockItem>(createPlaceholderStockItem()) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-    LazyColumn (
-        modifier = Modifier.fillMaxSize().background(color = Color.LightGray),
-        contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(list) { stock ->
-            StockUiItem(stock = stock,
-                onClickListener = {
-                    itemIsSelected = true
-                    selectedItem = stock
-                    marketViewModel.updateCurrentSymbol(stock.ticker)
-                })
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.LightGray),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(list) { stock ->
+                StockUiItem(stock = stock,
+                    onClickListener = {
+                        itemIsSelected = true
+                        selectedItem = stock
+                        marketViewModel.updateCurrentSymbol(stock)
+                    })
+            }
         }
-    }
-        if(itemIsSelected) {
-            StockDetailsDialog(onDismiss = {itemIsSelected = false}, displayedItem = selectedItem )
+        if (itemIsSelected) {
+            StockDetailsDialog(
+                marketViewModel = marketViewModel,
+                onDismiss = { itemIsSelected = false }
+            )
         }
     }
 }
