@@ -23,7 +23,7 @@ import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.get
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.domain.repository.model.toStockItem
-import com.example.kotlin_app.presentation.ui.state.StockState
+import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async

@@ -7,16 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.kotlin_app.common.Logger
 import javax.inject.Inject
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.example.kotlin_app.common.plotDiagram
 import com.example.kotlin_app.databinding.FragmentStockBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StockFragment : Fragment() {

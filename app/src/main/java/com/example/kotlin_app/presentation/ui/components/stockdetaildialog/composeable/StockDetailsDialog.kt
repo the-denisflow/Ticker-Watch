@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components
+package com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composeable
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -36,10 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.kotlin_app.R
-import com.example.kotlin_app.common.plotDiagram
+import com.example.kotlin_app.presentation.ui.components.chart.utils.plotDiagram
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.StockItem
+import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 import com.github.mikephil.charting.charts.LineChart
 

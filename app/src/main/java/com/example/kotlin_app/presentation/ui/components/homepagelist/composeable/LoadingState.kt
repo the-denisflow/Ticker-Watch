@@ -1,6 +1,5 @@
-package com.example.kotlin_app.presentation.ui.components
+package com.example.kotlin_app.presentation.ui.components.homepagelist.composeable
 
-import android.os.Message
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

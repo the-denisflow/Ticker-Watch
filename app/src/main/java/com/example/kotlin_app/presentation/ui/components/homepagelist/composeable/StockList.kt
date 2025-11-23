@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components
+package com.example.kotlin_app.presentation.ui.components.homepagelist.composeable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.kotlin_app.domain.repository.model.StockItem
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
+import com.example.kotlin_app.presentation.ui.components.shared.StockUiItem
+import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composeable.StockDetailsDialog
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 
 @Composable

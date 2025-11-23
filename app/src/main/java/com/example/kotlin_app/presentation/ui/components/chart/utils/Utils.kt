@@ -1,17 +1,12 @@
-package com.example.kotlin_app.common
+package com.example.kotlin_app.presentation.ui.components.chart.utils
 
 import android.graphics.Color
 import com.example.kotlin_app.domain.repository.model.Range
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 fun plotDiagram(
     closePrices: List<Double>?,
@@ -63,24 +58,4 @@ fun plotDiagram(
     chart.axisRight.isEnabled = false
     chart.description.text = "Stock close prices"
     chart.invalidate()
-}
-
-class TimestampValueFormatter(range: Range) : ValueFormatter() {
-    private val dateFormat = getFormat(range)
-
-    private fun getFormat(
-        range: Range
-    ): SimpleDateFormat {
-        return when(range) {
-            Range.ONE_DAY -> SimpleDateFormat("HH:mm", Locale.getDefault())
-            Range.FIVE_YEARS -> SimpleDateFormat("MM.yy", Locale.getDefault())
-            Range.ONE_YEAR -> SimpleDateFormat("dd.MM", Locale.getDefault())
-            Range.SIX_MONTHS -> SimpleDateFormat("dd.MM", Locale.getDefault())
-        }
-    }
-
-    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-        val timestamp = value.toLong()
-        return dateFormat.format(Date(timestamp * 1000))
-    }
 }
