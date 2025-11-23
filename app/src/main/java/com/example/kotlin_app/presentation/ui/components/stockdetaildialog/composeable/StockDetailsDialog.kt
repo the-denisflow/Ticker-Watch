@@ -52,7 +52,7 @@ fun StockDetailsDialog(
     onDismiss: () -> Unit = {},
     ) {
 
-    val displayedStock by marketViewModel.stockstate.collectAsState()
+    val displayedStock by marketViewModel.stockState.collectAsState()
 
     ModalBottomSheet(
         onDismissRequest = {

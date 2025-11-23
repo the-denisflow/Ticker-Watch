@@ -28,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -44,15 +43,17 @@ class MarketViewModel @Inject constructor(
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
     private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
-
-    val stockstate: StateFlow<StockState> =
+    private val _isLoading = MutableStateFlow(false)
+    
+    val stockState: StateFlow<StockState> =
         combine(
             _currentTicker,
             _displayedRange
-        ) {
-                item, range ->
+        ) { item, range ->
             StockState(item, range)
-        }.stateIn(viewModelScope, SharingStarted.Eagerly,
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
             StockState(createPlaceholderStockItem(), Range.ONE_YEAR)
         )
 
@@ -61,7 +62,11 @@ class MarketViewModel @Inject constructor(
 
     private var networkJob: Job? = null
 
-    @SuppressLint("SuspiciousIndentation")
+    init {
+        loadFromDatabase()
+        registerNetworkObserver()
+    }
+
     private suspend fun fetchLogoUrl(ticker: StockTicker): String? {
         val result = finnHubRepository.getCompanyProfile(ticker.symbol)
         return result.getOrNull()?.logo
@@ -72,27 +77,41 @@ class MarketViewModel @Inject constructor(
         dbRepository.saveStocks(stocks.map { it.toEntity() })
     }
 
-    private fun fetchStockList() {
+    private fun loadFromDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val stockList = coroutineScope {
-                    allTickers.map { ticker ->
-                        async {
-                            getStockItem(
-                                ticker = ticker,
-                                range = _displayedRange.value
-                            )
-                        }
-                    }.awaitAll()
-                }
-                _currentStockList.value = stockList
-                saveAllTickersInDb(stockList)
+                val dbStocks = dbRepository.getAllStocks()
+                    .map { it.toDomain(toStockTicker(it.symbol)) }
+                    .filter { it.ticker != StockTicker.IVALIDTICKER }
+                _currentStockList.value = dbStocks
             } catch (e: Exception) {
-                logger.error("Error fetching stock list: ${e.message}")
+                logger.error("Error loading from database: ${e.message}")
             }
         }
     }
 
+    private fun fetchStockList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.value = true
+            try {
+                val stockList = allTickers.map { ticker ->
+                    async {
+                        getStockItem(
+                            ticker = ticker,
+                            range = _displayedRange.value
+                        )
+                    }
+                }.awaitAll()
+
+                _currentStockList.value = stockList
+                saveAllTickersInDb(stockList)
+            } catch (e: Exception) {
+                logger.error("Error fetching stock list: ${e.message}")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 
     fun updateCurrentSymbol(stockTicker: StockItem) {
         _currentTicker.value = stockTicker
@@ -101,26 +120,26 @@ class MarketViewModel @Inject constructor(
 
     fun updateDisplayedRange(range: Range) {
         logger.info("Update Displayed Range: ${range.value}")
-        _displayedRange.value = range
 
         viewModelScope.launch(Dispatchers.IO) {
-            val stockItem = getStockItem(
-                ticker = _currentTicker.value.ticker,
-                range = range
-            )
-            _currentTicker.value = stockItem
+            _isLoading.value = true
+            try {
+                val stockItem = getStockItem(
+                    ticker = _currentTicker.value.ticker,
+                    range = range
+                )
+                _displayedRange.value = range
+                _currentTicker.value = stockItem
+            } catch (e: Exception) {
+                logger.error("Error updating range: ${e.message}")
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-
-    fun unregisterNetworkObserver() {
-        networkMonitor.unregisterNetworkCallback()
-        networkJob?.cancel()
-        networkJob = null
-    }
-
     fun registerNetworkObserver() {
-        if(networkJob != null) return
+        if (networkJob != null) return
 
         networkJob = viewModelScope.launch {
             networkMonitor.registerNetworkCallback()
@@ -129,22 +148,25 @@ class MarketViewModel @Inject constructor(
                 if (isOnline) {
                     logger.info("Device is online")
                     fetchStockList()
-                }
-                else {
+                } else {
                     logger.info("Device is offline")
-                    if (_currentStockList.value.isEmpty() && dbRepository.getAllStocks().isNotEmpty()) {
-                        val dbStocks = dbRepository.getAllStocks()
-                            .map { it.toDomain(toStockTicker(it.symbol)) }
-                            .filter { it.ticker != StockTicker.IVALIDTICKER }
-                        _currentStockList.value = dbStocks
-                    }
                 }
             }
         }
     }
 
+    fun unregisterNetworkObserver() {
+        networkMonitor.unregisterNetworkCallback()
+        networkJob?.cancel()
+        networkJob = null
+    }
+
     private suspend fun getStockItem(ticker: StockTicker, range: Range): StockItem {
-        val chartResult = yahooRepository.getChart(ticker = ticker,range = range.value, interval = getValidIntervalsFor(range).value)
+        val chartResult = yahooRepository.getChart(
+            ticker = ticker,
+            range = range.value,
+            interval = getValidIntervalsFor(range).value
+        )
         val chart = chartResult.getOrNull()
 
         if (chart != null && chartResult.isSuccess) {
@@ -159,6 +181,11 @@ class MarketViewModel @Inject constructor(
             )
         }
         return createPlaceholderStockItem()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        unregisterNetworkObserver()
     }
 }
 
