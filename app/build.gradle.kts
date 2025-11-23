@@ -48,6 +48,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    kapt {
+        javacOptions {
+            option("-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED")
+        }
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
+    }
 }
 
 dependencies {
