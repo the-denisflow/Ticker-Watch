@@ -9,7 +9,8 @@ data class StockItem (val ticker: StockTicker,
                       var price: Double,
                       val logoUrl: String?,
                       val logoRes: Int?,
-                      var prices: List<Double> = emptyList<Double>()
+                      var prices: List<Double> = emptyList<Double>(),
+                      var timestamp: List<Int> = emptyList<Int>(),
     )
 
 fun YahooResult.toStockItem(ticker: StockTicker, logoUrl: String? = null, logoRes: Int? = null): StockItem {
@@ -20,7 +21,8 @@ fun YahooResult.toStockItem(ticker: StockTicker, logoUrl: String? = null, logoRe
         longName = chart.result.first().meta.longName,
         shortName =  chart.result.first().meta.shortName,
         price = chart.result.firstOrNull()?.meta?.regularMarketPrice ?: 0.0,
-        prices = chart.result.firstOrNull()?.indicators?.quote?.firstOrNull()?.close ?: emptyList()
+        prices = chart.result.firstOrNull()?.indicators?.quote?.firstOrNull()?.close ?: emptyList(),
+        timestamp = chart.result.firstOrNull()?.timestamp ?: emptyList()
     )
 }
 

@@ -1,7 +1,6 @@
 package com.example.kotlin_app.presentation.ui.components
 
 import android.annotation.SuppressLint
-import android.provider.CalendarContract.Colors
 import android.view.LayoutInflater
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -45,7 +43,6 @@ import com.example.kotlin_app.domain.repository.model.StockItem
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 import com.github.mikephil.charting.charts.LineChart
 
-
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +51,7 @@ fun StockDetailsDialog(
     onDismiss: () -> Unit = {},
     ) {
 
-    val displayedStock by marketViewModel.displayedStockProperties.collectAsState()
+    val displayedStock by marketViewModel.stockstate.collectAsState()
 
     ModalBottomSheet(
         onDismissRequest = {
@@ -131,7 +128,11 @@ private fun StockChart(
         },
         update = { view ->
             val chart = view.findViewById<LineChart>(R.id.line_chart)
-            plotDiagram(displayedItem.prices, chart)
+            plotDiagram(
+                displayedItem.prices,
+                displayedItem.timestamp,
+                displayedRange,
+                chart)
         }
     )
     Row(modifier = Modifier

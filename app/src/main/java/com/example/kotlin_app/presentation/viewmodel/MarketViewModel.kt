@@ -19,11 +19,11 @@ import com.example.kotlin_app.data.local.toEntity
 import com.example.kotlin_app.data.repository.DbRepository
 import com.example.kotlin_app.domain.repository.FinnHubRepository
 import com.example.kotlin_app.domain.network.NetworkMonitor
-import com.example.kotlin_app.domain.repository.model.Interval
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.domain.repository.model.toStockItem
+import com.example.kotlin_app.presentation.ui.state.StockState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -45,15 +45,15 @@ class MarketViewModel @Inject constructor(
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
     private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
 
-    val displayedStockProperties: StateFlow<DisplayedStockProperties> =
+    val stockstate: StateFlow<StockState> =
         combine(
             _currentTicker,
             _displayedRange
         ) {
                 item, range ->
-            DisplayedStockProperties(item, range)
+            StockState(item, range)
         }.stateIn(viewModelScope, SharingStarted.Eagerly,
-            DisplayedStockProperties(createPlaceholderStockItem(), Range.ONE_YEAR)
+            StockState(createPlaceholderStockItem(), Range.ONE_YEAR)
         )
 
     private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
@@ -157,14 +157,8 @@ class MarketViewModel @Inject constructor(
                 logoRes = ticker.logoRes,
                 logoUrl = logoUrl
             )
-
         }
         return createPlaceholderStockItem()
     }
 }
-
-data class DisplayedStockProperties(
-    val item: StockItem,
-    val range: Range
-)
 
