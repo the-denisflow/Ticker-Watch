@@ -19,15 +19,12 @@ import com.example.kotlin_app.data.local.toEntity
 import com.example.kotlin_app.data.repository.DbRepository
 import com.example.kotlin_app.domain.repository.FinnHubRepository
 import com.example.kotlin_app.domain.network.NetworkMonitor
-import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
-import com.example.kotlin_app.domain.repository.model.toStockItem
+import com.example.kotlin_app.domain.use_case.GetMarketStocks
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -38,7 +35,8 @@ class MarketViewModel @Inject constructor(
     private val yahooRepository: YahooRepository,
     private val finnHubRepository: FinnHubRepository,
     private val dbRepository: DbRepository,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val getMarketStocks: GetMarketStocks
 ): ViewModel() {
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
@@ -67,10 +65,6 @@ class MarketViewModel @Inject constructor(
         registerNetworkObserver()
     }
 
-    private suspend fun fetchLogoUrl(ticker: StockTicker): String? {
-        val result = finnHubRepository.getCompanyProfile(ticker.symbol)
-        return result.getOrNull()?.logo
-    }
 
     private suspend fun saveAllTickersInDb(stocks: List<StockItem>) {
         logger.info("Saving all tickers in DB")
@@ -92,24 +86,7 @@ class MarketViewModel @Inject constructor(
 
     private fun fetchStockList() {
         viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.value = true
-            try {
-                val stockList = allTickers.map { ticker ->
-                    async {
-                        getStockItem(
-                            ticker = ticker,
-                            range = _displayedRange.value
-                        )
-                    }
-                }.awaitAll()
-
-                _currentStockList.value = stockList
-                saveAllTickersInDb(stockList)
-            } catch (e: Exception) {
-                logger.error("Error fetching stock list: ${e.message}")
-            } finally {
-                _isLoading.value = false
-            }
+         _currentStockList.value = getMarketStocks(_displayedRange.value)
         }
     }
 
@@ -122,19 +99,7 @@ class MarketViewModel @Inject constructor(
         logger.info("Update Displayed Range: ${range.value}")
 
         viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.value = true
-            try {
-                val stockItem = getStockItem(
-                    ticker = _currentTicker.value.ticker,
-                    range = range
-                )
-                _displayedRange.value = range
-                _currentTicker.value = stockItem
-            } catch (e: Exception) {
-                logger.error("Error updating range: ${e.message}")
-            } finally {
-                _isLoading.value = false
-            }
+         _currentStockList.value = getMarketStocks(_displayedRange.value)
         }
     }
 
@@ -159,28 +124,6 @@ class MarketViewModel @Inject constructor(
         networkMonitor.unregisterNetworkCallback()
         networkJob?.cancel()
         networkJob = null
-    }
-
-    private suspend fun getStockItem(ticker: StockTicker, range: Range): StockItem {
-        val chartResult = yahooRepository.getChart(
-            ticker = ticker,
-            range = range.value,
-            interval = getValidIntervalsFor(range).value
-        )
-        val chart = chartResult.getOrNull()
-
-        if (chart != null && chartResult.isSuccess) {
-            val logoUrl = if (ticker.logoRes != null) null else runCatching {
-                fetchLogoUrl(ticker)
-            }.getOrNull()
-
-            return chart.toStockItem(
-                ticker = ticker,
-                logoRes = ticker.logoRes,
-                logoUrl = logoUrl
-            )
-        }
-        return createPlaceholderStockItem()
     }
 
     override fun onCleared() {
