@@ -1,5 +1,6 @@
 package com.example.kotlin_app.domain.use_case
 
+import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.common.tickers.StockTicker
 import com.example.kotlin_app.common.tickers.StockTicker.Companion.allTickers
 import com.example.kotlin_app.domain.repository.FinnHubRepository
@@ -16,25 +17,31 @@ import javax.inject.Inject
 
 class GetMarketStocks @Inject constructor(
     private val yahooRepository: YahooRepository,
-    private val finnHubRepository: FinnHubRepository){
-
-     suspend operator fun invoke(displayRange: Range): List<StockItem> =
+    private val finnHubRepository: FinnHubRepository,
+    private val logger: Logger
+){
+    suspend operator fun invoke(displayRange: Range): List<StockItem> =
         supervisorScope {
-            try {
-                allTickers.map { ticker ->
-                    async {
-                        getStockItem(
-                            ticker = ticker,
-                            range = displayRange
-                        )
+            allTickers.map { ticker ->
+                async {
+                    runCatching {
+                        getStockItem(ticker = ticker, range = displayRange)
                     }
-                }.awaitAll()
-            } catch (e: Exception) {
-                throw e
-            }
+                        .onFailure { error ->
+                            logger.error(
+                                "Failed to fetch ${ticker.symbol}: ${error.message}"
+                            )
+                        }
+                        .getOrNull()
+                        ?.also {
+                            logger.info("Fetched stock item for ${ticker.symbol}")
+                        }
+                        ?: createPlaceholderStockItem()
+                }
+            }.awaitAll()
         }
 
-    private suspend fun getStockItem(ticker: StockTicker, range: Range): StockItem {
+    private suspend fun getStockItem(ticker: StockTicker, range: Range): StockItem? {
         val chartResult = yahooRepository.getChart(
             ticker = ticker,
             range = range.value,
@@ -53,7 +60,7 @@ class GetMarketStocks @Inject constructor(
                 logoUrl = logoUrl
             )
         }
-        return createPlaceholderStockItem()
+        return null
     }
 
     private suspend fun fetchLogoUrl(ticker: StockTicker): String? {
