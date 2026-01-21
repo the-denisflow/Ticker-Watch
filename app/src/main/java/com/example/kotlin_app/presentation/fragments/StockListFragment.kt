@@ -44,14 +44,4 @@ class StockListFragment: Fragment() {
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        marketViewModel.registerNetworkObserver()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        marketViewModel.unregisterNetworkObserver()
-    }
 }
