@@ -16,8 +16,7 @@ import kotlinx.coroutines.supervisorScope
 import javax.inject.Inject
 
 class GetMarketStocks @Inject constructor(
-    private val yahooRepository: YahooRepository,
-    private val finnHubRepository: FinnHubRepository,
+    private val getStockItem: GetStockItem,
     private val logger: Logger
 ){
     suspend operator fun invoke(displayRange: Range): List<StockItem> =
@@ -40,31 +39,4 @@ class GetMarketStocks @Inject constructor(
                 }
             }.awaitAll()
         }
-
-    private suspend fun getStockItem(ticker: StockTicker, range: Range): StockItem? {
-        val chartResult = yahooRepository.getChart(
-            ticker = ticker,
-            range = range.value,
-            interval = getValidIntervalsFor(range).value
-        )
-        val chart = chartResult.getOrNull()
-
-        if (chart != null && chartResult.isSuccess) {
-            val logoUrl = if (ticker.logoRes != null) null else runCatching {
-                fetchLogoUrl(ticker)
-            }.getOrNull()
-
-            return chart.toStockItem(
-                ticker = ticker,
-                logoRes = ticker.logoRes,
-                logoUrl = logoUrl
-            )
-        }
-        return null
-    }
-
-    private suspend fun fetchLogoUrl(ticker: StockTicker): String? {
-        val result = finnHubRepository.getCompanyProfile(ticker.symbol)
-        return result.getOrNull()?.logo
-    }
 }

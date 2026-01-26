@@ -11,6 +11,7 @@ import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
+import com.example.kotlin_app.domain.use_case.GetStockItem
 import com.example.kotlin_app.domain.use_case.SyncMarketStocks
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,8 @@ import kotlinx.coroutines.flow.stateIn
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
-    private val syncMarketStocks: SyncMarketStocks
+    private val syncMarketStocks: SyncMarketStocks,
+    private val getStockItem: GetStockItem
 ): ViewModel() {
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
@@ -60,10 +62,13 @@ class MarketViewModel @Inject constructor(
     fun updateDisplayedRange(range: Range) {
         logger.info("Update Displayed Range: ${range.value}")
         _displayedRange.value = range
-
         viewModelScope.launch(Dispatchers.IO) {
-         _currentStockList.value = syncMarketStocks(_displayedRange.value)
+            _currentTicker.value = getStockItem(
+                ticker = _currentTicker.value.ticker,
+                range = _displayedRange.value
+            ) ?: createPlaceholderStockItem()
         }
+
     }
 
     override fun onCleared() {
