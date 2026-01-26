@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockList
+import com.example.kotlin_app.presentation.ui.components.main.MainPage
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -35,11 +36,7 @@ class StockListFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             marketViewModel.currentStockList.collect { stockList ->
                 setContent {
-                    if (stockList.isEmpty()) {
-                        LoadingState()
-                    } else {
-                        StockList(stockList, marketViewModel)
-                    }
+                    MainPage(stockList, marketViewModel)
                 }
             }
         }

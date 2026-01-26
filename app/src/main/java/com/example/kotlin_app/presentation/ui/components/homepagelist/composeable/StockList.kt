@@ -33,7 +33,7 @@ fun StockList(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.LightGray),
+                .background(color = Color.White),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
