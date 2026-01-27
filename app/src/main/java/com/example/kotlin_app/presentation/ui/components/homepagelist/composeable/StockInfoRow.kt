@@ -24,8 +24,7 @@ import com.example.kotlin_app.domain.repository.model.StockItem
 
 @Composable
 fun StockInfoRow(stock: StockItem,
-                 iconSize : Dp = 42.dp
-
+                 iconSize : Dp = 35.dp
 ) {
     Row {
         Icon(

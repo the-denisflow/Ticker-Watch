@@ -1,5 +1,6 @@
 package com.example.kotlin_app.presentation.ui.components.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,8 +17,6 @@ import com.example.kotlin_app.domain.repository.model.StockItem
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockList
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
-import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.kotlin_app.presentation.ui.uimodels.TopIconData
 import com.example.kotlin_app.presentation.ui.utils.MainPageData.topIconAdd
 import com.example.kotlin_app.presentation.ui.utils.MainPageData.topIconSort
@@ -49,6 +46,7 @@ fun MainPageHeader() {
         modifier = Modifier
             .padding(top = headerTopMargin)
             .fillMaxWidth()
+            .background(Color.White)
             .height(headerHeight)
     ){
         Row (modifier = Modifier.fillMaxWidth().padding(

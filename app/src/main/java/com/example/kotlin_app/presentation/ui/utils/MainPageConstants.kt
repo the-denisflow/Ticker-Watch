@@ -8,7 +8,7 @@ import com.example.kotlin_app.presentation.ui.uimodels.TopIconData
 
 object MainPageDimens {
     val iconSize = 35.dp
-    val headerTopMargin = 25.dp
+    val headerTopMargin = 30.dp
     val headerHorizontalMargin = 10.dp
     val headerHeight = 60.dp
 }

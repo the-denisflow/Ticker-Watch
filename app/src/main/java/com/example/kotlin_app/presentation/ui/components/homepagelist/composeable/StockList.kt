@@ -34,8 +34,6 @@ fun StockList(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color.White),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(list) { stock ->
                 StockUiItem(stock = stock,
