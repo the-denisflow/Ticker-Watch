@@ -62,5 +62,10 @@ object NetworkModule {
     fun provideLogger(): Logger = LoggerImpl()
 
     @Provides
-    fun provideNetworkMonitor(@ApplicationContext context: Context): NetworkMonitor = NetworkMonitorImpl(context)
-}
+    @Singleton
+    fun provideNetworkMonitorImpl(@ApplicationContext context: Context): NetworkMonitorImpl =
+        NetworkMonitorImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideNetworkMonitor(impl: NetworkMonitorImpl): NetworkMonitor = impl}
