@@ -16,6 +16,7 @@ import com.example.kotlin_app.domain.use_case.SyncMarketStocks
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
@@ -28,7 +29,9 @@ class MarketViewModel @Inject constructor(
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
     private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
-    
+    private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
+    val currentStockList: StateFlow<List<StockItem>> = _currentStockList.asStateFlow()
+
     val stockState: StateFlow<StockState> =
         combine(
             _currentTicker,
@@ -41,16 +44,19 @@ class MarketViewModel @Inject constructor(
             StockState(createPlaceholderStockItem(), Range.ONE_YEAR)
         )
 
-    private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
-    val currentStockList: StateFlow<List<StockItem>> = _currentStockList
-
     init {
         fetchStockList()
     }
 
     private fun fetchStockList() {
         viewModelScope.launch(Dispatchers.IO) {
-         _currentStockList.value = syncMarketStocks(_displayedRange.value)
+            runCatching {
+                syncMarketStocks(_displayedRange.value)
+            }.onSuccess { stocks ->
+                _currentStockList.value = stocks
+            }.onFailure { exception ->
+                logger.error("Failed to fetch stock list : ${exception.message}")
+            }
         }
     }
 
@@ -68,11 +74,6 @@ class MarketViewModel @Inject constructor(
                 range = _displayedRange.value
             ) ?: createPlaceholderStockItem()
         }
-
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }
 
