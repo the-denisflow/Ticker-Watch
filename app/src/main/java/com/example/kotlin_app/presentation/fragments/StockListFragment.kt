@@ -8,13 +8,13 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.presentation.ui.components.main.MainPage
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.compose.runtime.getValue
 
 @AndroidEntryPoint
 class StockListFragment: Fragment() {
@@ -31,12 +31,9 @@ class StockListFragment: Fragment() {
             ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
         )
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            marketViewModel.currentStockList.collect { stockList ->
-                setContent {
-                    MainPage(stockList, marketViewModel)
-                }
-            }
+        setContent {
+            val stockList by marketViewModel.currentStockList.collectAsStateWithLifecycle()
+            MainPage(stockList, marketViewModel)
         }
     }
 }

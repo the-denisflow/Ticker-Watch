@@ -44,10 +44,10 @@ fun MainPage( stockList: List<StockItem>,
 fun MainPageHeader() {
     Column (
         modifier = Modifier
-            .padding(top = headerTopMargin)
             .fillMaxWidth()
             .background(Color.White)
             .height(headerHeight)
+            .padding(top = headerTopMargin)
     ){
         Row (modifier = Modifier.fillMaxWidth().padding(
             horizontal = headerHorizontalMargin),
