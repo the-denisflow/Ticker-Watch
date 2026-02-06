@@ -66,13 +66,18 @@ class MarketViewModel @Inject constructor(
     }
 
     fun updateDisplayedRange(range: Range) {
-        logger.info("Update Displayed Range: ${range.value}")
-        _displayedRange.value = range
-        viewModelScope.launch(Dispatchers.IO) {
-            _currentTicker.value = getStockItem(
-                ticker = _currentTicker.value.ticker,
-                range = _displayedRange.value
-            ) ?: createPlaceholderStockItem()
+        runCatching {
+            viewModelScope.launch(Dispatchers.IO) {
+                _currentTicker.value = getStockItem(
+                    ticker = _currentTicker.value.ticker,
+                    range = _displayedRange.value
+                ) ?: createPlaceholderStockItem()
+            }
+        }.onSuccess {
+            logger.info("Update Displayed Range: ${range.value}")
+            _displayedRange.value = range
+        }.onFailure {
+            logger.error("Failed to fetch stock item with the range ${range.value}")
         }
     }
 }
