@@ -1,9 +1,9 @@
 package com.example.kotlin_app.domain.repository
 
 
-import com.example.kotlin_app.common.tickers.StockTicker
-import com.example.kotlin_app.domain.repository.model.YahooResult
+import com.example.kotlin_app.common.tickers.Ticker
+import com.example.kotlin_app.domain.repository.model.YahooResultDto
 
 interface YahooRepository {
-    suspend fun getChart(ticker: StockTicker, range: String, interval: String): Result<YahooResult>
+    suspend fun getChart(ticker: Ticker, range: String, interval: String): Result<YahooResultDto>
 }

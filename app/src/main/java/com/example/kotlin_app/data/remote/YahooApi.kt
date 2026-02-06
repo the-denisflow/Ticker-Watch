@@ -1,7 +1,7 @@
 package com.example.kotlin_app.data.remote
 
 
-import com.example.kotlin_app.domain.repository.model.YahooResult
+import com.example.kotlin_app.domain.repository.model.YahooResultDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -13,5 +13,5 @@ interface YahooApi {
         @Query("interval") interval: String,
         @Query("range") range: String,
         @Query("includePrePost") includePrePost: Boolean = false
-    ): YahooResult
+    ): YahooResultDto
 }

@@ -1,8 +1,9 @@
 package com.example.kotlin_app.domain.use_case
 
 import com.example.kotlin_app.common.Logger
-import com.example.kotlin_app.common.tickers.StockTicker
-import com.example.kotlin_app.common.tickers.StockTicker.Companion.toStockTicker
+import com.example.kotlin_app.common.tickers.InvalidTicker
+import com.example.kotlin_app.common.tickers.TickerRegistry
+import com.example.kotlin_app.common.tickers.StockMarketEnum
 import com.example.kotlin_app.data.local.toDomain
 import com.example.kotlin_app.domain.network.NetworkMonitor
 import com.example.kotlin_app.domain.repository.model.Range
@@ -25,9 +26,8 @@ class SyncMarketStocks @Inject constructor(
             stocks
         } else {
             logger.info("Device is offline")
-            loadStocksFromDb().map { it.toDomain(toStockTicker(it.symbol)) }
-                .filter { it.ticker != StockTicker.IVALIDTICKER }
-
+            loadStocksFromDb().map { it.toDomain(TickerRegistry.replaceSymbolWithTickerEnum(it.symbol)) }
+                .filter { it.ticker != InvalidTicker.INVALIDTICKER }
         })
     }
-    }
+}

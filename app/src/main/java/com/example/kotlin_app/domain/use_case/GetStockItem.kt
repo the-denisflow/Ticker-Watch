@@ -1,6 +1,7 @@
 package com.example.kotlin_app.domain.use_case
 
-import com.example.kotlin_app.common.tickers.StockTicker
+import com.example.kotlin_app.common.tickers.StockMarketEnum
+import com.example.kotlin_app.common.tickers.Ticker
 import com.example.kotlin_app.domain.repository.YahooRepository
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
 import com.example.kotlin_app.domain.repository.model.Range
@@ -12,7 +13,7 @@ class GetStockItem @Inject constructor(
     private val yahooRepository: YahooRepository
 ) {
     suspend operator fun invoke(
-        ticker: StockTicker,
+        ticker: Ticker,
         range: Range
     ): StockItem? {
         val chartResult = yahooRepository.getChart(

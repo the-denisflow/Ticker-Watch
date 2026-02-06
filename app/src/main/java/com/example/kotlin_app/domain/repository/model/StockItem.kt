@@ -1,9 +1,9 @@
 package com.example.kotlin_app.domain.repository.model
 
-import com.example.kotlin_app.common.tickers.StockTicker
-import com.example.kotlin_app.common.tickers.StockTicker.IVALIDTICKER
+import com.example.kotlin_app.common.tickers.InvalidTicker
+import com.example.kotlin_app.common.tickers.Ticker
 
-data class StockItem (val ticker: StockTicker,
+data class StockItem (val ticker: Ticker,
                       val longName: String,
                       val shortName: String,
                       var price: Double,
@@ -13,7 +13,7 @@ data class StockItem (val ticker: StockTicker,
                       var timestamp: List<Int> = emptyList<Int>(),
     )
 
-fun YahooResult.toStockItem(ticker: StockTicker, logoUrl: String? = null, logoRes: Int? = null): StockItem {
+fun YahooResultDto.toStockItem(ticker: Ticker, logoUrl: String? = null, logoRes: Int? = null): StockItem {
     return StockItem(
         ticker = ticker,
         logoUrl = logoUrl,
@@ -27,7 +27,7 @@ fun YahooResult.toStockItem(ticker: StockTicker, logoUrl: String? = null, logoRe
 }
 
 fun createPlaceholderStockItem() = StockItem (
-    ticker = IVALIDTICKER,
+    ticker = InvalidTicker.INVALIDTICKER,
     longName = "",
     shortName = "",
     price = 0.0,

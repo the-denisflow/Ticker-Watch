@@ -2,7 +2,7 @@ package com.example.kotlin_app.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.kotlin_app.common.tickers.StockTicker
+import com.example.kotlin_app.common.tickers.Ticker
 import com.example.kotlin_app.domain.repository.model.StockItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -28,7 +28,7 @@ fun StockItem.toEntity(): StockEntity = StockEntity(
     pricesJson = Gson().toJson(prices)
 )
 
-fun StockEntity.toDomain(ticker: StockTicker): StockItem = StockItem(
+fun StockEntity.toDomain(ticker: Ticker): StockItem = StockItem(
     ticker = ticker,
     longName = longName,
     shortName = shortName,

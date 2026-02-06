@@ -63,8 +63,8 @@ class MarketViewModel @Inject constructor(
         }
     }
 
-    fun updateCurrentSymbol(stockTicker: StockItem) {
-        _currentTicker.value = stockTicker
+    fun updateCurrentSymbol(StockMarketEnum: StockItem) {
+        _currentTicker.value = StockMarketEnum
         updateDisplayedRange(Range.ONE_YEAR)
     }
 
