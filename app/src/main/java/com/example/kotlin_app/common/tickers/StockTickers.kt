@@ -3,7 +3,17 @@ package com.example.kotlin_app.common.tickers
 import androidx.annotation.DrawableRes
 import com.example.kotlin_app.R
 
-enum class StockTicker(val symbol: String, @DrawableRes val logoRes: Int? = null) {
+sealed interface Ticker {
+    val symbol: String
+    val logoRes: Int?
+    val urlLogo: String?
+}
+
+
+
+enum class StockTicker( override val symbol: String,
+                         @DrawableRes override val logoRes: Int? = null,
+                         override val urlLogo: String? = null): Ticker {
     IVALIDTICKER("INVALIDTICKER"),
     APPLE("AAPL", R.drawable.aapl),
     MICROSOFT("MSFT", R.drawable.msft),
@@ -19,12 +29,15 @@ enum class StockTicker(val symbol: String, @DrawableRes val logoRes: Int? = null
     MASTERCARD("MA", R.drawable.ma),
     JPMORGAN("JPM", R.drawable.jpm),
     BANK_OF_AMERICA("BAC", R.drawable.bac),
-    GOLDMAN_SACHS("GS", R.drawable.gs);
+    GOLDMAN_SACHS("GS", R.drawable.gs),
+
+    // Cryptos
+    BITCOIN("BTC-USD", null, "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"),
+    ETHEREUM("ETH-USD",null, "https://assets.coingecko.com/coins/images/279/large/ethereum.png");
 
     companion object {
         val allTickers = values().toList().filterNot { it == IVALIDTICKER }
 
         fun toStockTicker(symbol: String): StockTicker = entries.toTypedArray().find { it.symbol == symbol} ?: IVALIDTICKER
     }
-
 }

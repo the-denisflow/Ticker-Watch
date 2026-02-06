@@ -3,12 +3,9 @@ package com.example.kotlin_app.di
 import android.content.Context
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.common.LoggerImpl
-import com.example.kotlin_app.data.remote.FinnHubApi
 import com.example.kotlin_app.data.remote.YahooApi
-import com.example.kotlin_app.data.repository.FinnHubRepositoryImpl
 import com.example.kotlin_app.framework.network.NetworkMonitorImpl
 import com.example.kotlin_app.data.repository.YahooRepositoryImpl
-import com.example.kotlin_app.domain.repository.FinnHubRepository
 import com.example.kotlin_app.domain.network.NetworkMonitor
 import com.example.kotlin_app.domain.repository.YahooRepository
 
@@ -35,22 +32,8 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideFinnHubApi(): FinnHubApi {
-        return Retrofit.Builder()
-            .baseUrl("https://finnhub.io/api/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(FinnHubApi::class.java)
-    }
-
-    @Provides
-    fun provideYahooRepository(api: YahooApi): YahooRepository {
-        return YahooRepositoryImpl(api)
-    }
-
-    @Provides
-    fun provideFinnHubRepository(api: FinnHubApi, @Named("finnhubToken") token: String): FinnHubRepository {
-        return FinnHubRepositoryImpl(api,token)
+    fun provideYahooRepository(api: YahooApi, logger: Logger): YahooRepository {
+        return YahooRepositoryImpl(api, logger)
     }
 
     @Provides

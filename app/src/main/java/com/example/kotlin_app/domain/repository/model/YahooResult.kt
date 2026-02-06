@@ -28,7 +28,7 @@ data class YahooResult(
                     var high: List<Double>,
                     var low: List<Double>,
                     var `open`: List<Double>,
-                    var volume: List<Int>
+                    var volume: List<Long>
                 )
             }
 
@@ -53,7 +53,7 @@ data class YahooResult(
                 var regularMarketDayLow: Double,
                 var regularMarketPrice: Double,
                 var regularMarketTime: Int,
-                var regularMarketVolume: Int,
+                var regularMarketVolume: Long,
                 var shortName: String,
                 var symbol: String,
                 var timezone: String,

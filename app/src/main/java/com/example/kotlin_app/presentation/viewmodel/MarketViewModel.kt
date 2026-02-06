@@ -15,6 +15,7 @@ import com.example.kotlin_app.domain.use_case.GetStockItem
 import com.example.kotlin_app.domain.use_case.SyncMarketStocks
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -30,6 +31,8 @@ class MarketViewModel @Inject constructor(
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
     private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
     private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
+    private var fetchStockDetailsJob : Job? = null
+
     val currentStockList: StateFlow<List<StockItem>> = _currentStockList.asStateFlow()
 
     val stockState: StateFlow<StockState> =
@@ -66,19 +69,27 @@ class MarketViewModel @Inject constructor(
     }
 
     fun updateDisplayedRange(range: Range) {
-        runCatching {
-            viewModelScope.launch(Dispatchers.IO) {
-                _currentTicker.value = getStockItem(
-                    ticker = _currentTicker.value.ticker,
-                    range = _displayedRange.value
-                ) ?: createPlaceholderStockItem()
-            }
-        }.onSuccess {
             logger.info("Update Displayed Range: ${range.value}")
+            fetchStockDetailsJob?.cancel()
+
+            val lastRangeBeforeUpdate = _displayedRange.value
             _displayedRange.value = range
-        }.onFailure {
-            logger.error("Failed to fetch stock item with the range ${range.value}")
-        }
+
+           fetchStockDetailsJob =  viewModelScope.launch(Dispatchers.IO) {
+               runCatching {
+                getStockItem(
+                       ticker = _currentTicker.value.ticker,
+                       range = _displayedRange.value
+                   )
+               }.onSuccess { item ->
+                   if(item != null) {
+                       _currentTicker.value = item
+                   }
+               }.onFailure { exception ->
+                   logger.error("Failed to update displayed range: ${exception.message}")
+                   _displayedRange.value = lastRangeBeforeUpdate
+               }
+            }
     }
 }
 

@@ -3,7 +3,6 @@ package com.example.kotlin_app.domain.use_case
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.common.tickers.StockTicker
 import com.example.kotlin_app.common.tickers.StockTicker.Companion.allTickers
-import com.example.kotlin_app.domain.repository.FinnHubRepository
 import com.example.kotlin_app.domain.repository.YahooRepository
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
 import com.example.kotlin_app.domain.repository.model.Range
