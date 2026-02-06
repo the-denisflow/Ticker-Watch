@@ -1,6 +1,5 @@
-package com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composeable
+package com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -44,7 +44,6 @@ import com.example.kotlin_app.presentation.ui.components.homepagelist.composeabl
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 import com.github.mikephil.charting.charts.LineChart
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockDetailsDialog(
@@ -55,6 +54,10 @@ fun StockDetailsDialog(
     val displayedStock by marketViewModel.stockState.collectAsState()
 
     ModalBottomSheet(
+        scrimColor = Color.Black.copy(alpha = 0.3f),
+        dragHandle = {
+            DialogHeader()
+        },
         onDismissRequest = {
             onDismiss() },
     ) {
@@ -145,10 +148,10 @@ private fun StockChart(
             PeriodButton(
               cardColor = if (range == displayedRange)
                   CardDefaults.cardColors(
-                      containerColor = Color.Gray
+                      containerColor = Color(0xffe2e2dd)
                   ) else
                   CardDefaults.cardColors(
-                      containerColor = Color.LightGray
+                      containerColor = Color.White
                   )
                 ,
                 modifier = Modifier
@@ -165,26 +168,26 @@ private fun StockChart(
 @Composable
 private fun PeriodButton(
     cardColor: CardColors = CardDefaults.cardColors(
-        containerColor = Color.LightGray
+        containerColor = Color.White,
     ),
-    modifier: Modifier = Modifier
-        .width(100.dp)
-        .height(50.dp),
+    modifier : Modifier,
     text: String = "1D",
     onClick: () -> Unit
 ) {
-    Card(
-        modifier = modifier,
-        colors = cardColor,
-        onClick = { onClick.invoke() }
-    ) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center)
-        {
-            Text(
-                text,
-                color = Color.Black,
-                modifier = Modifier.padding(8.dp)
-            )
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Card(
+            modifier = Modifier.height(40.dp). width(60.dp),
+            colors = cardColor,
+            onClick = { onClick.invoke() },
+        ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center)
+            {
+                Text(
+                    text,
+                    color = Color.Black,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 }
