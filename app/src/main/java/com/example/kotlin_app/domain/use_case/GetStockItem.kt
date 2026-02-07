@@ -16,7 +16,7 @@ class GetStockItem @Inject constructor(
         ticker: Ticker,
         range: Range
     ): StockItem? {
-        val chartResult = yahooRepository.getChart(
+        val chartResult = yahooRepository.getSingleChart(
             ticker = ticker,
             range = range.value,
             interval = getValidIntervalsFor(range).value

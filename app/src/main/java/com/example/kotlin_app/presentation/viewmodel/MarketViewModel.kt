@@ -10,8 +10,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import com.example.kotlin_app.domain.repository.model.Range
+import com.example.kotlin_app.domain.repository.model.SparkBatchDto
+import com.example.kotlin_app.domain.repository.model.SparkItemDto
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.domain.use_case.GetStockItem
+import com.example.kotlin_app.domain.use_case.GetStocksBatch
 import com.example.kotlin_app.domain.use_case.SyncMarketStocks
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
@@ -25,13 +28,15 @@ import kotlinx.coroutines.flow.stateIn
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
     private val syncMarketStocks: SyncMarketStocks,
-    private val getStockItem: GetStockItem
+    private val getStockItem: GetStockItem,
+    private val getStocksBatch: GetStocksBatch
 ): ViewModel() {
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
     private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
     private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
     private var fetchStockDetailsJob : Job? = null
+    private var fetchStocksBatchJob : Job? = null
 
     val currentStockList: StateFlow<List<StockItem>> = _currentStockList.asStateFlow()
 
@@ -49,6 +54,7 @@ class MarketViewModel @Inject constructor(
 
     init {
         fetchStockList()
+        fetchStocksBatch()
     }
 
     private fun fetchStockList() {
@@ -59,6 +65,24 @@ class MarketViewModel @Inject constructor(
                 _currentStockList.value = stocks
             }.onFailure { exception ->
                 logger.error("Failed to fetch stock list : ${exception.message}")
+            }
+        }
+    }
+
+    private val _batchStocks = MutableStateFlow<Map<String, SparkItemDto>?>(null)
+    val batchStocks: StateFlow<Map<String, SparkItemDto>?> = _batchStocks.asStateFlow()
+
+    fun fetchStocksBatch() {
+        val symbols = "AAPL,GOOG"
+        fetchStocksBatchJob?.cancel()
+
+        fetchStocksBatchJob = viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                getStocksBatch(symbols)
+            }.onSuccess { result ->
+                _batchStocks.value = result.getOrNull()
+            }.onFailure {
+                logger.error("Failed to fetch stocks batch: ${it.message}")
             }
         }
     }

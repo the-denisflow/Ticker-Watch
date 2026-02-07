@@ -4,29 +4,40 @@ import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.common.tickers.TickerRegistry
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.StockItem
-import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import javax.inject.Inject
 
 class GetMarketStocks @Inject constructor(
     private val getStockItem: GetStockItem,
     private val logger: Logger
-){
-    suspend operator fun invoke(displayRange: Range): List<StockItem> =
-        supervisorScope {
-            TickerRegistry.retrieveAllTickers().map { ticker ->
-                async {
-                    runCatching {
-                        getStockItem(ticker = ticker, range = displayRange)
-                    }
-                        .onFailure { error ->
-                            logger.error("Failed to fetch stock item for ${ticker.symbol}: ${error.message}")
-                        }
-                        .getOrNull()
-                        ?: createPlaceholderStockItem()
+) {
+    companion object {
+        private const val CONCURRENT_ITEMS_SIZE = 10
+    }
+
+    private val concurrencyLimit = Semaphore(CONCURRENT_ITEMS_SIZE)
+
+    suspend operator fun invoke(
+        displayRange: Range,
+    ): List<StockItem> = supervisorScope {
+
+        TickerRegistry.retrieveAllTickers().map { ticker ->
+            async (Dispatchers.IO) {
+                concurrencyLimit.withPermit {
+                runCatching {
+                    getStockItem(ticker = ticker, range = displayRange)
+                }.onSuccess {
+                    logger.info("${ticker.symbol} fetched")
+                }.onFailure { error ->
+                    logger.error("${ticker.symbol} failed: ${error.message}")
+                }.getOrNull()
                 }
-            }.awaitAll()
-        }
-}
+            }
+        }.awaitAll().filterNotNull()
+    }
+    }

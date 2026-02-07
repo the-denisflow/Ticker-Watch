@@ -15,6 +15,7 @@ import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.Lifecycle
 
 @AndroidEntryPoint
 class StockListFragment: Fragment() {
@@ -31,9 +32,12 @@ class StockListFragment: Fragment() {
             ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
         )
 
+
+
         setContent {
-            val stockList by marketViewModel.currentStockList.collectAsStateWithLifecycle()
-            MainPage(stockList, marketViewModel)
+            val result =  marketViewModel.batchStocks.collectAsStateWithLifecycle()
+            logger.info("Stocks batch: ${result.value}")
+
         }
-    }
+}
 }
