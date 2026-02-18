@@ -5,7 +5,10 @@ import com.example.kotlin_app.common.tickers.Ticker
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}
 
-typealias PriceProgressTrend = Pair<PriceTrend, Double>
+data class PriceProgressTrend(
+    val progressTrend: PriceTrend,
+    val progressPercent: String
+)
 
 data class SparkStockUiItem(
     val symbol: String,

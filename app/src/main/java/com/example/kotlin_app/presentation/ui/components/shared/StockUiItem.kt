@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockPriceInfoRow
+import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
 
 @Composable
 fun StockUiItem(
@@ -47,7 +48,7 @@ fun StockUiItem(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             StockInfoRow(stock = stock)
-            StockPriceInfoRow(stock = stock)
+            StockPriceInfoColum(stock = stock)
         }
     }
 }

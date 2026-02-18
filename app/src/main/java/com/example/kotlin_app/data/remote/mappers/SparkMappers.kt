@@ -10,20 +10,24 @@ import kotlin.math.abs
 fun SparkItemDto.toUiModel(ticker: Ticker): SparkStockUiItem? {
     val symbol = symbol ?: return null
     val latestClose = close?.filterNotNull()?.lastOrNull() ?: return null
-    val prevClose = previousClose ?: chartPreviousClose ?: return null
-
-    val progressPercent = ((latestClose - prevClose) / prevClose) * 100
-
-    val trend = when {
-        progressPercent > 0 -> PriceProgressTrend(PriceTrend.UP, abs(progressPercent))
-        progressPercent < 0 -> PriceProgressTrend(PriceTrend.DOWN, abs(progressPercent))
-        else -> PriceProgressTrend(PriceTrend.NEUTRAL, 0.0)
-    }
-
     return SparkStockUiItem(
         symbol = symbol,
         close = latestClose,
-        trend = trend,
+        trend = this.calculateTrend(),
         ticker = ticker
     )
 }
+
+private fun SparkItemDto.calculateTrend(): PriceProgressTrend {
+    val latestClose = close?.filterNotNull()?.lastOrNull() ?: 0.0
+    val prevClose = previousClose ?: chartPreviousClose ?: 0.0
+    val progressPercent = ((latestClose - prevClose) / prevClose) * 100
+    val priceProgress =  "%.2f".format(abs(progressPercent)) + "%"
+    return when {
+        progressPercent > 0 -> PriceProgressTrend(PriceTrend.UP, priceProgress)
+        progressPercent < 0 -> PriceProgressTrend(PriceTrend.DOWN, priceProgress)
+        else -> PriceProgressTrend(PriceTrend.NEUTRAL, "0.0")
+    }
+}
+
+

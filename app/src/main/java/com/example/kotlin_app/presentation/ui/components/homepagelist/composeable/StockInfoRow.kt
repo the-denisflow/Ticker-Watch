@@ -3,6 +3,7 @@ package com.example.kotlin_app.presentation.ui.components.homepagelist.composeab
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,11 +21,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.kotlin_app.domain.repository.model.PriceTrend
 import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 
 @Composable
-fun StockInfoRow(stock: SparkStockUiItem,
-                 iconSize : Dp = 35.dp) {
+fun StockInfoRow(stock: SparkStockUiItem, iconSize : Dp = 35.dp) {
     Row {
         Icon(
             painter = stock.ticker.logoRes?.let {
@@ -48,9 +50,16 @@ fun StockInfoRow(stock: SparkStockUiItem,
     }
 
 @Composable
-fun StockPriceInfoRow(stock: SparkStockUiItem) {
-    Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
+fun StockPriceInfoColum(stock: SparkStockUiItem) {
+    Column(modifier = Modifier.padding(end = 10.dp), horizontalAlignment = Alignment.End) {
         Text(text = "$${stock.close}")
-        Text(text = "${stock.trend.second}", fontSize = 10.sp)
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(text = stock.trend.progressPercent, fontSize = 15.sp,
+            color = when (stock.trend.progressTrend) {
+                PriceTrend.NEUTRAL -> Color.Gray
+                PriceTrend.DOWN -> Color(0xFFF44336)
+                else -> Color(0xFF2E7D32)
+            }
+        )
     }
 }
