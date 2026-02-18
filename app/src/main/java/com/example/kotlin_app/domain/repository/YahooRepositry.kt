@@ -2,8 +2,7 @@ package com.example.kotlin_app.domain.repository
 
 
 import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.domain.repository.model.SparkBatchDto
-import com.example.kotlin_app.domain.repository.model.SparkItemDto
+import com.example.kotlin_app.data.remote.dto.SparkItemDto
 import com.example.kotlin_app.domain.repository.model.YahooResultDto
 
 interface YahooRepository {

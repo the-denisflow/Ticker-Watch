@@ -2,10 +2,9 @@ package com.example.kotlin_app.data.repository
 
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.data.remote.YahooApi
+import com.example.kotlin_app.data.remote.api.YahooApi
 import com.example.kotlin_app.domain.repository.YahooRepository
-import com.example.kotlin_app.domain.repository.model.SparkBatchDto
-import com.example.kotlin_app.domain.repository.model.SparkItemDto
+import com.example.kotlin_app.data.remote.dto.SparkItemDto
 import com.example.kotlin_app.domain.repository.model.YahooResultDto
 import javax.inject.Inject
 

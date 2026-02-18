@@ -78,7 +78,6 @@ fun StockDetailsDialog(
                     )
                 }
             }
-
         }
     }
 }
@@ -96,7 +95,9 @@ private fun Header(
         verticalAlignment = Alignment.CenterVertically
     )
     {
-        StockInfoRow(displayedItem, iconSize = 50.dp)
+
+        // TODO: REFACTOR
+       // StockInfoRow(displayedItem, iconSize = 50.dp)
 
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_share),

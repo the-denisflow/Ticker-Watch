@@ -3,6 +3,7 @@ package com.example.kotlin_app.common.tickers
 import androidx.annotation.DrawableRes
 import com.example.kotlin_app.R
 sealed interface Ticker {
+    val tickerName: String
     val symbol: String
     val logoRes: Int?
     val urlLogo: String?
@@ -14,48 +15,53 @@ enum class Sector(){
     FINANCE
 }
 
-enum class CryptoEnum( override val symbol: String,
-                         @DrawableRes override val logoRes: Int? = null,
+enum class CryptoEnum(override val tickerName: String,
+                      override val symbol: String,
+                      @DrawableRes override val logoRes: Int? = null,
+                      override val urlLogo: String? = null): Ticker {
+    BITCOIN("Bitcoin", "BTC-USD", null, "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"),
+    ETHEREUM("Ethereum", "ETH-USD", null, "https://assets.coingecko.com/coins/images/279/large/ethereum.png");
+}
+
+enum class InvalidTicker(override val tickerName: String = "Invalid",
+                         override val symbol: String,
+                         override val logoRes: Int? = null,
                          override val urlLogo: String? = null): Ticker {
-    BITCOIN("BTC-USD", null, "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"),
-    ETHEREUM("ETH-USD",null, "https://assets.coingecko.com/coins/images/279/large/ethereum.png");
+    INVALIDTICKER("Invalid", "INVALIDTICKER");
 }
 
-enum class InvalidTicker(override val symbol: String, override val logoRes: Int? = null, override val urlLogo: String? = null): Ticker {
-    INVALIDTICKER("INVALIDTICKER");
-}
-
-enum class StockMarketEnum( override val symbol: String,
-                            @DrawableRes override val logoRes: Int? = null,
-                            override val urlLogo: String? = null,
-                            val sector: Sector? = null): Ticker {
-    APPLE("AAPL", R.drawable.aapl, sector = Sector.TECHNOLOGY),
-    MICROSOFT("MSFT", R.drawable.msft, sector = Sector.TECHNOLOGY),
-    AMAZON("AMZN", R.drawable.amzn, sector = Sector.TECHNOLOGY),
-    ALPHABET("GOOGL", R.drawable.googl, sector = Sector.TECHNOLOGY),
-    META("META", R.drawable.meta, sector = Sector.TECHNOLOGY),
-    NVIDIA("NVDA", R.drawable.nvda, sector = Sector.TECHNOLOGY),
-    TESLA("TSLA", R.drawable.tsla, sector = Sector.TECHNOLOGY),
-    AMD("AMD", R.drawable.amd, sector = Sector.TECHNOLOGY),
-    INTEL("INTC", R.drawable.intc, sector = Sector.TECHNOLOGY),
-    IBM("IBM", R.drawable.ibm, sector = Sector.TECHNOLOGY),
-    VISA("V", R.drawable.v, sector = Sector.FINANCE),
-    MASTERCARD("MA", R.drawable.ma, sector = Sector.FINANCE),
-    JPMORGAN("JPM", R.drawable.jpm, sector = Sector.FINANCE),
-    BANK_OF_AMERICA("BAC", R.drawable.bac, sector = Sector.FINANCE),
-    GOLDMAN_SACHS("GS", R.drawable.gs, sector = Sector.FINANCE),
+enum class StockMarketEnum(override val tickerName: String,
+                           override val symbol: String,
+                           @DrawableRes override val logoRes: Int? = null,
+                           override val urlLogo: String? = null,
+                           val sector: Sector? = null): Ticker {
+    APPLE("Apple", "AAPL", R.drawable.aapl, null, Sector.TECHNOLOGY),
+    MICROSOFT("Microsoft", "MSFT", R.drawable.msft, null, Sector.TECHNOLOGY),
+    AMAZON("Amazon", "AMZN", R.drawable.amzn, null, Sector.TECHNOLOGY),
+    ALPHABET("Alphabet", "GOOGL", R.drawable.googl, null, Sector.TECHNOLOGY),
+    META("Meta", "META", R.drawable.meta, null, Sector.TECHNOLOGY),
+    NVIDIA("NVIDIA", "NVDA", R.drawable.nvda, null, Sector.TECHNOLOGY),
+    TESLA("Tesla", "TSLA", R.drawable.tsla, null, Sector.TECHNOLOGY),
+    AMD("AMD", "AMD", R.drawable.amd, null, Sector.TECHNOLOGY),
+    INTEL("Intel", "INTC", R.drawable.intc, null, Sector.TECHNOLOGY),
+    IBM("IBM", "IBM", R.drawable.ibm, null, Sector.TECHNOLOGY),
+    VISA("Visa", "V", R.drawable.v, null, Sector.FINANCE),
+    MASTERCARD("Mastercard", "MA", R.drawable.ma, null, Sector.FINANCE),
+    JPMORGAN("JPMorgan", "JPM", R.drawable.jpm, null, Sector.FINANCE),
+    BANK_OF_AMERICA("Bank of America", "BAC", R.drawable.bac, null, Sector.FINANCE),
+    GOLDMAN_SACHS("Goldman Sachs", "GS", R.drawable.gs, null, Sector.FINANCE),
 }
 
 object TickerRegistry {
-        val allStockMarketTickers = StockMarketEnum.entries
-        val allCryptoTickers = CryptoEnum.entries
-    
-       fun  retrieveAllTickers(): List<Ticker> = allStockMarketTickers + allCryptoTickers
+    val allStockMarketTickers = StockMarketEnum.entries
+    val allCryptoTickers = CryptoEnum.entries
 
-        fun replaceSymbolWithTickerEnum(symbol: String): Ticker  {
-            val firstResult = StockMarketEnum.entries.toTypedArray().find { it.symbol == symbol} ?: InvalidTicker.INVALIDTICKER
-            if (firstResult != InvalidTicker.INVALIDTICKER)
-                return firstResult
-            return  CryptoEnum.entries.toTypedArray().find { it.symbol == symbol} ?: InvalidTicker.INVALIDTICKER
-        }
+    fun retrieveAllTickers(): List<Ticker> = allStockMarketTickers + allCryptoTickers
+
+    fun replaceSymbolWithTickerEnum(symbol: String): Ticker {
+        val firstResult = StockMarketEnum.entries.toTypedArray().find { it.symbol == symbol} ?: InvalidTicker.INVALIDTICKER
+        if (firstResult != InvalidTicker.INVALIDTICKER)
+            return firstResult
+        return CryptoEnum.entries.toTypedArray().find { it.symbol == symbol} ?: InvalidTicker.INVALIDTICKER
+    }
 }

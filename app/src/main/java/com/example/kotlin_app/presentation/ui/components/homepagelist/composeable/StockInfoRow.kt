@@ -19,18 +19,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.kotlin_app.domain.repository.model.StockItem
-
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 
 @Composable
-fun StockInfoRow(stock: StockItem,
-                 iconSize : Dp = 35.dp
-) {
+fun StockInfoRow(stock: SparkStockUiItem,
+                 iconSize : Dp = 35.dp) {
     Row {
         Icon(
-            painter = stock.logoRes?.let {
+            painter = stock.ticker.logoRes?.let {
                 painterResource(id = it)
-            } ?: rememberAsyncImagePainter(stock.logoUrl),
+            } ?: rememberAsyncImagePainter(stock.ticker.urlLogo),
             contentDescription = "Stock icon",
             modifier = Modifier
                 .size(iconSize)
@@ -43,8 +41,16 @@ fun StockInfoRow(stock: StockItem,
                     .height(iconSize)
                     .padding(start = 10.dp)
             ) {
-                Text(text = stock.ticker.symbol, fontWeight = FontWeight.Bold)
-                Text(text = stock.shortName, fontSize = 10.sp, fontWeight = FontWeight.Light)
+                Text(text = stock.ticker.tickerName, fontWeight = FontWeight.Bold)
+                Text(text = stock.ticker.symbol, fontSize = 10.sp, fontWeight = FontWeight.Light)
             }
         }
     }
+
+@Composable
+fun StockPriceInfoRow(stock: SparkStockUiItem) {
+    Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
+        Text(text = "$${stock.close}")
+        Text(text = "${stock.trend.second}", fontSize = 10.sp)
+    }
+}

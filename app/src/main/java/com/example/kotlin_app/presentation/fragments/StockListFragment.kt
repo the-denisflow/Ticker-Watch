@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -15,7 +17,10 @@ import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
+import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
 
 @AndroidEntryPoint
 class StockListFragment: Fragment() {
@@ -32,12 +37,13 @@ class StockListFragment: Fragment() {
             ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
         )
 
-
-
         setContent {
-            val result =  marketViewModel.batchStocks.collectAsStateWithLifecycle()
-            logger.info("Stocks batch: ${result.value}")
-
+            val result = marketViewModel.batchStocks.collectAsStateWithLifecycle()
+            if (result.value.isNotEmpty()) {
+               MainPage(stockList = result.value, marketViewModel)
+            } else {
+                LoadingState()
+            }
         }
-}
+    }
 }

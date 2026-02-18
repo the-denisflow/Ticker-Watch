@@ -1,14 +1,5 @@
 package com.example.kotlin_app.domain.repository.model
 
-typealias SparkBatchDto = Map<String, SparkItemDto>
+import com.example.kotlin_app.data.remote.dto.SparkItemDto
 
-data class SparkItemDto(
-    val timestamp: List<Long>?,
-    val symbol: String?,
-    val end: Long?,
-    val dataGranularity: Int?,
-    val start: Long?,
-    val close: List<Double?>?,
-    val previousClose: Double?,
-    val chartPreviousClose: Double?
-)
+typealias SparkBatchDto = Map<String, SparkItemDto>

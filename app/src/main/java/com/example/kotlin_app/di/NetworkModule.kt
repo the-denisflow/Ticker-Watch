@@ -3,7 +3,7 @@ package com.example.kotlin_app.di
 import android.content.Context
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.common.LoggerImpl
-import com.example.kotlin_app.data.remote.YahooApi
+import com.example.kotlin_app.data.remote.api.YahooApi
 import com.example.kotlin_app.framework.network.NetworkMonitorImpl
 import com.example.kotlin_app.data.repository.YahooRepositoryImpl
 import com.example.kotlin_app.domain.network.NetworkMonitor

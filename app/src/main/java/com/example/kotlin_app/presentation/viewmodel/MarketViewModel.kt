@@ -9,9 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.kotlin_app.common.tickers.TickerRegistry
 import com.example.kotlin_app.domain.repository.model.Range
+import com.example.kotlin_app.data.remote.dto.SparkItemDto
+import com.example.kotlin_app.data.remote.mappers.toUiModel
 import com.example.kotlin_app.domain.repository.model.SparkBatchDto
-import com.example.kotlin_app.domain.repository.model.SparkItemDto
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.domain.use_case.GetStockItem
 import com.example.kotlin_app.domain.use_case.GetStocksBatch
@@ -37,6 +40,10 @@ class MarketViewModel @Inject constructor(
     private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
     private var fetchStockDetailsJob : Job? = null
     private var fetchStocksBatchJob : Job? = null
+
+    private val _batchStocks = MutableStateFlow<List<SparkStockUiItem>>(emptyList())
+    val batchStocks: StateFlow<List<SparkStockUiItem>> = _batchStocks.asStateFlow()
+
 
     val currentStockList: StateFlow<List<StockItem>> = _currentStockList.asStateFlow()
 
@@ -69,18 +76,15 @@ class MarketViewModel @Inject constructor(
         }
     }
 
-    private val _batchStocks = MutableStateFlow<Map<String, SparkItemDto>?>(null)
-    val batchStocks: StateFlow<Map<String, SparkItemDto>?> = _batchStocks.asStateFlow()
-
     fun fetchStocksBatch() {
-        val symbols = "AAPL,GOOG"
+        val symbols = TickerRegistry.allStockMarketTickers.joinToString(",") { it.symbol }
         fetchStocksBatchJob?.cancel()
 
         fetchStocksBatchJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                getStocksBatch(symbols)
+                getStocksBatch(symbols = symbols, tickers = TickerRegistry.allStockMarketTickers)
             }.onSuccess { result ->
-                _batchStocks.value = result.getOrNull()
+                _batchStocks.value = result
             }.onFailure {
                 logger.error("Failed to fetch stocks batch: ${it.message}")
             }

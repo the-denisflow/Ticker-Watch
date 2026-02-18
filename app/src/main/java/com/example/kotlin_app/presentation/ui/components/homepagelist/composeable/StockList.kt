@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.domain.repository.model.StockItem
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.presentation.ui.components.shared.StockUiItem
@@ -20,7 +21,7 @@ import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
 
 @Composable
 fun StockList(
-    list: List<StockItem>,
+    list: List<SparkStockUiItem>,
     marketViewModel: MarketViewModel
 ) {
     var itemIsSelected by remember { mutableStateOf<Boolean>(false) }
@@ -35,9 +36,11 @@ fun StockList(
             items(list) { stock ->
                 StockUiItem(stock = stock,
                     onClickListener = {
+                        /**
                         itemIsSelected = true
                         selectedItem = stock
                         marketViewModel.updateCurrentSymbol(stock)
+                        **/
                     })
             }
         }

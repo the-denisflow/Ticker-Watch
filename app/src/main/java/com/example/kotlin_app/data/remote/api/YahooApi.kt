@@ -1,8 +1,6 @@
-package com.example.kotlin_app.data.remote
+package com.example.kotlin_app.data.remote.api
 
-
-import com.example.kotlin_app.domain.repository.model.SparkBatchDto
-import com.example.kotlin_app.domain.repository.model.SparkItemDto
+import com.example.kotlin_app.data.remote.dto.SparkItemDto
 import com.example.kotlin_app.domain.repository.model.YahooResultDto
 import retrofit2.http.GET
 import retrofit2.http.Path

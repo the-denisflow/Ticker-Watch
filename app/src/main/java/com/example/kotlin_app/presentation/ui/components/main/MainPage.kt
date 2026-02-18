@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.domain.repository.model.StockItem
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockList
@@ -26,8 +27,8 @@ import com.example.kotlin_app.presentation.ui.utils.MainPageDimens.headerTopMarg
 import com.example.kotlin_app.presentation.ui.utils.MainPageDimens.iconSize
 
 @Composable
-fun MainPage( stockList: List<StockItem>,
-              marketViewModel: MarketViewModel) {
+fun MainPage(stockList: List<SparkStockUiItem>,
+             marketViewModel: MarketViewModel) {
     if (stockList.isEmpty()) {
         LoadingState()
     } else {
