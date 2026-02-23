@@ -12,12 +12,12 @@ class YahooRepositoryImpl @Inject constructor(
     private val api: YahooApi,
     private val logger: Logger
 ) : YahooRepository {
-    override suspend fun getSingleChart(ticker: Ticker, range: String, interval: String): Result<YahooResultDto> {
+    override suspend fun getSingleChart(symbol: String, range: String, interval: String): Result<YahooResultDto> {
       return try {
-          val yahooResult = api.getSingleChart(ticker.symbol, range = range, interval = interval)
+          val yahooResult = api.getSingleChart(symbol, range = range, interval = interval)
           Result.success(yahooResult)
       } catch (e: Exception) {
-          logger.error("Failed to fetch chart for ${ticker.symbol}: ${e.message}")
+          logger.error("Failed to fetch chart for ${symbol}: ${e.message}")
           Result.failure(e)
       }
     }

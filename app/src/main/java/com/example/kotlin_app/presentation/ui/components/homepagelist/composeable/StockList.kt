@@ -25,7 +25,6 @@ fun StockList(
     marketViewModel: MarketViewModel
 ) {
     var itemIsSelected by remember { mutableStateOf<Boolean>(false) }
-    var selectedItem by remember { mutableStateOf<StockItem>(createPlaceholderStockItem()) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -36,11 +35,8 @@ fun StockList(
             items(list) { stock ->
                 StockUiItem(stock = stock,
                     onClickListener = {
-                        /**
                         itemIsSelected = true
-                        selectedItem = stock
-                        marketViewModel.updateCurrentSymbol(stock)
-                        **/
+                        marketViewModel.updateCurrentSymbol(stock.symbol)
                     })
             }
         }

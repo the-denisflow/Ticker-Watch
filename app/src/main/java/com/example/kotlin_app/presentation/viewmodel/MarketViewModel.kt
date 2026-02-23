@@ -1,5 +1,6 @@
 package com.example.kotlin_app.presentation.viewmodel
 
+import android.R
 import androidx.lifecycle.ViewModel
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.domain.repository.model.StockItem
@@ -36,7 +37,8 @@ class MarketViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
-    private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
+    private val _currentTickerSymbol = MutableStateFlow<String>("")
+    private val _currentDisplayedTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
     private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
     private var fetchStockDetailsJob : Job? = null
     private var fetchStocksBatchJob : Job? = null
@@ -44,12 +46,9 @@ class MarketViewModel @Inject constructor(
     private val _batchStocks = MutableStateFlow<List<SparkStockUiItem>>(emptyList())
     val batchStocks: StateFlow<List<SparkStockUiItem>> = _batchStocks.asStateFlow()
 
-
-    val currentStockList: StateFlow<List<StockItem>> = _currentStockList.asStateFlow()
-
     val stockState: StateFlow<StockState> =
         combine(
-            _currentTicker,
+            _currentDisplayedTicker,
             _displayedRange
         ) { item, range ->
             StockState(item, range)
@@ -60,20 +59,7 @@ class MarketViewModel @Inject constructor(
         )
 
     init {
-        fetchStockList()
         fetchStocksBatch()
-    }
-
-    private fun fetchStockList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                syncMarketStocks(_displayedRange.value)
-            }.onSuccess { stocks ->
-                _currentStockList.value = stocks
-            }.onFailure { exception ->
-                logger.error("Failed to fetch stock list : ${exception.message}")
-            }
-        }
     }
 
     fun fetchStocksBatch() {
@@ -91,8 +77,8 @@ class MarketViewModel @Inject constructor(
         }
     }
 
-    fun updateCurrentSymbol(StockMarketEnum: StockItem) {
-        _currentTicker.value = StockMarketEnum
+    fun updateCurrentSymbol(currentSymbol: String) {
+        _currentTickerSymbol.value = currentSymbol
         updateDisplayedRange(Range.ONE_YEAR)
     }
 
@@ -105,14 +91,14 @@ class MarketViewModel @Inject constructor(
 
            fetchStockDetailsJob =  viewModelScope.launch(Dispatchers.IO) {
                runCatching {
-                getStockItem(
-                       ticker = _currentTicker.value.ticker,
+                val fetchedItem = getStockItem(
+                       symbol = _currentTickerSymbol.value,
                        range = _displayedRange.value
                    )
-               }.onSuccess { item ->
-                   if(item != null) {
-                       _currentTicker.value = item
+                   if (fetchedItem != null) {
+                       _currentDisplayedTicker.value = fetchedItem
                    }
+               }.onSuccess {
                }.onFailure { exception ->
                    logger.error("Failed to update displayed range: ${exception.message}")
                    _displayedRange.value = lastRangeBeforeUpdate

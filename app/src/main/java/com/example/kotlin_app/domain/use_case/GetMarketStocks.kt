@@ -24,20 +24,22 @@ class GetMarketStocks @Inject constructor(
 
     suspend operator fun invoke(
         displayRange: Range,
-    ): List<StockItem> = supervisorScope {
+    ) = supervisorScope {
 
-        TickerRegistry.retrieveAllTickers().map { ticker ->
-            async (Dispatchers.IO) {
-                concurrencyLimit.withPermit {
-                runCatching {
-                    getStockItem(ticker = ticker, range = displayRange)
-                }.onSuccess {
-                    logger.info("${ticker.symbol} fetched")
-                }.onFailure { error ->
-                    logger.error("${ticker.symbol} failed: ${error.message}")
-                }.getOrNull()
-                }
-            }
-        }.awaitAll().filterNotNull()
+        /**
+         *         TickerRegistry.retrieveAllTickers().map { ticker ->
+         *             async (Dispatchers.IO) {
+         *                 concurrencyLimit.withPermit {
+         *                 runCatching {
+         *                     getStockItem(ticker = ticker, range = displayRange)
+         *                 }.onSuccess {
+         *                     logger.info("${ticker.symbol} fetched")
+         *                 }.onFailure { error ->
+         *                     logger.error("${ticker.symbol} failed: ${error.message}")
+         *                 }.getOrNull()
+         *                 }
+         *             }
+         *         }.awaitAll().filterNotNull()
+         */
     }
     }

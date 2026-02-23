@@ -2,6 +2,7 @@ package com.example.kotlin_app.domain.use_case
 
 import com.example.kotlin_app.common.tickers.StockMarketEnum
 import com.example.kotlin_app.common.tickers.Ticker
+import com.example.kotlin_app.common.tickers.TickerRegistry.replaceSymbolWithTickerEnum
 import com.example.kotlin_app.domain.repository.YahooRepository
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
 import com.example.kotlin_app.domain.repository.model.Range
@@ -13,16 +14,17 @@ class GetStockItem @Inject constructor(
     private val yahooRepository: YahooRepository
 ) {
     suspend operator fun invoke(
-        ticker: Ticker,
+        symbol: String,
         range: Range
     ): StockItem? {
         val chartResult = yahooRepository.getSingleChart(
-            ticker = ticker,
+            symbol = symbol,
             range = range.value,
             interval = getValidIntervalsFor(range).value
         )
 
         val chart = chartResult.getOrNull() ?: return null
+        val ticker = replaceSymbolWithTickerEnum(symbol)
 
         return chart.toStockItem(
             ticker = ticker,
