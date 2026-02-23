@@ -19,12 +19,16 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
-            context,AppDatabase::class.java,"my-database").build()
+            context, AppDatabase::class.java, "my-database")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
+    @Singleton
     fun provideStockDao(database: AppDatabase) = database.stockDao()
 
     @Provides
+    @Singleton
     fun provideDbRepository(stockDao: StockDao) = DbRepository(stockDao)
 }

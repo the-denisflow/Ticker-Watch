@@ -23,6 +23,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
+    @Singleton
     fun provideYahooApi(): YahooApi {
         return Retrofit.Builder()
             .baseUrl("https://query1.finance.yahoo.com/")
@@ -32,6 +33,7 @@ object NetworkModule {
     }
 
     @Provides
+    @Singleton
     fun provideYahooRepository(api: YahooApi, logger: Logger): YahooRepository {
         return YahooRepositoryImpl(api, logger)
     }
