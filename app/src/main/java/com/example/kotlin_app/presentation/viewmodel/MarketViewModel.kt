@@ -39,6 +39,13 @@ class MarketViewModel @Inject constructor(
     private val _batchStocks = MutableStateFlow<List<SparkStockUiItem>>(emptyList())
     val batchStocks: StateFlow<List<SparkStockUiItem>> = _batchStocks.asStateFlow()
 
+    val currentSparkItem: StateFlow<SparkStockUiItem?> = combine(
+        _currentTickerSymbol,
+        _batchStocks
+    ) { symbol, stocks ->
+        stocks.find { it.symbol == symbol }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
     val stockState: StateFlow<StockState> =
         combine(
             _currentDisplayedTicker,

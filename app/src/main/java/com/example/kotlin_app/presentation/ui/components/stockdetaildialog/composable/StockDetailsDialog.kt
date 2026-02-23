@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -39,6 +38,7 @@ import com.example.kotlin_app.R
 import com.example.kotlin_app.presentation.ui.components.chart.utils.plotDiagram
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator
 import com.example.kotlin_app.domain.repository.model.Range
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.domain.repository.model.StockItem
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
 import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
@@ -52,6 +52,7 @@ fun StockDetailsDialog(
     ) {
 
     val displayedStock by marketViewModel.stockState.collectAsState()
+    val currentSparkItem by marketViewModel.currentSparkItem.collectAsState(initial = null)
 
     ModalBottomSheet(
         scrimColor = Color.Black.copy(alpha = 0.3f),
@@ -69,7 +70,7 @@ fun StockDetailsDialog(
         ) {
             displayedStock.let { item ->
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    Header(displayedItem = displayedStock.item)
+                    currentSparkItem?.let { Header(displayedItem = it) }
                     Spacer(modifier = Modifier.height(10.dp))
                     StockChart(
                         displayedRange = item.range,
@@ -84,7 +85,7 @@ fun StockDetailsDialog(
 
 @Composable
 private fun Header(
-    displayedItem: StockItem
+    displayedItem: SparkStockUiItem
 ) {
     Row (
         Modifier
@@ -96,8 +97,7 @@ private fun Header(
     )
     {
 
-        // TODO: REFACTOR
-       // StockInfoRow(displayedItem, iconSize = 50.dp)
+        StockInfoRow(displayedItem, iconSize = 50.dp)
 
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_share),
