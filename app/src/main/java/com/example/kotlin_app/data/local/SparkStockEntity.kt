@@ -6,20 +6,24 @@ import com.example.kotlin_app.common.tickers.Ticker
 import com.example.kotlin_app.domain.repository.model.PriceTrend
 import com.example.kotlin_app.domain.repository.model.PriceProgressTrend
 import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 @Entity
 data class SparkStockEntity(
     @PrimaryKey val symbol: String,
     val close: Double,
     val progressTrend: String,
-    val progressPercent: String
+    val progressPercent: String,
+    val pricesJson: String = "[]"
 )
 
 fun SparkStockUiItem.toEntity(): SparkStockEntity = SparkStockEntity(
     symbol = symbol,
     close = close,
     progressTrend = trend.progressTrend.name,
-    progressPercent = trend.progressPercent
+    progressPercent = trend.progressPercent,
+    pricesJson = Gson().toJson(prices)
 )
 
 fun SparkStockEntity.toUiModel(ticker: Ticker): SparkStockUiItem = SparkStockUiItem(
@@ -29,5 +33,6 @@ fun SparkStockEntity.toUiModel(ticker: Ticker): SparkStockUiItem = SparkStockUiI
         progressTrend = PriceTrend.valueOf(progressTrend),
         progressPercent = progressPercent
     ),
-    ticker = ticker
+    ticker = ticker,
+    prices = Gson().fromJson(pricesJson, object : TypeToken<List<Double>>() {}.type) ?: emptyList()
 )

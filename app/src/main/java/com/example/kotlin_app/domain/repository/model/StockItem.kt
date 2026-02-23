@@ -14,7 +14,8 @@ data class SparkStockUiItem(
     val symbol: String,
     val close: Double,
     val trend: PriceProgressTrend,
-    val ticker: Ticker
+    val ticker: Ticker,
+    val prices: List<Double> = emptyList()
 )
 
 data class StockItem (val ticker: Ticker,

@@ -18,10 +18,11 @@ class SyncMarketStocks @Inject constructor(
     operator fun invoke(): Flow<List<SparkStockUiItem>> = flow {
         if (networkMonitor.isOnline.value) {
             logger.info("Device is online, fetching fresh data")
-            val symbols = TickerRegistry.allStockMarketTickers.joinToString(",") { it.symbol }
+            val allTickers = TickerRegistry.retrieveAllTickers()
+            val symbols = allTickers.joinToString(",") { it.symbol }
             val fresh = getStocksBatch(
                 symbols = symbols,
-                tickers = TickerRegistry.allStockMarketTickers
+                tickers = allTickers
             )
             if (fresh.isNotEmpty()) {
                 saveBatchToDb(fresh)
