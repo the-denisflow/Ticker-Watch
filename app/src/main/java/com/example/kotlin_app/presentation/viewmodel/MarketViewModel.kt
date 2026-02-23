@@ -1,6 +1,5 @@
 package com.example.kotlin_app.presentation.viewmodel
 
-import android.R
 import androidx.lifecycle.ViewModel
 import com.example.kotlin_app.common.Logger
 import com.example.kotlin_app.domain.repository.model.StockItem
@@ -12,14 +11,10 @@ import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import com.example.kotlin_app.common.tickers.TickerRegistry
 import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.data.remote.dto.SparkItemDto
-import com.example.kotlin_app.data.remote.mappers.toUiModel
-import com.example.kotlin_app.domain.repository.model.SparkBatchDto
 import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.domain.use_case.GetStockItem
 import com.example.kotlin_app.domain.use_case.GetStocksBatch
-import com.example.kotlin_app.domain.use_case.SyncMarketStocks
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -31,7 +26,6 @@ import kotlinx.coroutines.flow.stateIn
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
-    private val syncMarketStocks: SyncMarketStocks,
     private val getStockItem: GetStockItem,
     private val getStocksBatch: GetStocksBatch
 ): ViewModel() {
@@ -39,7 +33,6 @@ class MarketViewModel @Inject constructor(
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
     private val _currentTickerSymbol = MutableStateFlow<String>("")
     private val _currentDisplayedTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
-    private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
     private var fetchStockDetailsJob : Job? = null
     private var fetchStocksBatchJob : Job? = null
 
@@ -98,7 +91,6 @@ class MarketViewModel @Inject constructor(
                    if (fetchedItem != null) {
                        _currentDisplayedTicker.value = fetchedItem
                    }
-               }.onSuccess {
                }.onFailure { exception ->
                    logger.error("Failed to update displayed range: ${exception.message}")
                    _displayedRange.value = lastRangeBeforeUpdate
