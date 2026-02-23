@@ -13,10 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.kotlin_app.domain.repository.model.StockItem
+import com.example.kotlin_app.domain.repository.model.Range
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockList
-import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
+import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import com.example.kotlin_app.presentation.ui.uimodels.TopIconData
 import com.example.kotlin_app.presentation.ui.utils.MainPageData.topIconAdd
 import com.example.kotlin_app.presentation.ui.utils.MainPageData.topIconSort
@@ -26,14 +27,25 @@ import com.example.kotlin_app.presentation.ui.utils.MainPageDimens.headerTopMarg
 import com.example.kotlin_app.presentation.ui.utils.MainPageDimens.iconSize
 
 @Composable
-fun MainPage( stockList: List<StockItem>,
-              marketViewModel: MarketViewModel) {
+fun MainPage(
+    stockList: List<SparkStockUiItem>,
+    stockState: StockState,
+    currentSparkItem: SparkStockUiItem?,
+    onSymbolSelected: (String) -> Unit,
+    onRangeChange: (Range) -> Unit
+) {
     if (stockList.isEmpty()) {
         LoadingState()
     } else {
         Column {
             MainPageHeader()
-            StockList(stockList, marketViewModel)
+            StockList(
+                list = stockList,
+                stockState = stockState,
+                currentSparkItem = currentSparkItem,
+                onSymbolSelected = onSymbolSelected,
+                onRangeChange = onRangeChange
+            )
         }
     }
 }
@@ -42,16 +54,19 @@ fun MainPage( stockList: List<StockItem>,
 @Preview
 @Composable
 fun MainPageHeader() {
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
             .height(headerHeight)
             .padding(top = headerTopMargin)
-    ){
-        Row (modifier = Modifier.fillMaxWidth().padding(
-            horizontal = headerHorizontalMargin),
-            horizontalArrangement = Arrangement.SpaceBetween) {
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = headerHorizontalMargin),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             TopIcon(data = topIconSort)
             TopIcon(data = topIconAdd)
         }
@@ -60,7 +75,7 @@ fun MainPageHeader() {
 
 @Composable
 fun TopIcon(
-    data : TopIconData
+    data: TopIconData
 ) {
     Icon(
         modifier = Modifier.size(iconSize),

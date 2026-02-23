@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.kotlin_app.common.tickers.TickerRegistry
 import com.example.kotlin_app.domain.repository.model.Range
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
 import com.example.kotlin_app.domain.use_case.GetStockItem
-import com.example.kotlin_app.domain.use_case.SyncMarketStocks
+import com.example.kotlin_app.domain.use_case.GetStocksBatch
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,20 +26,29 @@ import kotlinx.coroutines.flow.stateIn
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
-    private val syncMarketStocks: SyncMarketStocks,
-    private val getStockItem: GetStockItem
+    private val getStockItem: GetStockItem,
+    private val getStocksBatch: GetStocksBatch
 ): ViewModel() {
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
-    private val _currentTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
-    private val _currentStockList = MutableStateFlow<List<StockItem>>(emptyList())
+    private val _currentTickerSymbol = MutableStateFlow<String>("")
+    private val _currentDisplayedTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
     private var fetchStockDetailsJob : Job? = null
+    private var fetchStocksBatchJob : Job? = null
 
-    val currentStockList: StateFlow<List<StockItem>> = _currentStockList.asStateFlow()
+    private val _batchStocks = MutableStateFlow<List<SparkStockUiItem>>(emptyList())
+    val batchStocks: StateFlow<List<SparkStockUiItem>> = _batchStocks.asStateFlow()
+
+    val currentSparkItem: StateFlow<SparkStockUiItem?> = combine(
+        _currentTickerSymbol,
+        _batchStocks
+    ) { symbol, stocks ->
+        stocks.find { it.symbol == symbol }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val stockState: StateFlow<StockState> =
         combine(
-            _currentTicker,
+            _currentDisplayedTicker,
             _displayedRange
         ) { item, range ->
             StockState(item, range)
@@ -48,23 +59,26 @@ class MarketViewModel @Inject constructor(
         )
 
     init {
-        fetchStockList()
+        fetchStocksBatch()
     }
 
-    private fun fetchStockList() {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun fetchStocksBatch() {
+        val symbols = TickerRegistry.allStockMarketTickers.joinToString(",") { it.symbol }
+        fetchStocksBatchJob?.cancel()
+
+        fetchStocksBatchJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                syncMarketStocks(_displayedRange.value)
-            }.onSuccess { stocks ->
-                _currentStockList.value = stocks
-            }.onFailure { exception ->
-                logger.error("Failed to fetch stock list : ${exception.message}")
+                getStocksBatch(symbols = symbols, tickers = TickerRegistry.allStockMarketTickers)
+            }.onSuccess { result ->
+                _batchStocks.value = result
+            }.onFailure {
+                logger.error("Failed to fetch stocks batch: ${it.message}")
             }
         }
     }
 
-    fun updateCurrentSymbol(StockMarketEnum: StockItem) {
-        _currentTicker.value = StockMarketEnum
+    fun updateCurrentSymbol(currentSymbol: String) {
+        _currentTickerSymbol.value = currentSymbol
         updateDisplayedRange(Range.ONE_YEAR)
     }
 
@@ -77,13 +91,12 @@ class MarketViewModel @Inject constructor(
 
            fetchStockDetailsJob =  viewModelScope.launch(Dispatchers.IO) {
                runCatching {
-                getStockItem(
-                       ticker = _currentTicker.value.ticker,
+                val fetchedItem = getStockItem(
+                       symbol = _currentTickerSymbol.value,
                        range = _displayedRange.value
                    )
-               }.onSuccess { item ->
-                   if(item != null) {
-                       _currentTicker.value = item
+                   if (fetchedItem != null) {
+                       _currentDisplayedTicker.value = fetchedItem
                    }
                }.onFailure { exception ->
                    logger.error("Failed to update displayed range: ${exception.message}")

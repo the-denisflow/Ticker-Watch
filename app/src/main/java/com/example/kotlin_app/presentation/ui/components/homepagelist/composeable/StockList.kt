@@ -12,19 +12,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.kotlin_app.domain.repository.model.StockItem
-import com.example.kotlin_app.domain.repository.model.createPlaceholderStockItem
+import com.example.kotlin_app.domain.repository.model.Range
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.presentation.ui.components.shared.StockUiItem
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable.StockDetailsDialog
-import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
+import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 
 @Composable
 fun StockList(
-    list: List<StockItem>,
-    marketViewModel: MarketViewModel
+    list: List<SparkStockUiItem>,
+    stockState: StockState,
+    currentSparkItem: SparkStockUiItem?,
+    onSymbolSelected: (String) -> Unit,
+    onRangeChange: (Range) -> Unit
 ) {
-    var itemIsSelected by remember { mutableStateOf<Boolean>(false) }
-    var selectedItem by remember { mutableStateOf<StockItem>(createPlaceholderStockItem()) }
+    var itemIsSelected by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -36,14 +38,15 @@ fun StockList(
                 StockUiItem(stock = stock,
                     onClickListener = {
                         itemIsSelected = true
-                        selectedItem = stock
-                        marketViewModel.updateCurrentSymbol(stock)
+                        onSymbolSelected(stock.symbol)
                     })
             }
         }
         if (itemIsSelected) {
             StockDetailsDialog(
-                marketViewModel = marketViewModel,
+                stockState = stockState,
+                currentSparkItem = currentSparkItem,
+                onRangeChange = onRangeChange,
                 onDismiss = { itemIsSelected = false }
             )
         }

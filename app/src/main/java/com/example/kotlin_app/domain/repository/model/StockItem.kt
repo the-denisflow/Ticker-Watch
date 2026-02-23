@@ -3,6 +3,20 @@ package com.example.kotlin_app.domain.repository.model
 import com.example.kotlin_app.common.tickers.InvalidTicker
 import com.example.kotlin_app.common.tickers.Ticker
 
+enum class PriceTrend {UP, DOWN, NEUTRAL}
+
+data class PriceProgressTrend(
+    val progressTrend: PriceTrend,
+    val progressPercent: String
+)
+
+data class SparkStockUiItem(
+    val symbol: String,
+    val close: Double,
+    val trend: PriceProgressTrend,
+    val ticker: Ticker
+)
+
 data class StockItem (val ticker: Ticker,
                       val longName: String,
                       val shortName: String,
@@ -10,8 +24,7 @@ data class StockItem (val ticker: Ticker,
                       val logoUrl: String?,
                       val logoRes: Int?,
                       var prices: List<Double> = emptyList<Double>(),
-                      var timestamp: List<Int> = emptyList<Int>(),
-    )
+                      var timestamp: List<Int> = emptyList<Int>())
 
 fun YahooResultDto.toStockItem(ticker: Ticker, logoUrl: String? = null, logoRes: Int? = null): StockItem {
     return StockItem(

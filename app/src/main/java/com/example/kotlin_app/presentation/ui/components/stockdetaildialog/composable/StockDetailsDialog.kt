@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -24,8 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,63 +36,57 @@ import com.example.kotlin_app.R
 import com.example.kotlin_app.presentation.ui.components.chart.utils.plotDiagram
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator
 import com.example.kotlin_app.domain.repository.model.Range
+import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.domain.repository.model.StockItem
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
-import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
+import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
 import com.github.mikephil.charting.charts.LineChart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockDetailsDialog(
-    marketViewModel: MarketViewModel,
+    stockState: StockState,
+    currentSparkItem: SparkStockUiItem?,
+    onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit = {},
-    ) {
-
-    val displayedStock by marketViewModel.stockState.collectAsState()
-
+) {
     ModalBottomSheet(
         scrimColor = Color.Black.copy(alpha = 0.3f),
         dragHandle = {
             DialogHeader()
         },
-        onDismissRequest = {
-            onDismiss() },
+        onDismissRequest = { onDismiss() },
     ) {
         Box(
             Modifier
                 .height(800.dp)
                 .background(Color.White)
-
         ) {
-            displayedStock.let { item ->
-                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    Header(displayedItem = displayedStock.item)
-                    Spacer(modifier = Modifier.height(10.dp))
-                    StockChart(
-                        displayedRange = item.range,
-                        displayedItem = displayedStock.item,
-                        marketViewModel = marketViewModel
-                    )
-                }
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                currentSparkItem?.let { Header(displayedItem = it) }
+                Spacer(modifier = Modifier.height(10.dp))
+                StockChart(
+                    displayedRange = stockState.range,
+                    displayedItem = stockState.item,
+                    onRangeChange = onRangeChange
+                )
             }
-
         }
     }
 }
 
 @Composable
 private fun Header(
-    displayedItem: StockItem
+    displayedItem: SparkStockUiItem
 ) {
-    Row (
+    Row(
         Modifier
             .fillMaxWidth()
             .width(100.dp)
             .padding(start = 18.dp, end = 18.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
-    )
-    {
+    ) {
         StockInfoRow(displayedItem, iconSize = 50.dp)
 
         Image(
@@ -110,15 +101,15 @@ private fun Header(
 private fun StockChart(
     displayedRange: Range,
     displayedItem: StockItem,
-    marketViewModel: MarketViewModel
+    onRangeChange: (Range) -> Unit
 ) {
     val innerBarPadding = 10.dp
     val innerButtonPadding = 1.dp
     val totalButtons = 5
     val context = LocalContext.current
     val density = context.resources.displayMetrics.density
-    val periodBarWidth = (context.resources.displayMetrics.widthPixels/density).dp - (innerBarPadding * 2)
-    val singlePeriodElementWidth = (periodBarWidth / totalButtons) -  (innerButtonPadding * totalButtons)
+    val periodBarWidth = (context.resources.displayMetrics.widthPixels / density).dp - (innerBarPadding * 2)
+    val singlePeriodElementWidth = (periodBarWidth / totalButtons) - (innerButtonPadding * totalButtons)
     AndroidView(
         factory = { context ->
             val view = LayoutInflater.from(context)
@@ -136,28 +127,26 @@ private fun StockChart(
                 displayedItem.prices,
                 displayedItem.timestamp,
                 displayedRange,
-                chart)
+                chart
+            )
         }
     )
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(innerBarPadding),
-        horizontalArrangement = Arrangement.SpaceBetween){
-        IntervalRangeValidator.allRanges.map { range ->
-
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(innerBarPadding),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        IntervalRangeValidator.allRanges.forEach { range ->
             PeriodButton(
-              cardColor = if (range == displayedRange)
-                  CardDefaults.cardColors(
-                      containerColor = Color(0xffe2e2dd)
-                  ) else
-                  CardDefaults.cardColors(
-                      containerColor = Color.White
-                  )
-                ,
+                cardColor = if (range == displayedRange)
+                    CardDefaults.cardColors(containerColor = Color(0xffe2e2dd))
+                else
+                    CardDefaults.cardColors(containerColor = Color.White),
                 modifier = Modifier
                     .width(singlePeriodElementWidth)
                     .height(50.dp),
-                onClick = {marketViewModel.updateDisplayedRange(range)},
+                onClick = { onRangeChange(range) },
                 text = range.value
             )
         }
@@ -170,18 +159,19 @@ private fun PeriodButton(
     cardColor: CardColors = CardDefaults.cardColors(
         containerColor = Color.White,
     ),
-    modifier : Modifier,
+    modifier: Modifier = Modifier,
     text: String = "1D",
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Card(
-            modifier = Modifier.height(40.dp). width(60.dp),
+            modifier = Modifier
+                .height(40.dp)
+                .width(60.dp),
             colors = cardColor,
             onClick = { onClick.invoke() },
         ) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center)
-            {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
                     text,
                     color = Color.Black,
