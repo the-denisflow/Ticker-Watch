@@ -23,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.kotlin_app.R
+import com.example.kotlin_app.common.tickers.CryptoEnum
+import com.example.kotlin_app.common.tickers.StockMarketEnum
+import com.example.kotlin_app.common.tickers.Ticker
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator
 import com.example.kotlin_app.domain.repository.model.PriceTrend
 import com.example.kotlin_app.domain.repository.model.Range
@@ -68,10 +72,23 @@ fun StockDetailsDialog(
                 currentSparkItem?.let { Header(displayedItem = it) }
                 Spacer(modifier = Modifier.height(8.dp))
 
+                val validPrices = remember(stockState.item.prices) {
+                    stockState.item.prices.filter { !it.isNaN() }
+                }
+                val periodHigh = remember(validPrices) { validPrices.maxOrNull() }
+                val periodLow = remember(validPrices) { validPrices.minOrNull() }
+
                 StockChart(
                     displayedRange = stockState.range,
                     displayedItem = stockState.item,
                     onRangeChange = onRangeChange
+                )
+                currentSparkItem?.let { StockMetaRow(ticker = it.ticker) }
+                StockDetailsSection(
+                    item = stockState.item,
+                    periodLabel = stockState.range.value,
+                    periodHigh = periodHigh,
+                    periodLow = periodLow
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 ShareRow()
@@ -265,6 +282,101 @@ private fun PeriodPerformanceRow(
                 fontWeight = FontWeight.SemiBold,
                 color = trendColor
             )
+        }
+    }
+}
+
+private fun formatVolume(volume: Long): String = when {
+    volume >= 1_000_000_000L -> "${"%.1f".format(volume / 1_000_000_000.0)}B"
+    volume >= 1_000_000L     -> "${"%.1f".format(volume / 1_000_000.0)}M"
+    volume >= 1_000L         -> "${"%.1f".format(volume / 1_000.0)}K"
+    else                     -> volume.toString()
+}
+
+@Composable
+private fun StockDetailsSection(
+    item: StockItem,
+    periodLabel: String,
+    periodHigh: Double?,
+    periodLow: Double?
+) {
+    val priceFormat: (Double) -> String = { "$" + "%.2f".format(it) }
+    val rows = buildList {
+        if (periodLow != null && periodHigh != null)
+            add("$periodLabel Range" to "${priceFormat(periodLow)} – ${priceFormat(periodHigh)}")
+        item.volume?.let { add("Volume" to formatVolume(it)) }
+        item.previousClose?.let { add("Prev. Close" to priceFormat(it)) }
+        item.exchangeName?.let { add("Exchange" to it) }
+        item.currency?.let { add("Currency" to it) }
+    }
+    if (rows.isEmpty()) return
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 8.dp)
+            .background(Color(0xFFF2F2F7), shape = RoundedCornerShape(12.dp))
+            .padding(horizontal = 16.dp)
+    ) {
+        rows.forEachIndexed { index, (label, value) ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = label,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color(0xFF8E8E93)
+                )
+                Text(
+                    text = value,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF1C1C1E)
+                )
+            }
+            if (index < rows.lastIndex) {
+                HorizontalDivider(thickness = 0.5.dp, color = Color(0xFFE5E5EA))
+            }
+        }
+    }
+}
+
+@Composable
+private fun StockMetaRow(ticker: Ticker) {
+    val chips: List<String> = when (ticker) {
+        is StockMarketEnum -> listOfNotNull(
+            ticker.sector?.name?.lowercase()?.replaceFirstChar { it.titlecase() },
+            ticker.country?.let { "${it.flag} ${it.displayName}" }
+        )
+        is CryptoEnum -> listOf("Crypto")
+        else -> emptyList()
+    }
+    if (chips.isEmpty()) return
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        chips.forEach { label ->
+            Box(
+                modifier = Modifier
+                    .background(Color(0xFFF2F2F7), shape = RoundedCornerShape(20.dp))
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text(
+                    text = label,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF3C3C43)
+                )
+            }
         }
     }
 }

@@ -16,6 +16,12 @@ class SyncMarketStocks @Inject constructor(
     private val logger: Logger
 ) {
     operator fun invoke(): Flow<List<SparkStockUiItem>> = flow {
+        val cached = loadBatchFromDb()
+        if (cached.isNotEmpty()) {
+            logger.info("Emitting cached data")
+            emit(cached)
+        }
+
         if (networkMonitor.isOnline.value) {
             logger.info("Device is online, fetching fresh data")
             val allTickers = TickerRegistry.retrieveAllTickers()
@@ -29,9 +35,7 @@ class SyncMarketStocks @Inject constructor(
                 emit(fresh)
             }
         } else {
-            logger.info("Device is offline, loading cached data")
-            val cached = loadBatchFromDb()
-            if (cached.isNotEmpty()) emit(cached)
+            logger.info("Device is offline, serving cached data only")
         }
     }
 }
