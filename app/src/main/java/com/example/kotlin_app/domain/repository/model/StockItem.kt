@@ -1,15 +1,18 @@
 package com.example.kotlin_app.domain.repository.model
 
+import androidx.compose.runtime.Immutable
 import com.example.kotlin_app.common.tickers.InvalidTicker
 import com.example.kotlin_app.common.tickers.Ticker
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}
 
+@Immutable
 data class PriceProgressTrend(
     val progressTrend: PriceTrend,
     val progressPercent: String
 )
 
+@Immutable
 data class SparkStockUiItem(
     val symbol: String,
     val close: Double,

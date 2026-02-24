@@ -7,6 +7,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.kotlin_app.R
 import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator
-import com.example.kotlin_app.domain.repository.model.PriceProgressTrend
 import com.example.kotlin_app.domain.repository.model.PriceTrend
 import com.example.kotlin_app.domain.repository.model.Range
 import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
@@ -68,10 +67,10 @@ fun StockDetailsDialog(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 currentSparkItem?.let { Header(displayedItem = it) }
                 Spacer(modifier = Modifier.height(8.dp))
+
                 StockChart(
                     displayedRange = stockState.range,
                     displayedItem = stockState.item,
-                    onDayTrend = currentSparkItem?.trend,
                     onRangeChange = onRangeChange
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -127,7 +126,6 @@ private fun ShareRow() {
 private fun StockChart(
     displayedRange: Range,
     displayedItem: StockItem,
-    onDayTrend: PriceProgressTrend?,
     onRangeChange: (Range) -> Unit
 ) {
     val context = LocalContext.current
@@ -150,6 +148,18 @@ private fun StockChart(
             "%.2f%%".format(kotlin.math.abs(pct))
         } else null
     }
+    val periodAbsoluteChange = remember(validPrices) {
+        if (validPrices.size >= 2) validPrices.last() - validPrices.first() else null
+    }
+
+    if (periodPercent != null && periodAbsoluteChange != null) {
+        PeriodPerformanceRow(
+            price = "$" + displayedItem.price.toString(),
+            trend = periodTrend,
+            periodPercent = periodPercent,
+            periodAbsoluteChange = periodAbsoluteChange,
+        )
+    }
 
     AndroidView(
         factory = { ctx ->
@@ -164,15 +174,6 @@ private fun StockChart(
             plotDiagram(displayedItem.prices, displayedItem.timestamp, displayedRange, chart, periodTrend)
         }
     )
-
-    if (periodPercent != null) {
-        PeriodPerformanceRow(
-            trend = periodTrend,
-            periodLabel = displayedRange.value,
-            periodPercent = periodPercent,
-            onDayTrend = onDayTrend
-        )
-    }
 
     val horizontalPadding = 16.dp
     val buttonCount = IntervalRangeValidator.allRanges.size
@@ -191,21 +192,8 @@ private fun StockChart(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = horizontalPadding, vertical = 12.dp)
-            .background(Color(0xFFF2F2F7), shape = RoundedCornerShape(10.dp))
-            .padding(4.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .offset(x = indicatorOffset)
-                .width(buttonWidth)
-                .height(36.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFF1C1C1E))
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             IntervalRangeValidator.allRanges.forEach { range ->
                 PeriodButton(
                     modifier = Modifier
@@ -217,73 +205,66 @@ private fun StockChart(
                 )
             }
         }
+        // animated blue underline
+        val lineWidth = 28.dp
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .offset(x = indicatorOffset + (buttonWidth - lineWidth) / 2)
+                .width(lineWidth)
+                .height(2.dp)
+                .background(Color(0xFF007AFF), shape = RoundedCornerShape(1.dp))
+        )
     }
 }
 
 @Composable
 private fun PeriodPerformanceRow(
+    price: String,
     trend: PriceTrend,
-    periodLabel: String,
     periodPercent: String,
-    onDayTrend: PriceProgressTrend?
+    periodAbsoluteChange: Double
 ) {
-    val (arrow, trendColor) = when (trend) {
-        PriceTrend.UP -> "▲" to Color(0xFF2E7D32)
-        PriceTrend.DOWN -> "▼" to Color(0xFFC62828)
-        PriceTrend.NEUTRAL -> "–" to Color(0xFF8E8E93)
+    val (arrow, trendColor, bg) = when (trend) {
+        PriceTrend.UP -> Triple("▲", Color(0xFF2E7D32), Color(0xFFE8F5E9))
+        PriceTrend.DOWN -> Triple("▼", Color(0xFFC62828), Color(0xFFFFEBEE))
+        PriceTrend.NEUTRAL -> Triple("–", Color(0xFF8E8E93), Color(0xFFF2F2F7))
     }
+    val sign = if (periodAbsoluteChange >= 0) "+" else "-"
+    val absFormatted = "%.2f".format(kotlin.math.abs(periodAbsoluteChange))
+    val formattedAmount = "${sign}$$absFormatted"
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 24.dp)
             .padding(top = 12.dp, bottom = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
+        Text(
+            text = price,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Black
+        )
+        Text(
+            text = formattedAmount,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = trendColor
+        )
+        Box(
+            modifier = Modifier
+                .background(bg, shape = RoundedCornerShape(6.dp))
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+        ) {
             Text(
                 text = "$arrow $periodPercent",
-                fontSize = 16.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = trendColor
             )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = "over $periodLabel",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color(0xFF8E8E93)
-            )
-        }
-
-        if (onDayTrend != null) {
-            val (dayArrow, dayBg, dayFg) = when (onDayTrend.progressTrend) {
-                PriceTrend.UP -> Triple("▲", Color(0xFFE8F5E9), Color(0xFF2E7D32))
-                PriceTrend.DOWN -> Triple("▼", Color(0xFFFFEBEE), Color(0xFFC62828))
-                PriceTrend.NEUTRAL -> Triple("–", Color(0xFFF2F2F7), Color(0xFF8E8E93))
-            }
-            Column(horizontalAlignment = Alignment.End) {
-                Box(
-                    modifier = Modifier
-                        .background(dayBg, shape = RoundedCornerShape(6.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = "$dayArrow ${onDayTrend.progressPercent}",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = dayFg
-                    )
-                }
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = "from yesterday",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color(0xFFAEAEB2)
-                )
-            }
         }
     }
 }
@@ -296,12 +277,17 @@ private fun PeriodButton(
     onClick: () -> Unit = {}
 ) {
     Box(
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier.clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() },
+            onClick = onClick
+        ),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            color = if (isSelected) Color.White else Color(0xFF8E8E93),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            color = if (isSelected) Color(0xFF007AFF) else Color(0xFF8E8E93),
             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
             fontSize = 13.sp
         )

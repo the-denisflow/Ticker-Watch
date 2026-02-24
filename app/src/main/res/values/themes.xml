@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.Kotlin_App" parent="Base.Theme.Kotlin_App" />
+
+    <style name="Theme.Kotlin_App.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <item name="windowSplashScreenIconBackgroundColor">#3DDC84</item>
+        <item name="postSplashScreenTheme">@style/Theme.Kotlin_App</item>
+    </style>
 </resources>

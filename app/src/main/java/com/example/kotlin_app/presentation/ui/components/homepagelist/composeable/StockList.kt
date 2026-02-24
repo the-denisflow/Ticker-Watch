@@ -34,7 +34,7 @@ fun StockList(
                 .fillMaxSize()
                 .background(color = Color.White),
         ) {
-            items(list) { stock ->
+            items(list, key = { stock -> stock.symbol }) { stock ->
                 StockUiItem(stock = stock,
                     onClickListener = {
                         itemIsSelected = true

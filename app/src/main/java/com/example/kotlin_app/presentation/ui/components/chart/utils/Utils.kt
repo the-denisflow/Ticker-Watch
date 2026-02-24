@@ -44,6 +44,9 @@ fun plotDiagram(
             GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(gradientTop, Color.TRANSPARENT)
         )
+        setDrawHighlightIndicators(true)
+        highLightColor = lineColor
+        highlightLineWidth = 1f
     }
 
     chart.data = LineData(dataSet)
@@ -80,5 +83,8 @@ fun plotDiagram(
     chart.legend.isEnabled = false
     chart.setTouchEnabled(true)
     chart.setPinchZoom(false)
+    chart.isDragEnabled = false
+    chart.isHighlightPerDragEnabled = true
+    chart.marker = ChartMarkerView(chart.context, displayedRange)
     chart.invalidate()
 }
