@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.watchlist
+package com.example.tickerwatch.presentation.ui.components.watchlist
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable

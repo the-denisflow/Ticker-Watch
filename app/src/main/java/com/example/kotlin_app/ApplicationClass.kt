@@ -1,9 +1,9 @@
-package com.example.kotlin_app
+package com.example.tickerwatch
 
 import android.app.Application
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.example.kotlin_app.domain.network.NetworkMonitor
-import com.example.kotlin_app.framework.network.NetworkMonitorImpl
+import com.example.tickerwatch.domain.network.NetworkMonitor
+import com.example.tickerwatch.framework.network.NetworkMonitorImpl
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 

@@ -1,7 +1,7 @@
-package com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state
+package com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state
 
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.StockItem
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.StockItem
 
 data class StockState(
     val item: StockItem,

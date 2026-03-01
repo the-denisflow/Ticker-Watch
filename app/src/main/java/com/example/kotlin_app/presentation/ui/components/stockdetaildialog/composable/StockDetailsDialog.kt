@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable
+package com.example.tickerwatch.presentation.ui.components.stockdetaildialog.composable
 
 import android.view.LayoutInflater
 import androidx.compose.animation.core.Spring
@@ -34,22 +34,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.kotlin_app.R
-import com.example.kotlin_app.common.tickers.CryptoEnum
-import com.example.kotlin_app.common.tickers.StockMarketEnum
-import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator
-import com.example.kotlin_app.domain.repository.model.PriceTrend
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.domain.repository.model.StockItem
-import com.example.kotlin_app.presentation.ui.components.chart.utils.plotDiagram
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
-import com.example.kotlin_app.presentation.ui.theme.AppColors
-import com.example.kotlin_app.presentation.ui.theme.AppDimens
-import com.example.kotlin_app.presentation.ui.theme.AppType
+import com.example.tickerwatch.R
+import com.example.tickerwatch.common.tickers.CryptoEnum
+import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator
+import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockItem
+import com.example.tickerwatch.presentation.ui.components.chart.utils.plotDiagram
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockInfoRow
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.presentation.ui.theme.AppType
 import com.github.mikephil.charting.charts.LineChart
 
 @OptIn(ExperimentalMaterial3Api::class)

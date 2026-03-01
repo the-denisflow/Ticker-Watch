@@ -1,10 +1,10 @@
-package com.example.kotlin_app.framework.network
+package com.example.tickerwatch.framework.network
 
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.example.kotlin_app.domain.network.NetworkMonitor
+import com.example.tickerwatch.domain.network.NetworkMonitor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

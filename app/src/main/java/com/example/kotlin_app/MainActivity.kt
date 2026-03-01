@@ -1,12 +1,12 @@
-package com.example.kotlin_app
+package com.example.tickerwatch
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.example.kotlin_app.common.Logger
-import com.example.kotlin_app.presentation.fragments.StockListFragment
+import com.example.tickerwatch.common.Logger
+import com.example.tickerwatch.presentation.fragments.StockListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

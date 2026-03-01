@@ -1,12 +1,12 @@
-package com.example.kotlin_app.domain.use_case
+package com.example.tickerwatch.domain.use_case
 
-import com.example.kotlin_app.common.tickers.InvalidTicker
-import com.example.kotlin_app.common.tickers.TickerRegistry
-import com.example.kotlin_app.data.local.toEntity
-import com.example.kotlin_app.data.local.toUiModel
-import com.example.kotlin_app.data.repository.DbRepository
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.domain.repository.model.StockItem
+import com.example.tickerwatch.common.tickers.InvalidTicker
+import com.example.tickerwatch.common.tickers.TickerRegistry
+import com.example.tickerwatch.data.local.toEntity
+import com.example.tickerwatch.data.local.toUiModel
+import com.example.tickerwatch.data.repository.DbRepository
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockItem
 import javax.inject.Inject
 
 class LoadStocksFromDb @Inject constructor(private val dbRepository: DbRepository) {

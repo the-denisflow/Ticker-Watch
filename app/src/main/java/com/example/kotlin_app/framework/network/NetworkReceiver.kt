@@ -1,4 +1,4 @@
-package com.example.kotlin_app.framework.network
+package com.example.tickerwatch.framework.network
 
 import android.net.ConnectivityManager
 import android.net.Network

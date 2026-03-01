@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.homepagelist.composeable
+package com.example.tickerwatch.presentation.ui.components.homepagelist.composeable
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -27,14 +27,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.kotlin_app.common.tickers.CryptoEnum
-import com.example.kotlin_app.common.tickers.Sector
-import com.example.kotlin_app.common.tickers.StockMarketEnum
-import com.example.kotlin_app.domain.repository.model.PriceTrend
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.presentation.ui.theme.AppColors
-import com.example.kotlin_app.presentation.ui.theme.AppDimens
-import com.example.kotlin_app.presentation.ui.theme.AppType
+import com.example.tickerwatch.common.tickers.CryptoEnum
+import com.example.tickerwatch.common.tickers.Sector
+import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.presentation.ui.theme.AppType
 
 @Composable
 fun StockInfoRow(stock: SparkStockUiItem, iconSize: Dp = AppDimens.IconStockRow, modifier: Modifier = Modifier) {
@@ -73,7 +73,7 @@ fun StockInfoRow(stock: SparkStockUiItem, iconSize: Dp = AppDimens.IconStockRow,
 }
 
 @Composable
-private fun SectorChip(ticker: com.example.kotlin_app.common.tickers.Ticker) {
+private fun SectorChip(ticker: com.example.tickerwatch.common.tickers.Ticker) {
     val sector = (ticker as? StockMarketEnum)?.sector
     val isCrypto = ticker is CryptoEnum
 

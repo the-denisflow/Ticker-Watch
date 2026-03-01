@@ -1,13 +1,13 @@
-package com.example.kotlin_app.domain.use_case
+package com.example.tickerwatch.domain.use_case
 
-import com.example.kotlin_app.common.tickers.StockMarketEnum
-import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.common.tickers.TickerRegistry.replaceSymbolWithTickerEnum
-import com.example.kotlin_app.domain.repository.YahooRepository
-import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.StockItem
-import com.example.kotlin_app.domain.repository.model.toStockItem
+import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.common.tickers.TickerRegistry.replaceSymbolWithTickerEnum
+import com.example.tickerwatch.domain.repository.YahooRepository
+import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.StockItem
+import com.example.tickerwatch.domain.repository.model.toStockItem
 import javax.inject.Inject
 
 class GetStockItem @Inject constructor(

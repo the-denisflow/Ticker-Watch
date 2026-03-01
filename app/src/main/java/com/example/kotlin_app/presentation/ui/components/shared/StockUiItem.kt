@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.shared
+package com.example.tickerwatch.presentation.ui.components.shared
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,12 +18,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.MiniSparkline
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
-import com.example.kotlin_app.presentation.ui.theme.AppColors
-import com.example.kotlin_app.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.MiniSparkline
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockInfoRow
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
 
 @Composable
 fun StockUiItem(

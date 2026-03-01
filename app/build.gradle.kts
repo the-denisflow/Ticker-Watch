@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.kotlin_app"
+    namespace = "com.example.tickerwatch"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.kotlin_app"
+        applicationId = "com.example.tickerwatch"
         minSdk = 35
         targetSdk = 35
         versionCode = 1

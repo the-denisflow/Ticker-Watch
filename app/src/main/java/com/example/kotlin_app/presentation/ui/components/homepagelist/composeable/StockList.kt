@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.homepagelist.composeable
+package com.example.tickerwatch.presentation.ui.components.homepagelist.composeable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -21,17 +21,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.example.kotlin_app.common.tickers.CryptoEnum
-import com.example.kotlin_app.common.tickers.Sector
-import com.example.kotlin_app.common.tickers.StockMarketEnum
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.presentation.ui.components.shared.StockUiItem
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable.StockDetailsDialog
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
-import com.example.kotlin_app.presentation.ui.theme.AppColors
-import com.example.kotlin_app.presentation.ui.theme.AppDimens
-import com.example.kotlin_app.presentation.ui.theme.AppType
+import com.example.tickerwatch.common.tickers.CryptoEnum
+import com.example.tickerwatch.common.tickers.Sector
+import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.presentation.ui.components.shared.StockUiItem
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.composable.StockDetailsDialog
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.presentation.ui.theme.AppType
 
 private enum class SectorFilter(val label: String) {
     ALL("All"),

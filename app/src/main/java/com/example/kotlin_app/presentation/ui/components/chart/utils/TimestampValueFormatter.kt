@@ -1,6 +1,6 @@
-package com.example.kotlin_app.presentation.ui.components.chart.utils
+package com.example.tickerwatch.presentation.ui.components.chart.utils
 
-import com.example.kotlin_app.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.Range
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.formatter.ValueFormatter
 import java.text.SimpleDateFormat

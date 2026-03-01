@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.main
+package com.example.tickerwatch.presentation.ui.components.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,17 +42,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockList
-import com.example.kotlin_app.presentation.ui.components.portfolio.PortfolioScreen
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
-import com.example.kotlin_app.presentation.ui.components.watchlist.WatchlistScreen
-import com.example.kotlin_app.presentation.ui.theme.AppColors
-import com.example.kotlin_app.presentation.ui.theme.AppDimens
-import com.example.kotlin_app.presentation.ui.theme.AppType
-import com.example.kotlin_app.presentation.viewmodel.SortOption
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.LoadingState
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockList
+import com.example.tickerwatch.presentation.ui.components.portfolio.PortfolioScreen
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.presentation.ui.components.watchlist.WatchlistScreen
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.presentation.ui.theme.AppType
+import com.example.tickerwatch.presentation.viewmodel.SortOption
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

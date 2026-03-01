@@ -1,4 +1,4 @@
-package com.example.kotlin_app.data.local
+package com.example.tickerwatch.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

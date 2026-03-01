@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.homepagelist.composeable
+package com.example.tickerwatch.presentation.ui.components.homepagelist.composeable
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

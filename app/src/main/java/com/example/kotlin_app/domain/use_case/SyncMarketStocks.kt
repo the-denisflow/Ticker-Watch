@@ -1,9 +1,9 @@
-package com.example.kotlin_app.domain.use_case
+package com.example.tickerwatch.domain.use_case
 
-import com.example.kotlin_app.common.Logger
-import com.example.kotlin_app.common.tickers.TickerRegistry
-import com.example.kotlin_app.domain.network.NetworkMonitor
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.common.Logger
+import com.example.tickerwatch.common.tickers.TickerRegistry
+import com.example.tickerwatch.domain.network.NetworkMonitor
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

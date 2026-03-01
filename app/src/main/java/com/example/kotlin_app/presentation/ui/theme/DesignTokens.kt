@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.theme
+package com.example.tickerwatch.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp

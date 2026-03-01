@@ -1,13 +1,13 @@
-package com.example.kotlin_app.presentation.fragments
+package com.example.tickerwatch.presentation.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.kotlin_app.common.Logger
+import com.example.tickerwatch.common.Logger
 import javax.inject.Inject
-import com.example.kotlin_app.databinding.FragmentStockBinding
+import com.example.tickerwatch.databinding.FragmentStockBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 

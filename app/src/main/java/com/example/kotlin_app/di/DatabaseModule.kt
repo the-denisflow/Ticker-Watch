@@ -1,11 +1,11 @@
-package com.example.kotlin_app.di
+package com.example.tickerwatch.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.kotlin_app.data.local.AppDatabase
-import com.example.kotlin_app.data.local.StockDao
-import com.example.kotlin_app.data.local.WatchlistDao
-import com.example.kotlin_app.data.repository.DbRepository
+import com.example.tickerwatch.data.local.AppDatabase
+import com.example.tickerwatch.data.local.StockDao
+import com.example.tickerwatch.data.local.WatchlistDao
+import com.example.tickerwatch.data.repository.DbRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

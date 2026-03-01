@@ -1,10 +1,10 @@
-package com.example.kotlin_app.presentation.ui.utils
+package com.example.tickerwatch.presentation.ui.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.ui.unit.dp
-import com.example.kotlin_app.presentation.ui.uimodels.TopIconData
+import com.example.tickerwatch.presentation.ui.uimodels.TopIconData
 
 object MainPageDimens {
     val iconSize = 35.dp

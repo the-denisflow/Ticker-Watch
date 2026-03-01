@@ -1,4 +1,4 @@
-package com.example.kotlin_app.data.remote.dto
+package com.example.tickerwatch.data.remote.dto
 
 data class SparkItemDto(
     val timestamp: List<Long>?,

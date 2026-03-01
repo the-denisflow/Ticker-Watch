@@ -1,9 +1,9 @@
-package com.example.kotlin_app.presentation.ui.components.chart.utils
+package com.example.tickerwatch.presentation.ui.components.chart.utils
 
 import android.content.Context
 import android.widget.TextView
-import com.example.kotlin_app.R
-import com.example.kotlin_app.domain.repository.model.Range
+import com.example.tickerwatch.R
+import com.example.tickerwatch.domain.repository.model.Range
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight

@@ -1,4 +1,4 @@
-package com.example.kotlin_app.data.local
+package com.example.tickerwatch.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
