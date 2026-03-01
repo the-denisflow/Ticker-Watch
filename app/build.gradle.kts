@@ -16,9 +16,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        val FinnhubApiKey ="d27mpphr01qr2iasjjg0d27mpphr01qr2iasjjgg"
-        buildConfigField ("String", "FINNHUB_API_KEY", "\"$FinnhubApiKey\"")
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
