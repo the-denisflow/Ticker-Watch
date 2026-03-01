@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.uimodels
+package com.example.tickerwatch.presentation.ui.uimodels
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

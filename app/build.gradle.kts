@@ -6,18 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.kotlin_app"
+    namespace = "com.example.tickerwatch"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.kotlin_app"
+        applicationId = "com.example.tickerwatch"
         minSdk = 35
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
-        val FinnhubApiKey ="d27mpphr01qr2iasjjg0d27mpphr01qr2iasjjgg"
-        buildConfigField ("String", "FINNHUB_API_KEY", "\"$FinnhubApiKey\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

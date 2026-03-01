@@ -1,4 +1,4 @@
-package com.example.kotlin_app.domain.network
+package com.example.tickerwatch.domain.network
 
 import kotlinx.coroutines.flow.StateFlow
 

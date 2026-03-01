@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.main
+package com.example.tickerwatch.presentation.ui.components.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,19 +39,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockList
-import com.example.kotlin_app.presentation.ui.components.portfolio.PortfolioScreen
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
-import com.example.kotlin_app.presentation.ui.components.watchlist.WatchlistScreen
-import com.example.kotlin_app.presentation.viewmodel.SortOption
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.LoadingState
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockList
+import com.example.tickerwatch.presentation.ui.components.portfolio.PortfolioScreen
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.presentation.ui.components.watchlist.WatchlistScreen
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.presentation.ui.theme.AppType
+import com.example.tickerwatch.presentation.viewmodel.SortOption
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -79,7 +80,7 @@ fun MainPage(
     var showSortSheet by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = AppColors.Surface,
         bottomBar = {
             MainBottomBar(selectedTab = selectedTab, onTabSelected = { selectedTab = it })
         }
@@ -151,8 +152,8 @@ private fun MarketsHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
-            .padding(start = 20.dp, end = 16.dp, top = 20.dp, bottom = 12.dp)
+            .background(AppColors.Surface)
+            .padding(start = AppDimens.Space20, end = AppDimens.Space16, top = AppDimens.Space20, bottom = AppDimens.Space12)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -161,20 +162,20 @@ private fun MarketsHeader(
         ) {
             Text(
                 text = "Markets",
-                fontSize = 28.sp,
+                fontSize = AppType.PageTitle,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF1C1C1E)
+                color = AppColors.Primary
             )
             SortButton(
                 label = if (sortOption == SortOption.DEFAULT) "Sort" else sortOption.label,
                 onClick = onSortClick
             )
         }
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(AppDimens.Space4))
         Text(
             text = "$stockCount assets · $today",
-            fontSize = 13.sp,
-            color = Color(0xFF8E8E93)
+            fontSize = AppType.Body,
+            color = AppColors.Secondary
         )
     }
 }
@@ -183,23 +184,23 @@ private fun MarketsHeader(
 private fun SortButton(label: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
-            .background(Color(0xFFF2F2F7), RoundedCornerShape(20.dp))
+            .background(AppColors.SurfaceVariant, RoundedCornerShape(AppDimens.CornerPill))
             .clickable { onClick() }
-            .padding(horizontal = 12.dp, vertical = 7.dp),
+            .padding(horizontal = AppDimens.Space12, vertical = AppDimens.Space7),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(AppDimens.Space4)
     ) {
         Icon(
             imageVector = Icons.Rounded.FilterList,
             contentDescription = "Sort",
-            modifier = Modifier.size(16.dp),
-            tint = Color(0xFF1C1C1E)
+            modifier = Modifier.size(AppDimens.IconXs),
+            tint = AppColors.Primary
         )
         Text(
             text = label,
-            fontSize = 13.sp,
+            fontSize = AppType.Body,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF1C1C1E)
+            color = AppColors.Primary
         )
     }
 }
@@ -216,21 +217,21 @@ private fun SortBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = Color.White,
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        containerColor = AppColors.Surface,
+        shape = RoundedCornerShape(topStart = AppDimens.CornerModal, topEnd = AppDimens.CornerModal)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 32.dp)
+                .padding(horizontal = AppDimens.Space20)
+                .padding(bottom = AppDimens.Space32)
         ) {
             Text(
                 text = "Sort by",
-                fontSize = 18.sp,
+                fontSize = AppType.SectionTitle,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF1C1C1E),
-                modifier = Modifier.padding(bottom = 8.dp)
+                color = AppColors.Primary,
+                modifier = Modifier.padding(bottom = AppDimens.Space8)
             )
             SortOption.entries.forEach { option ->
                 SortOptionRow(
@@ -261,41 +262,41 @@ private fun SortOptionRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(vertical = 12.dp),
+            .padding(vertical = AppDimens.Space12),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(AppDimens.Space12)
         ) {
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(AppDimens.IconXl)
                     .background(
-                        if (isSelected) Color(0xFF1C1C1E) else Color(0xFFF2F2F7),
-                        RoundedCornerShape(10.dp)
+                        if (isSelected) AppColors.Primary else AppColors.SurfaceVariant,
+                        RoundedCornerShape(AppDimens.CornerLg)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = if (isSelected) Color.White else Color(0xFF8E8E93)
+                    modifier = Modifier.size(AppDimens.IconSm),
+                    tint = if (isSelected) AppColors.Surface else AppColors.Secondary
                 )
             }
             Column {
                 Text(
                     text = option.label,
-                    fontSize = 15.sp,
+                    fontSize = AppType.BodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF1C1C1E)
+                    color = AppColors.Primary
                 )
                 Text(
                     text = description,
-                    fontSize = 12.sp,
-                    color = Color(0xFF8E8E93)
+                    fontSize = AppType.Caption,
+                    color = AppColors.Secondary
                 )
             }
         }
@@ -303,12 +304,12 @@ private fun SortOptionRow(
             Icon(
                 imageVector = Icons.Rounded.Check,
                 contentDescription = null,
-                tint = Color(0xFF1C1C1E),
-                modifier = Modifier.size(22.dp)
+                tint = AppColors.Primary,
+                modifier = Modifier.size(AppDimens.IconCheck)
             )
         }
     }
-    HorizontalDivider(color = Color(0xFFF2F2F7), thickness = 0.5.dp)
+    HorizontalDivider(color = AppColors.SurfaceVariant, thickness = AppDimens.DividerThickness)
 }
 
 @Composable
@@ -317,7 +318,7 @@ private fun MainBottomBar(
     onTabSelected: (BottomTab) -> Unit
 ) {
     NavigationBar(
-        containerColor = Color.White,
+        containerColor = AppColors.Surface,
         tonalElevation = 0.dp
     ) {
         BottomTab.entries.forEach { tab ->
@@ -328,14 +329,14 @@ private fun MainBottomBar(
                     Icon(imageVector = tab.icon, contentDescription = tab.label)
                 },
                 label = {
-                    Text(text = tab.label, fontSize = 10.sp)
+                    Text(text = tab.label, fontSize = AppType.NavLabel)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color(0xFF1C1C1E),
-                    selectedTextColor = Color(0xFF1C1C1E),
-                    unselectedIconColor = Color(0xFF8E8E93),
-                    unselectedTextColor = Color(0xFF8E8E93),
-                    indicatorColor = Color(0xFFF2F2F7)
+                    selectedIconColor = AppColors.Primary,
+                    selectedTextColor = AppColors.Primary,
+                    unselectedIconColor = AppColors.Secondary,
+                    unselectedTextColor = AppColors.Secondary,
+                    indicatorColor = AppColors.SurfaceVariant
                 )
             )
         }

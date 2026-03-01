@@ -1,4 +1,4 @@
-package com.example.kotlin_app
+package com.example.tickerwatch
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable
+package com.example.tickerwatch.presentation.ui.components.stockdetaildialog.composable
 
 import android.view.LayoutInflater
 import androidx.compose.animation.core.Spring
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -31,25 +30,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.kotlin_app.R
-import com.example.kotlin_app.common.tickers.CryptoEnum
-import com.example.kotlin_app.common.tickers.StockMarketEnum
-import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.domain.repository.model.IntervalRangeValidator
-import com.example.kotlin_app.domain.repository.model.PriceTrend
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.domain.repository.model.StockItem
-import com.example.kotlin_app.presentation.ui.components.chart.utils.plotDiagram
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.R
+import com.example.tickerwatch.common.tickers.CryptoEnum
+import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator
+import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockItem
+import com.example.tickerwatch.presentation.ui.components.chart.utils.plotDiagram
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockInfoRow
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.presentation.ui.theme.AppType
 import com.github.mikephil.charting.charts.LineChart
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,14 +61,14 @@ fun StockDetailsDialog(
     onDismiss: () -> Unit = {},
 ) {
     ModalBottomSheet(
-        scrimColor = Color.Black.copy(alpha = 0.3f),
+        scrimColor = AppColors.Scrim,
         dragHandle = { DialogHeader() },
         onDismissRequest = { onDismiss() },
     ) {
-        Box(Modifier.background(Color.White)) {
+        Box(Modifier.background(AppColors.Surface)) {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 currentSparkItem?.let { Header(displayedItem = it) }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(AppDimens.Space8))
 
                 val validPrices = remember(stockState.item.prices) {
                     stockState.item.prices.filter { !it.isNaN() }
@@ -88,7 +88,7 @@ fun StockDetailsDialog(
                     periodHigh = periodHigh,
                     periodLow = periodLow
                 )
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(AppDimens.Space24))
             }
         }
     }
@@ -99,11 +99,11 @@ private fun Header(displayedItem: SparkStockUiItem) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 16.dp),
+            .padding(horizontal = AppDimens.Space20, vertical = AppDimens.Space16),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        StockInfoRow(displayedItem, iconSize = 48.dp)
+        StockInfoRow(displayedItem, iconSize = AppDimens.IconDialog)
         StockPriceInfoColum(stock = displayedItem, subLabel = "from yesterday")
     }
 }
@@ -161,9 +161,9 @@ private fun StockChart(
         }
     )
 
-    val horizontalPadding = 16.dp
+    val horizontalPadding = AppDimens.Space16
     val buttonCount = IntervalRangeValidator.allRanges.size
-    val buttonWidth = (screenWidth - horizontalPadding * 2 - 8.dp) / buttonCount
+    val buttonWidth = (screenWidth - horizontalPadding * 2 - AppDimens.Space8) / buttonCount
     val selectedIndex = IntervalRangeValidator.allRanges.indexOf(displayedRange)
     val indicatorOffset by animateDpAsState(
         targetValue = buttonWidth * selectedIndex,
@@ -177,29 +177,27 @@ private fun StockChart(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = horizontalPadding, vertical = 12.dp)
+            .padding(horizontal = horizontalPadding, vertical = AppDimens.Space12)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             IntervalRangeValidator.allRanges.forEach { range ->
                 PeriodButton(
                     modifier = Modifier
                         .width(buttonWidth)
-                        .height(36.dp),
+                        .height(AppDimens.ChartPeriodButtonHeight),
                     isSelected = range == displayedRange,
                     text = range.value,
                     onClick = { onRangeChange(range) }
                 )
             }
         }
-        // animated blue underline
-        val lineWidth = 28.dp
         Box(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .offset(x = indicatorOffset + (buttonWidth - lineWidth) / 2)
-                .width(lineWidth)
-                .height(2.dp)
-                .background(Color(0xFF007AFF), shape = RoundedCornerShape(1.dp))
+                .offset(x = indicatorOffset + (buttonWidth - AppDimens.ChartUnderlineWidth) / 2)
+                .width(AppDimens.ChartUnderlineWidth)
+                .height(AppDimens.ChartUnderlineHeight)
+                .background(AppColors.Accent, shape = RoundedCornerShape(AppDimens.CornerChartUnderline))
         )
     }
 }
@@ -212,9 +210,9 @@ private fun PeriodPerformanceRow(
     periodAbsoluteChange: Double
 ) {
     val (arrow, trendColor, bg) = when (trend) {
-        PriceTrend.UP -> Triple("▲", Color(0xFF2E7D32), Color(0xFFE8F5E9))
-        PriceTrend.DOWN -> Triple("▼", Color(0xFFC62828), Color(0xFFFFEBEE))
-        PriceTrend.NEUTRAL -> Triple("–", Color(0xFF8E8E93), Color(0xFFF2F2F7))
+        PriceTrend.UP -> Triple("▲", AppColors.TrendUp, AppColors.TrendUpSurface)
+        PriceTrend.DOWN -> Triple("▼", AppColors.TrendDown, AppColors.TrendDownSurface)
+        PriceTrend.NEUTRAL -> Triple("–", AppColors.Secondary, AppColors.SurfaceVariant)
     }
     val sign = if (periodAbsoluteChange >= 0) "+" else "-"
     val absFormatted = "%.2f".format(kotlin.math.abs(periodAbsoluteChange))
@@ -223,31 +221,31 @@ private fun PeriodPerformanceRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .padding(top = 12.dp, bottom = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(horizontal = AppDimens.Space24)
+            .padding(top = AppDimens.Space12, bottom = AppDimens.Space4),
+        horizontalArrangement = Arrangement.spacedBy(AppDimens.Space10),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = price,
-            fontSize = 18.sp,
+            fontSize = AppType.SectionTitle,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color = AppColors.Strong
         )
         Text(
             text = formattedAmount,
-            fontSize = 18.sp,
+            fontSize = AppType.SectionTitle,
             fontWeight = FontWeight.SemiBold,
             color = trendColor
         )
         Box(
             modifier = Modifier
-                .background(bg, shape = RoundedCornerShape(6.dp))
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .background(bg, shape = RoundedCornerShape(AppDimens.CornerSm))
+                .padding(horizontal = AppDimens.Space8, vertical = AppDimens.Space4)
         ) {
             Text(
                 text = "$arrow $periodPercent",
-                fontSize = 13.sp,
+                fontSize = AppType.Body,
                 fontWeight = FontWeight.SemiBold,
                 color = trendColor
             )
@@ -283,33 +281,33 @@ private fun StockDetailsSection(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 8.dp)
-            .background(Color(0xFFF2F2F7), shape = RoundedCornerShape(12.dp))
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = AppDimens.Space20, vertical = AppDimens.Space8)
+            .background(AppColors.SurfaceVariant, shape = RoundedCornerShape(AppDimens.CornerCard))
+            .padding(horizontal = AppDimens.Space16)
     ) {
         rows.forEachIndexed { index, (label, value) ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = AppDimens.Space12),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = label,
-                    fontSize = 14.sp,
+                    fontSize = AppType.BodyMedium,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF8E8E93)
+                    color = AppColors.Secondary
                 )
                 Text(
                     text = value,
-                    fontSize = 14.sp,
+                    fontSize = AppType.BodyMedium,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFF1C1C1E)
+                    color = AppColors.Primary
                 )
             }
             if (index < rows.lastIndex) {
-                HorizontalDivider(thickness = 0.5.dp, color = Color(0xFFE5E5EA))
+                HorizontalDivider(thickness = AppDimens.DividerThickness, color = AppColors.DividerSubtle)
             }
         }
     }
@@ -330,20 +328,20 @@ private fun StockMetaRow(ticker: Ticker) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = AppDimens.Space20, vertical = AppDimens.Space8),
+        horizontalArrangement = Arrangement.spacedBy(AppDimens.Space8)
     ) {
         chips.forEach { label ->
             Box(
                 modifier = Modifier
-                    .background(Color(0xFFF2F2F7), shape = RoundedCornerShape(20.dp))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .background(AppColors.SurfaceVariant, shape = RoundedCornerShape(AppDimens.CornerPill))
+                    .padding(horizontal = AppDimens.Space12, vertical = AppDimens.Space6)
             ) {
                 Text(
                     text = label,
-                    fontSize = 12.sp,
+                    fontSize = AppType.Caption,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFF3C3C43)
+                    color = AppColors.ChipContent
                 )
             }
         }
@@ -368,9 +366,9 @@ private fun PeriodButton(
         Text(
             text = text,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            color = if (isSelected) Color(0xFF007AFF) else Color(0xFF8E8E93),
+            color = if (isSelected) AppColors.Accent else AppColors.Secondary,
             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-            fontSize = 13.sp
+            fontSize = AppType.Body
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.fragments
+package com.example.tickerwatch.presentation.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +11,12 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.kotlin_app.common.Logger
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.LoadingState
-import com.example.kotlin_app.presentation.ui.components.main.MainPage
-import com.example.kotlin_app.presentation.viewmodel.MarketViewModel
-import com.example.kotlin_app.presentation.viewmodel.SortOption
+import com.example.tickerwatch.common.Logger
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.LoadingState
+import com.example.tickerwatch.presentation.ui.components.main.MainPage
+import com.example.tickerwatch.presentation.viewmodel.MarketViewModel
+import com.example.tickerwatch.presentation.viewmodel.SortOption
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

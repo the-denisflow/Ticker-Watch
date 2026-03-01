@@ -1,9 +1,9 @@
-package com.example.kotlin_app.presentation.ui.components.chart.utils
+package com.example.tickerwatch.presentation.ui.components.chart.utils
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import com.example.kotlin_app.domain.repository.model.PriceTrend
-import com.example.kotlin_app.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.Range
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry

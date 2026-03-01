@@ -1,10 +1,10 @@
-package com.example.kotlin_app.data.remote.mappers
+package com.example.tickerwatch.data.remote.mappers
 
-import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.data.remote.dto.SparkItemDto
-import com.example.kotlin_app.domain.repository.model.PriceProgressTrend
-import com.example.kotlin_app.domain.repository.model.PriceTrend
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.data.remote.dto.SparkItemDto
+import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
+import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import kotlin.math.abs
 
 fun SparkItemDto.toUiModel(ticker: Ticker): SparkStockUiItem? {

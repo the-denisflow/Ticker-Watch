@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable
+package com.example.tickerwatch.presentation.ui.components.stockdetaildialog.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

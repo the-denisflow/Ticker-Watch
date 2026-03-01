@@ -1,11 +1,11 @@
-package com.example.kotlin_app.data.repository
+package com.example.tickerwatch.data.repository
 
-import com.example.kotlin_app.common.Logger
-import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.data.remote.api.YahooApi
-import com.example.kotlin_app.domain.repository.YahooRepository
-import com.example.kotlin_app.data.remote.dto.SparkItemDto
-import com.example.kotlin_app.domain.repository.model.YahooResultDto
+import com.example.tickerwatch.common.Logger
+import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.data.remote.api.YahooApi
+import com.example.tickerwatch.domain.repository.YahooRepository
+import com.example.tickerwatch.data.remote.dto.SparkItemDto
+import com.example.tickerwatch.domain.repository.model.YahooResultDto
 import javax.inject.Inject
 
 class YahooRepositoryImpl @Inject constructor(

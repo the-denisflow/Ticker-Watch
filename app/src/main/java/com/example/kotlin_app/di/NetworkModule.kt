@@ -1,13 +1,13 @@
-package com.example.kotlin_app.di
+package com.example.tickerwatch.di
 
 import android.content.Context
-import com.example.kotlin_app.common.Logger
-import com.example.kotlin_app.common.LoggerImpl
-import com.example.kotlin_app.data.remote.api.YahooApi
-import com.example.kotlin_app.framework.network.NetworkMonitorImpl
-import com.example.kotlin_app.data.repository.YahooRepositoryImpl
-import com.example.kotlin_app.domain.network.NetworkMonitor
-import com.example.kotlin_app.domain.repository.YahooRepository
+import com.example.tickerwatch.common.Logger
+import com.example.tickerwatch.common.LoggerImpl
+import com.example.tickerwatch.data.remote.api.YahooApi
+import com.example.tickerwatch.framework.network.NetworkMonitorImpl
+import com.example.tickerwatch.data.repository.YahooRepositoryImpl
+import com.example.tickerwatch.domain.network.NetworkMonitor
+import com.example.tickerwatch.domain.repository.YahooRepository
 
 import dagger.Module
 import dagger.Provides
@@ -16,7 +16,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -37,10 +36,6 @@ object NetworkModule {
     fun provideYahooRepository(api: YahooApi, logger: Logger): YahooRepository {
         return YahooRepositoryImpl(api, logger)
     }
-
-    @Provides
-    @Named("finnhubToken")
-    fun provideFinnhubToken(): String = com.example.kotlin_app.BuildConfig.FINNHUB_API_KEY
 
     @Provides
     @Singleton

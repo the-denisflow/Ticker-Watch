@@ -1,11 +1,11 @@
-package com.example.kotlin_app.data.local
+package com.example.tickerwatch.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.domain.repository.model.PriceTrend
-import com.example.kotlin_app.domain.repository.model.PriceProgressTrend
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

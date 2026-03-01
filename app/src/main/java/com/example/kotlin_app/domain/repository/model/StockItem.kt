@@ -1,8 +1,8 @@
-package com.example.kotlin_app.domain.repository.model
+package com.example.tickerwatch.domain.repository.model
 
 import androidx.compose.runtime.Immutable
-import com.example.kotlin_app.common.tickers.InvalidTicker
-import com.example.kotlin_app.common.tickers.Ticker
+import com.example.tickerwatch.common.tickers.InvalidTicker
+import com.example.tickerwatch.common.tickers.Ticker
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}
 

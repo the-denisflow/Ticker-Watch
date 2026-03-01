@@ -1,4 +1,4 @@
-package com.example.kotlin_app.common
+package com.example.tickerwatch.common
 
 import android.util.Log
 import javax.inject.Inject

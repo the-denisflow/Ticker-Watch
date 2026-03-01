@@ -1,8 +1,8 @@
-package com.example.kotlin_app.data.repository
+package com.example.tickerwatch.data.repository
 
-import com.example.kotlin_app.data.local.SparkStockEntity
-import com.example.kotlin_app.data.local.StockDao
-import com.example.kotlin_app.data.local.StockEntity
+import com.example.tickerwatch.data.local.SparkStockEntity
+import com.example.tickerwatch.data.local.StockDao
+import com.example.tickerwatch.data.local.StockEntity
 import javax.inject.Inject
 
 class DbRepository @Inject constructor(private val stockDao: StockDao) {

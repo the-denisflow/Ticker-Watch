@@ -1,7 +1,7 @@
-package com.example.kotlin_app.common.tickers
+package com.example.tickerwatch.common.tickers
 
 import androidx.annotation.DrawableRes
-import com.example.kotlin_app.R
+import com.example.tickerwatch.R
 sealed interface Ticker {
     val tickerName: String
     val symbol: String

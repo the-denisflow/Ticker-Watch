@@ -1,4 +1,4 @@
-package com.example.kotlin_app.domain.repository.model
+package com.example.tickerwatch.domain.repository.model
 
 enum class Interval(val value: String) {
     ONE_MIN("1m"),

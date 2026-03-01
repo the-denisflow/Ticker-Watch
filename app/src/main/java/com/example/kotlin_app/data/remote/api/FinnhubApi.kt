@@ -1,4 +1,4 @@
-package com.example.kotlin_app.data.remote.api
+package com.example.tickerwatch.data.remote.api
 
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,10 +1,10 @@
-package com.example.kotlin_app.domain.use_case
+package com.example.tickerwatch.domain.use_case
 
-import com.example.kotlin_app.common.Logger
-import com.example.kotlin_app.common.tickers.Ticker
-import com.example.kotlin_app.domain.repository.YahooRepository
-import com.example.kotlin_app.data.remote.mappers.toUiModel
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.common.Logger
+import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.domain.repository.YahooRepository
+import com.example.tickerwatch.data.remote.mappers.toUiModel
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import javax.inject.Inject
 
 class GetStocksBatch @Inject constructor(

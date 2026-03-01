@@ -1,4 +1,4 @@
-package com.example.kotlin_app.presentation.ui.components.portfolio
+package com.example.tickerwatch.presentation.ui.components.portfolio
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,14 +34,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.kotlin_app.domain.repository.model.PriceTrend
-import com.example.kotlin_app.domain.repository.model.Range
-import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable.StockDetailsDialog
-import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.composable.StockDetailsDialog
+import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.presentation.ui.theme.AppColors
+import com.example.tickerwatch.presentation.ui.theme.AppDimens
+import com.example.tickerwatch.presentation.ui.theme.AppType
 
 private const val MOCK_SHARES = 10
 
@@ -92,20 +93,20 @@ private fun PortfolioContent(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(AppColors.Surface)
         ) {
             item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White)
-                        .padding(start = 20.dp, end = 16.dp, top = 20.dp, bottom = 4.dp)
+                        .background(AppColors.Surface)
+                        .padding(start = AppDimens.Space20, end = AppDimens.Space16, top = AppDimens.Space20, bottom = AppDimens.Space4)
                 ) {
                     Text(
                         text = "Portfolio",
-                        fontSize = 28.sp,
+                        fontSize = AppType.PageTitle,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1C1C1E)
+                        color = AppColors.Primary
                     )
                 }
             }
@@ -119,10 +120,10 @@ private fun PortfolioContent(
             item {
                 Text(
                     text = "Holdings",
-                    fontSize = 18.sp,
+                    fontSize = AppType.SectionTitle,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1C1C1E),
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+                    color = AppColors.Primary,
+                    modifier = Modifier.padding(horizontal = AppDimens.Space20, vertical = AppDimens.Space12)
                 )
             }
             items(holdings, key = { it.symbol }) { stock ->
@@ -134,7 +135,7 @@ private fun PortfolioContent(
                     }
                 )
             }
-            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item { Spacer(modifier = Modifier.height(AppDimens.Space24)) }
         }
 
         if (itemIsSelected) {
@@ -153,48 +154,48 @@ private fun SummaryCard(totalValue: Double, dailyChange: Double, dailyPct: Doubl
     val isUp = dailyChange >= 0
     val arrow = if (isUp) "▲" else "▼"
     val gradientColors = if (isUp)
-        listOf(Color(0xFF1A6B3C), Color(0xFF2E7D32))
+        listOf(AppColors.PortfolioGainDark, AppColors.PortfolioGainLight)
     else
-        listOf(Color(0xFF9B1B1B), Color(0xFFC62828))
+        listOf(AppColors.PortfolioLossDark, AppColors.PortfolioLossLight)
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 8.dp)
+            .padding(horizontal = AppDimens.Space20, vertical = AppDimens.Space8)
             .background(
                 brush = Brush.linearGradient(gradientColors),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(AppDimens.CornerPill)
             )
-            .padding(24.dp)
+            .padding(AppDimens.Space24)
     ) {
         Column {
             Text(
                 text = "Total Value",
-                fontSize = 13.sp,
-                color = Color.White.copy(alpha = 0.7f)
+                fontSize = AppType.Body,
+                color = AppColors.OnGradientCaption
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(AppDimens.Space8))
             Text(
                 text = "$%.2f".format(totalValue),
-                fontSize = 32.sp,
+                fontSize = AppType.DisplayLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = AppColors.OnGradient
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(AppDimens.Space10))
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(AppDimens.Space8),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
-                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                        .background(AppColors.OnGradientOverlay, RoundedCornerShape(AppDimens.CornerMd))
+                        .padding(horizontal = AppDimens.Space10, vertical = AppDimens.Space4)
                 ) {
                     Text(
                         text = "$arrow ${"%.2f".format(kotlin.math.abs(dailyPct))}%",
-                        fontSize = 13.sp,
+                        fontSize = AppType.Body,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        color = AppColors.OnGradient
                     )
                 }
                 Text(
@@ -202,15 +203,15 @@ private fun SummaryCard(totalValue: Double, dailyChange: Double, dailyPct: Doubl
                         if (isUp) "+" else "-",
                         kotlin.math.abs(dailyChange)
                     ),
-                    fontSize = 13.sp,
-                    color = Color.White.copy(alpha = 0.85f)
+                    fontSize = AppType.Body,
+                    color = AppColors.OnGradientMuted
                 )
             }
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(AppDimens.Space6))
             Text(
                 text = "$MOCK_SHARES shares per position · Simulated",
-                fontSize = 11.sp,
-                color = Color.White.copy(alpha = 0.5f)
+                fontSize = AppType.Badge,
+                color = AppColors.OnGradientDisabled
             )
         }
     }
@@ -226,9 +227,9 @@ private fun HoldingRow(stock: SparkStockUiItem, onClick: () -> Unit) {
     val dailyChange = currentValue * signedPct / 100.0
 
     val (trendColor, arrow) = when (stock.trend.progressTrend) {
-        PriceTrend.UP -> Pair(Color(0xFF2E7D32), "▲")
-        PriceTrend.DOWN -> Pair(Color(0xFFC62828), "▼")
-        PriceTrend.NEUTRAL -> Pair(Color(0xFF8E8E93), "–")
+        PriceTrend.UP -> Pair(AppColors.TrendUp, "▲")
+        PriceTrend.DOWN -> Pair(AppColors.TrendDown, "▼")
+        PriceTrend.NEUTRAL -> Pair(AppColors.Secondary, "–")
     }
 
     Column(
@@ -239,13 +240,13 @@ private fun HoldingRow(stock: SparkStockUiItem, onClick: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 14.dp),
+                .padding(horizontal = AppDimens.Space20, vertical = AppDimens.Space14),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(AppDimens.Space12),
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
@@ -253,43 +254,43 @@ private fun HoldingRow(stock: SparkStockUiItem, onClick: () -> Unit) {
                         ?: rememberAsyncImagePainter(stock.ticker.urlLogo),
                     contentDescription = stock.ticker.tickerName,
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(AppDimens.IconXl)
                         .clip(CircleShape),
                     tint = Color.Unspecified
                 )
                 Column {
                     Text(
                         text = stock.ticker.tickerName,
-                        fontSize = 15.sp,
+                        fontSize = AppType.BodyLarge,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF1C1C1E)
+                        color = AppColors.Primary
                     )
                     Text(
                         text = "$MOCK_SHARES shares · ${stock.ticker.symbol}",
-                        fontSize = 12.sp,
-                        color = Color(0xFF8E8E93)
+                        fontSize = AppType.Caption,
+                        color = AppColors.Secondary
                     )
                 }
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = "$%.2f".format(currentValue),
-                    fontSize = 15.sp,
+                    fontSize = AppType.BodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF1C1C1E)
+                    color = AppColors.Primary
                 )
                 Text(
                     text = "$arrow ${"%.2f".format(kotlin.math.abs(dailyChange))}",
-                    fontSize = 12.sp,
+                    fontSize = AppType.Caption,
                     fontWeight = FontWeight.Medium,
                     color = trendColor
                 )
             }
         }
         HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 20.dp),
-            thickness = 0.5.dp,
-            color = Color(0xFFEEEEEE)
+            modifier = Modifier.padding(horizontal = AppDimens.Space20),
+            thickness = AppDimens.DividerThickness,
+            color = AppColors.Divider
         )
     }
 }
@@ -302,33 +303,33 @@ private fun PortfolioEmptyState() {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(32.dp)
+            modifier = Modifier.padding(AppDimens.Space32)
         ) {
             Box(
                 modifier = Modifier
-                    .size(72.dp)
-                    .background(Color(0xFFF2F2F7), CircleShape),
+                    .size(AppDimens.EmptyStateIconBox)
+                    .background(AppColors.SurfaceVariant, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Rounded.PieChart,
                     contentDescription = null,
-                    modifier = Modifier.size(36.dp),
-                    tint = Color(0xFFBEBEC0)
+                    modifier = Modifier.size(AppDimens.IconLg),
+                    tint = AppColors.Tertiary
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(AppDimens.Space16))
             Text(
                 text = "No holdings yet",
-                fontSize = 18.sp,
+                fontSize = AppType.SectionTitle,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF1C1C1E)
+                color = AppColors.Primary
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(AppDimens.Space6))
             Text(
                 text = "Add stocks to your watchlist to\nsee them here as portfolio holdings",
-                fontSize = 14.sp,
-                color = Color(0xFF8E8E93),
+                fontSize = AppType.BodyMedium,
+                color = AppColors.Secondary,
                 textAlign = TextAlign.Center
             )
         }
