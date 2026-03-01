@@ -1,20 +1,24 @@
 package com.example.kotlin_app.domain.repository.model
 
+import androidx.compose.runtime.Immutable
 import com.example.kotlin_app.common.tickers.InvalidTicker
 import com.example.kotlin_app.common.tickers.Ticker
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}
 
+@Immutable
 data class PriceProgressTrend(
     val progressTrend: PriceTrend,
     val progressPercent: String
 )
 
+@Immutable
 data class SparkStockUiItem(
     val symbol: String,
     val close: Double,
     val trend: PriceProgressTrend,
-    val ticker: Ticker
+    val ticker: Ticker,
+    val prices: List<Double> = emptyList()
 )
 
 data class StockItem (val ticker: Ticker,
@@ -23,19 +27,28 @@ data class StockItem (val ticker: Ticker,
                       var price: Double,
                       val logoUrl: String?,
                       val logoRes: Int?,
-                      var prices: List<Double> = emptyList<Double>(),
-                      var timestamp: List<Int> = emptyList<Int>())
+                      var prices: List<Double> = emptyList(),
+                      var timestamp: List<Int> = emptyList(),
+                      val previousClose: Double? = null,
+                      val volume: Long? = null,
+                      val exchangeName: String? = null,
+                      val currency: String? = null)
 
 fun YahooResultDto.toStockItem(ticker: Ticker, logoUrl: String? = null, logoRes: Int? = null): StockItem {
+    val meta = chart.result.firstOrNull()?.meta
     return StockItem(
         ticker = ticker,
         logoUrl = logoUrl,
         logoRes = logoRes,
-        longName = chart.result.first().meta.longName,
-        shortName =  chart.result.first().meta.shortName,
-        price = chart.result.firstOrNull()?.meta?.regularMarketPrice ?: 0.0,
+        longName = meta?.longName ?: "",
+        shortName = meta?.shortName ?: "",
+        price = meta?.regularMarketPrice ?: 0.0,
         prices = chart.result.firstOrNull()?.indicators?.quote?.firstOrNull()?.close ?: emptyList(),
-        timestamp = chart.result.firstOrNull()?.timestamp ?: emptyList()
+        timestamp = chart.result.firstOrNull()?.timestamp ?: emptyList(),
+        previousClose = meta?.chartPreviousClose,
+        volume = meta?.regularMarketVolume,
+        exchangeName = meta?.fullExchangeName,
+        currency = meta?.currency
     )
 }
 

@@ -16,4 +16,10 @@ interface StockDao {
 
     @Delete
     suspend fun delete(stock: StockEntity)
+
+    @Query("SELECT * FROM SparkStockEntity")
+    suspend fun getAllSpark(): List<SparkStockEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllSpark(stocks: List<SparkStockEntity>)
 }

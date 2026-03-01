@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ticker Watch logo — three ascending bullish candlesticks.
+    Designed to render on the green splash icon background (#3DDC84).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Candlestick 1 — left, lowest -->
+    <!-- Wick -->
+    <path
+        android:pathData="M30,58 L30,86"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+    <!-- Body (bullish = close above open) -->
+    <path
+        android:pathData="M22,66 Q22,64 24,64 L36,64 Q38,64 38,66 L38,80 Q38,82 36,82 L24,82 Q22,82 22,80 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Candlestick 2 — center, mid height -->
+    <!-- Wick -->
+    <path
+        android:pathData="M54,38 L54,70"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+    <!-- Body -->
+    <path
+        android:pathData="M46,46 Q46,44 48,44 L60,44 Q62,44 62,46 L62,62 Q62,64 60,64 L48,64 Q46,64 46,62 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Candlestick 3 — right, highest -->
+    <!-- Wick -->
+    <path
+        android:pathData="M78,20 L78,50"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+    <!-- Body -->
+    <path
+        android:pathData="M70,26 Q70,24 72,24 L84,24 Q86,24 86,26 L86,42 Q86,44 84,44 L72,44 Q70,44 70,42 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Baseline — horizontal ground line -->
+    <path
+        android:pathData="M18,90 L90,90"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.5" />
+
+    <!-- Upward trend arrow — connects the body tops -->
+    <path
+        android:pathData="M30,64 L54,44 L78,24"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeAlpha="0.4" />
+
+</vector>
