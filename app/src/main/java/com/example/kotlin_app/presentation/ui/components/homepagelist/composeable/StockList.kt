@@ -21,9 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.kotlin_app.common.tickers.CryptoEnum
 import com.example.kotlin_app.common.tickers.Sector
 import com.example.kotlin_app.common.tickers.StockMarketEnum
@@ -32,6 +29,9 @@ import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.presentation.ui.components.shared.StockUiItem
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.composable.StockDetailsDialog
 import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.kotlin_app.presentation.ui.theme.AppColors
+import com.example.kotlin_app.presentation.ui.theme.AppDimens
+import com.example.kotlin_app.presentation.ui.theme.AppType
 
 private enum class SectorFilter(val label: String) {
     ALL("All"),
@@ -68,7 +68,7 @@ fun StockList(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.White),
+                .background(color = AppColors.Surface),
         ) {
             item {
                 SectorFilterChips(
@@ -108,20 +108,20 @@ private fun SectorFilterChips(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = AppDimens.Space16, vertical = AppDimens.Space8),
+        horizontalArrangement = Arrangement.spacedBy(AppDimens.Space8)
     ) {
         SectorFilter.entries.forEach { filter ->
             FilterChip(
                 selected = filter == activeFilter,
                 onClick = { onFilterSelected(filter) },
-                label = { Text(text = filter.label, fontSize = 13.sp) },
-                shape = RoundedCornerShape(20.dp),
+                label = { Text(text = filter.label, fontSize = AppType.Body) },
+                shape = RoundedCornerShape(AppDimens.CornerPill),
                 colors = FilterChipDefaults.filterChipColors(
-                    containerColor = Color(0xFFF2F2F7),
-                    labelColor = Color(0xFF8E8E93),
-                    selectedContainerColor = Color(0xFF1C1C1E),
-                    selectedLabelColor = Color.White
+                    containerColor = AppColors.SurfaceVariant,
+                    labelColor = AppColors.Secondary,
+                    selectedContainerColor = AppColors.Primary,
+                    selectedLabelColor = AppColors.Surface
                 ),
                 border = null
             )

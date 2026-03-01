@@ -18,12 +18,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.example.kotlin_app.domain.repository.model.SparkStockUiItem
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.MiniSparkline
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockInfoRow
 import com.example.kotlin_app.presentation.ui.components.homepagelist.composeable.StockPriceInfoColum
+import com.example.kotlin_app.presentation.ui.theme.AppColors
+import com.example.kotlin_app.presentation.ui.theme.AppDimens
 
 @Composable
 fun StockUiItem(
@@ -36,9 +36,9 @@ fun StockUiItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp)
+                .height(AppDimens.StockRowHeight)
                 .clickable { onClickListener() }
-                .padding(start = 16.dp, end = 4.dp),
+                .padding(start = AppDimens.Space16, end = AppDimens.Space4),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -47,27 +47,27 @@ fun StockUiItem(
                 prices = stock.prices,
                 trend = stock.trend.progressTrend,
                 modifier = Modifier
-                    .width(72.dp)
-                    .height(32.dp)
-                    .padding(horizontal = 4.dp)
+                    .width(AppDimens.SparklineWidth)
+                    .height(AppDimens.SparklineHeight)
+                    .padding(horizontal = AppDimens.Space4)
             )
             StockPriceInfoColum(stock = stock)
             IconButton(
                 onClick = onToggleWatchlist,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(AppDimens.IconXl)
             ) {
                 Icon(
                     imageVector = if (isInWatchlist) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
                     contentDescription = if (isInWatchlist) "Remove from watchlist" else "Add to watchlist",
-                    tint = if (isInWatchlist) Color(0xFF1C1C1E) else Color(0xFFBEBEC0),
-                    modifier = Modifier.size(20.dp)
+                    tint = if (isInWatchlist) AppColors.Primary else AppColors.Tertiary,
+                    modifier = Modifier.size(AppDimens.IconSm)
                 )
             }
         }
         HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            thickness = 0.5.dp,
-            color = Color(0xFFEEEEEE)
+            modifier = Modifier.padding(horizontal = AppDimens.Space16),
+            thickness = AppDimens.DividerThickness,
+            color = AppColors.Divider
         )
     }
 }
