@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -32,9 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,8 +88,6 @@ fun StockDetailsDialog(
                     periodHigh = periodHigh,
                     periodLow = periodLow
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                ShareRow()
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
@@ -109,33 +105,6 @@ private fun Header(displayedItem: SparkStockUiItem) {
     ) {
         StockInfoRow(displayedItem, iconSize = 48.dp)
         StockPriceInfoColum(stock = displayedItem, subLabel = "from yesterday")
-    }
-}
-
-@Composable
-private fun ShareRow() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .background(Color(0xFFF2F2F7), shape = RoundedCornerShape(12.dp))
-            .clickable { /* TODO: share action */ }
-            .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Image(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_share),
-            contentDescription = "share",
-            modifier = Modifier.size(18.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "Share",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF1C1C1E)
-        )
     }
 }
 

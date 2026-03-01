@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.kotlin_app.data.local.AppDatabase
 import com.example.kotlin_app.data.local.StockDao
+import com.example.kotlin_app.data.local.WatchlistDao
 import com.example.kotlin_app.data.repository.DbRepository
 import dagger.Module
 import dagger.Provides
@@ -27,6 +28,10 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideStockDao(database: AppDatabase) = database.stockDao()
+
+    @Provides
+    @Singleton
+    fun provideWatchlistDao(database: AppDatabase): WatchlistDao = database.watchlistDao()
 
     @Provides
     @Singleton

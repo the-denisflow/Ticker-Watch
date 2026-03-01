@@ -2,6 +2,9 @@ package com.example.kotlin_app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.kotlin_app.common.Logger
+import com.example.kotlin_app.common.tickers.StockMarketEnum
+import com.example.kotlin_app.data.local.WatchlistDao
+import com.example.kotlin_app.data.local.WatchlistEntity
 import com.example.kotlin_app.domain.repository.model.StockItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,15 +21,24 @@ import com.example.kotlin_app.presentation.ui.components.stockdetaildialog.state
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+
+enum class SortOption(val label: String) {
+    DEFAULT("Default"),
+    NAME_ASC("Name A–Z"),
+    PRICE_DESC("Price ↓"),
+    CHANGE_DESC("Change %"),
+    SECTOR("By Sector"),
+}
 
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
     private val getStockItem: GetStockItem,
-    private val syncMarketStocks: SyncMarketStocks
+    private val syncMarketStocks: SyncMarketStocks,
+    private val watchlistDao: WatchlistDao
 ) : ViewModel() {
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
@@ -36,7 +48,37 @@ class MarketViewModel @Inject constructor(
     private var syncJob: Job? = null
 
     private val _batchStocks = MutableStateFlow<List<SparkStockUiItem>>(emptyList())
-    val batchStocks: StateFlow<List<SparkStockUiItem>> = _batchStocks.asStateFlow()
+    val batchStocks: StateFlow<List<SparkStockUiItem>> = _batchStocks
+
+    private val _sortOption = MutableStateFlow(SortOption.DEFAULT)
+    val sortOption: StateFlow<SortOption> = _sortOption
+
+    // Reactive: emits every time the DB watchlist table changes
+    val watchlistSymbols: StateFlow<Set<String>> = watchlistDao
+        .getAllSymbols()
+        .map { it.toSet() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
+
+    val sortedStocks: StateFlow<List<SparkStockUiItem>> = combine(
+        _batchStocks, _sortOption
+    ) { stocks, sort ->
+        when (sort) {
+            SortOption.DEFAULT -> stocks
+            SortOption.NAME_ASC -> stocks.sortedBy { it.ticker.tickerName }
+            SortOption.PRICE_DESC -> stocks.sortedByDescending { it.close }
+            SortOption.CHANGE_DESC -> stocks.sortedByDescending {
+                it.trend.progressPercent
+                    .replace("%", "").replace("+", "")
+                    .toDoubleOrNull() ?: 0.0
+            }
+            SortOption.SECTOR -> stocks.sortedWith(
+                compareBy(
+                    { (it.ticker as? StockMarketEnum)?.sector?.ordinal ?: Int.MAX_VALUE },
+                    { it.ticker.tickerName }
+                )
+            )
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val currentSparkItem: StateFlow<SparkStockUiItem?> = combine(
         _currentTickerSymbol,
@@ -66,6 +108,20 @@ class MarketViewModel @Inject constructor(
         syncJob = viewModelScope.launch(Dispatchers.IO) {
             syncMarketStocks().collect { stocks ->
                 _batchStocks.value = stocks
+            }
+        }
+    }
+
+    fun setSortOption(sort: SortOption) {
+        _sortOption.value = sort
+    }
+
+    fun toggleWatchlist(symbol: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (symbol in watchlistSymbols.value) {
+                watchlistDao.delete(symbol)
+            } else {
+                watchlistDao.insert(WatchlistEntity(symbol))
             }
         }
     }

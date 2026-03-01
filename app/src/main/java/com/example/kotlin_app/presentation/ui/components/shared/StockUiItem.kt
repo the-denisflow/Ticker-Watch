@@ -7,8 +7,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +28,9 @@ import com.example.kotlin_app.presentation.ui.components.homepagelist.composeabl
 @Composable
 fun StockUiItem(
     stock: SparkStockUiItem,
-    onClickListener: () -> Unit = {}
+    isInWatchlist: Boolean = false,
+    onClickListener: () -> Unit = {},
+    onToggleWatchlist: () -> Unit = {}
 ) {
     Column {
         Row(
@@ -30,7 +38,7 @@ fun StockUiItem(
                 .fillMaxWidth()
                 .height(72.dp)
                 .clickable { onClickListener() }
-                .padding(horizontal = 16.dp),
+                .padding(start = 16.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -44,6 +52,17 @@ fun StockUiItem(
                     .padding(horizontal = 4.dp)
             )
             StockPriceInfoColum(stock = stock)
+            IconButton(
+                onClick = onToggleWatchlist,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Icon(
+                    imageVector = if (isInWatchlist) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                    contentDescription = if (isInWatchlist) "Remove from watchlist" else "Add to watchlist",
+                    tint = if (isInWatchlist) Color(0xFF1C1C1E) else Color(0xFFBEBEC0),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp),
