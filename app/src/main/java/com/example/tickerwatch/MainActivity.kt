@@ -2,8 +2,6 @@ package com.example.tickerwatch
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.tickerwatch.common.Logger
 import com.example.tickerwatch.presentation.fragments.StockListFragment
@@ -16,7 +14,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
         super.onCreate(savedInstanceState)
         // Ensure status bar icons are dark so they are visible on the white background
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
