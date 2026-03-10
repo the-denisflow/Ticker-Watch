@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.tickerwatch.common.tickers.CryptoEnum
+import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.PriceTrend
@@ -40,9 +41,11 @@ import com.example.tickerwatch.presentation.ui.theme.AppType
 fun StockInfoRow(stock: SparkStockUiItem, iconSize: Dp = AppDimens.IconStockRow, modifier: Modifier = Modifier) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Icon(
-            painter = stock.ticker.logoRes?.let {
-                painterResource(id = it)
-            } ?: rememberAsyncImagePainter(stock.ticker.urlLogo),
+            painter = when (val logo = stock.ticker.logo) {
+                is LogoResource.Res -> painterResource(id = logo.resId)
+                is LogoResource.Url -> rememberAsyncImagePainter(logo.url )
+                else -> rememberAsyncImagePainter(null)
+            },
             contentDescription = "${stock.ticker.tickerName} logo",
             modifier = Modifier
                 .size(iconSize)

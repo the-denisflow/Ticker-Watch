@@ -2,11 +2,16 @@ package com.example.tickerwatch.common.tickers
 
 import androidx.annotation.DrawableRes
 import com.example.tickerwatch.R
+
+sealed class LogoResource {
+    data class Res(@DrawableRes val resId: Int): LogoResource()
+    data class Url(val url: String): LogoResource()
+}
+
 sealed interface Ticker {
     val tickerName: String
     val symbol: String
-    val logoRes: Int?
-    val urlLogo: String?
+    val logo: LogoResource?
 }
 
 enum class Sector {
@@ -26,40 +31,37 @@ enum class Country(val displayName: String, val flag: String) {
 
 enum class CryptoEnum(override val tickerName: String,
                       override val symbol: String,
-                      @DrawableRes override val logoRes: Int? = null,
-                      override val urlLogo: String? = null): Ticker {
-    BITCOIN("Bitcoin", "BTC-USD", null, "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"),
-    ETHEREUM("Ethereum", "ETH-USD", null, "https://assets.coingecko.com/coins/images/279/large/ethereum.png");
+                      override val logo: LogoResource? = null): Ticker {
+    BITCOIN("Bitcoin", "BTC-USD", LogoResource.Url(url = "https://assets.coingecko.com/coins/images/1/large/bitcoin.png")),
+    ETHEREUM("Ethereum", "ETH-USD", LogoResource.Url("https://assets.coingecko.com/coins/images/279/large/ethereum.png"));
 }
 
 enum class InvalidTicker(override val tickerName: String = "Invalid",
                          override val symbol: String,
-                         override val logoRes: Int? = null,
-                         override val urlLogo: String? = null): Ticker {
+                         override val logo: LogoResource? = null): Ticker {
     INVALIDTICKER("Invalid", "INVALIDTICKER");
 }
 
 enum class StockMarketEnum(override val tickerName: String,
                            override val symbol: String,
-                           @DrawableRes override val logoRes: Int? = null,
-                           override val urlLogo: String? = null,
+                           override val logo: LogoResource? = null,
                            val sector: Sector? = null,
                            val country: Country? = null): Ticker {
-    APPLE("Apple", "AAPL", R.drawable.aapl, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    MICROSOFT("Microsoft", "MSFT", R.drawable.msft, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    AMAZON("Amazon", "AMZN", R.drawable.amzn, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    ALPHABET("Alphabet", "GOOGL", R.drawable.googl, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    META("Meta", "META", R.drawable.meta, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    NVIDIA("NVIDIA", "NVDA", R.drawable.nvda, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    TESLA("Tesla", "TSLA", R.drawable.tsla, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    AMD("AMD", "AMD", R.drawable.amd, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    INTEL("Intel", "INTC", R.drawable.intc, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    IBM("IBM", "IBM", R.drawable.ibm, null, Sector.TECHNOLOGY, Country.UNITED_STATES),
-    VISA("Visa", "V", R.drawable.v, null, Sector.FINANCE, Country.UNITED_STATES),
-    MASTERCARD("Mastercard", "MA", R.drawable.ma, null, Sector.FINANCE, Country.UNITED_STATES),
-    JPMORGAN("JPMorgan", "JPM", R.drawable.jpm, null, Sector.FINANCE, Country.UNITED_STATES),
-    BANK_OF_AMERICA("Bank of America", "BAC", R.drawable.bac, null, Sector.FINANCE, Country.UNITED_STATES),
-    GOLDMAN_SACHS("Goldman Sachs", "GS", R.drawable.gs, null, Sector.FINANCE, Country.UNITED_STATES),
+    APPLE("Apple", "AAPL", LogoResource.Res(R.drawable.aapl), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    MICROSOFT("Microsoft", "MSFT", LogoResource.Res(R.drawable.msft), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    AMAZON("Amazon", "AMZN", LogoResource.Res(R.drawable.amzn), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    ALPHABET("Alphabet", "GOOGL", LogoResource.Res(R.drawable.googl), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    META("Meta", "META", LogoResource.Res(R.drawable.meta), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    NVIDIA("NVIDIA", "NVDA", LogoResource.Res(R.drawable.nvda), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    TESLA("Tesla", "TSLA", LogoResource.Res(R.drawable.tsla), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    AMD("AMD", "AMD", LogoResource.Res(R.drawable.amd), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    INTEL("Intel", "INTC", LogoResource.Res(R.drawable.intc), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    IBM("IBM", "IBM", LogoResource.Res(R.drawable.ibm), Sector.TECHNOLOGY, Country.UNITED_STATES),
+    VISA("Visa", "V", LogoResource.Res(R.drawable.v), Sector.FINANCE, Country.UNITED_STATES),
+    MASTERCARD("Mastercard", "MA", LogoResource.Res(R.drawable.ma), Sector.FINANCE, Country.UNITED_STATES),
+    JPMORGAN("JPMorgan", "JPM", LogoResource.Res(R.drawable.jpm), Sector.FINANCE, Country.UNITED_STATES),
+    BANK_OF_AMERICA("Bank of America", "BAC", LogoResource.Res(R.drawable.bac), Sector.FINANCE, Country.UNITED_STATES),
+    GOLDMAN_SACHS("Goldman Sachs", "GS", LogoResource.Res(R.drawable.gs), Sector.FINANCE, Country.UNITED_STATES),
 }
 
 object TickerRegistry {

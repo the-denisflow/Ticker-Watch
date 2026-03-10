@@ -1,7 +1,5 @@
 package com.example.tickerwatch.domain.use_case
 
-import com.example.tickerwatch.common.tickers.StockMarketEnum
-import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.common.tickers.TickerRegistry.replaceSymbolWithTickerEnum
 import com.example.tickerwatch.domain.repository.YahooRepository
 import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
@@ -27,9 +25,7 @@ class GetStockItem @Inject constructor(
         val ticker = replaceSymbolWithTickerEnum(symbol)
 
         return chart.toStockItem(
-            ticker = ticker,
-            logoRes = ticker.logoRes,
-            logoUrl = ticker.urlLogo
+            ticker = ticker
         )
     }
 }

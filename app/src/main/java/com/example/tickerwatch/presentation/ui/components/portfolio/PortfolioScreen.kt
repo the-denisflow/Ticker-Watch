@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.rememberAsyncImagePainter
+import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
@@ -250,8 +251,11 @@ private fun HoldingRow(stock: SparkStockUiItem, onClick: () -> Unit) {
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
-                    painter = stock.ticker.logoRes?.let { painterResource(id = it) }
-                        ?: rememberAsyncImagePainter(stock.ticker.urlLogo),
+                    painter = when(val logo = stock.ticker.logo ) {
+                        is LogoResource.Res ->  painterResource(id = logo.resId)
+                        is LogoResource.Url ->  rememberAsyncImagePainter(model = logo.url)
+                        else ->  rememberAsyncImagePainter(null)
+                    },
                     contentDescription = stock.ticker.tickerName,
                     modifier = Modifier
                         .size(AppDimens.IconXl)

@@ -25,8 +25,6 @@ data class StockItem (val ticker: Ticker,
                       val longName: String,
                       val shortName: String,
                       var price: Double,
-                      val logoUrl: String?,
-                      val logoRes: Int?,
                       var prices: List<Double> = emptyList(),
                       var timestamp: List<Int> = emptyList(),
                       val previousClose: Double? = null,
@@ -34,12 +32,10 @@ data class StockItem (val ticker: Ticker,
                       val exchangeName: String? = null,
                       val currency: String? = null)
 
-fun YahooResultDto.toStockItem(ticker: Ticker, logoUrl: String? = null, logoRes: Int? = null): StockItem {
+fun YahooResultDto.toStockItem(ticker: Ticker): StockItem {
     val meta = chart.result.firstOrNull()?.meta
     return StockItem(
         ticker = ticker,
-        logoUrl = logoUrl,
-        logoRes = logoRes,
         longName = meta?.longName ?: "",
         shortName = meta?.shortName ?: "",
         price = meta?.regularMarketPrice ?: 0.0,
@@ -56,6 +52,4 @@ fun createPlaceholderStockItem() = StockItem (
     ticker = InvalidTicker.INVALIDTICKER,
     longName = "",
     shortName = "",
-    price = 0.0,
-    logoUrl = null,
-    logoRes = null )
+    price = 0.0)
