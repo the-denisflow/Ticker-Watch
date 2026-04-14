@@ -15,7 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,16 +78,22 @@ fun StockList(
                     onFilterSelected = { activeFilter = it }
                 )
             }
-            items(filteredList, key = { stock -> stock.symbol }) { stock ->
-                StockUiItem(
-                    stock = stock,
-                    isInWatchlist = stock.symbol in watchlistSymbols,
-                    onClickListener = {
-                        itemIsSelected = true
-                        onSymbolSelected(stock.symbol)
-                    },
-                    onToggleWatchlist = { onToggleWatchlist(stock.symbol) }
-                )
+            if(list.isNotEmpty()) {
+                items(filteredList, key = { stock -> stock.symbol }) { stock ->
+                    StockUiItem(
+                        stock = stock,
+                        isInWatchlist = stock.symbol in watchlistSymbols,
+                        onClickListener = {
+                            itemIsSelected = true
+                            onSymbolSelected(stock.symbol)
+                        },
+                        onToggleWatchlist = { onToggleWatchlist(stock.symbol) }
+                    )
+                }
+            } else {
+                items(11) {
+
+                }
             }
         }
         if (itemIsSelected) {

@@ -12,7 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tickerwatch.common.Logger
+import com.example.tickerwatch.common.tickers.InvalidTicker
+import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
+import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.LoadingState
 import com.example.tickerwatch.presentation.ui.components.main.MainPage
 import com.example.tickerwatch.presentation.viewmodel.MarketViewModel
@@ -22,6 +26,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class StockListFragment : Fragment() {
+    private val EMTPY_ITEMS_COUNT = 10
     private val marketViewModel: MarketViewModel by viewModels()
     @Inject
     lateinit var logger: Logger
@@ -47,9 +52,22 @@ class StockListFragment : Fragment() {
             val onSortChange: (SortOption) -> Unit = remember { { sort -> marketViewModel.setSortOption(sort) } }
             val onToggleWatchlist: (String) -> Unit = remember { { symbol -> marketViewModel.toggleWatchlist(symbol) } }
 
-            if (sortedStocks.isNotEmpty()) {
-                MainPage(
-                    stockList = sortedStocks,
+            val listOfStocks = sortedStocks.ifEmpty {
+                (0..EMTPY_ITEMS_COUNT).map { index ->
+                    SparkStockUiItem(
+                        symbol = "$index",
+                        close = 0.0,
+                        ticker = InvalidTicker.INVALIDTICKER,
+                        trend = PriceProgressTrend(
+                            progressTrend = PriceTrend.NEUTRAL,
+                            progressPercent = "")
+
+                    )
+                }
+            }
+
+            MainPage(
+                    stockList = listOfStocks,
                     stockState = stockState,
                     currentSparkItem = currentSparkItem,
                     sortOption = sortOption,
@@ -59,9 +77,6 @@ class StockListFragment : Fragment() {
                     onSortChange = onSortChange,
                     onToggleWatchlist = onToggleWatchlist
                 )
-            } else {
-                LoadingState()
-            }
         }
     }
 }

@@ -88,9 +88,6 @@ fun MainPage(
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
                 BottomTab.MARKETS -> {
-                    if (stockList.isEmpty()) {
-                        LoadingState()
-                    } else {
                         Column {
                             MarketsHeader(
                                 stockCount = stockList.size,
@@ -108,7 +105,6 @@ fun MainPage(
                             )
                         }
                     }
-                }
                 BottomTab.WATCHLIST -> WatchlistScreen(
                     items = stockList.filter { it.symbol in watchlistSymbols },
                     stockState = stockState,

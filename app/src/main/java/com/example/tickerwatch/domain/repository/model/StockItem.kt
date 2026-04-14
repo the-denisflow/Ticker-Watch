@@ -21,6 +21,7 @@ data class SparkStockUiItem(
     val prices: List<Double> = emptyList()
 )
 
+
 data class StockItem (val ticker: Ticker,
                       val longName: String,
                       val shortName: String,
