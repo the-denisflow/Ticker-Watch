@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.tickerwatch.common.tickers.InvalidTicker
+import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
+import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.domain.repository.model.createPlaceholderStockItem
@@ -62,6 +65,7 @@ class MarketViewModel @Inject constructor(
     val sortedStocks: StateFlow<List<SparkStockUiItem>> = combine(
         _batchStocks, _sortOption
     ) { stocks, sort ->
+        logger.info("combine emitted — stocks size: ${stocks.size}, sort: $sort")
         when (sort) {
             SortOption.DEFAULT -> stocks
             SortOption.NAME_ASC -> stocks.sortedBy { it.ticker.tickerName }
@@ -78,7 +82,10 @@ class MarketViewModel @Inject constructor(
                 )
             )
         }
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    }.stateIn(viewModelScope, SharingStarted.Eagerly,
+         emptyList()
+    )
+
 
     val currentSparkItem: StateFlow<SparkStockUiItem?> = combine(
         _currentTickerSymbol,

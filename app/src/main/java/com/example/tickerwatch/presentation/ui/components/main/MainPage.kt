@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
-import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.LoadingState
 import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockList
 import com.example.tickerwatch.presentation.ui.components.portfolio.PortfolioScreen
 import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState

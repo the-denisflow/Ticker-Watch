@@ -1,5 +1,11 @@
 package com.example.tickerwatch.presentation.ui.components.homepagelist.composeable
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,12 +16,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,24 +32,45 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.tickerwatch.common.tickers.CryptoEnum
+import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.presentation.ui.components.common.rememberShimmerTranslateAnim
+import com.example.tickerwatch.presentation.ui.components.common.shimmer
 import com.example.tickerwatch.presentation.ui.theme.AppColors
 import com.example.tickerwatch.presentation.ui.theme.AppDimens
 import com.example.tickerwatch.presentation.ui.theme.AppType
 
 @Composable
-fun StockInfoRow(stock: SparkStockUiItem, iconSize: Dp = AppDimens.IconStockRow, modifier: Modifier = Modifier) {
+fun StockInfoRow(
+    stock: SparkStockUiItem,
+    modifier: Modifier = Modifier,
+    iconSize: Dp = AppDimens.IconStockRow
+) {
+    if (stock.ticker is InvalidTicker) {
+        StockInfoRowShimmer(iconSize = iconSize, modifier = modifier)
+    } else {
+        StockInfoRowContent(stock = stock, iconSize = iconSize, modifier = modifier)
+    }
+}
+
+@Composable
+private fun StockInfoRowContent(
+    stock: SparkStockUiItem,
+    iconSize: Dp,
+    modifier: Modifier = Modifier
+) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = when (val logo = stock.ticker.logo) {
                 is LogoResource.Res -> painterResource(id = logo.resId)
-                is LogoResource.Url -> rememberAsyncImagePainter(logo.url )
+                is LogoResource.Url -> rememberAsyncImagePainter(logo.url)
                 else -> rememberAsyncImagePainter(null)
             },
             contentDescription = "${stock.ticker.tickerName} logo",
@@ -74,6 +101,18 @@ fun StockInfoRow(stock: SparkStockUiItem, iconSize: Dp = AppDimens.IconStockRow,
         }
     }
 }
+
+/**
+ * A skeleton placeholder row shown while a stock's real data is still loading.
+ * It mimics the shape of [StockInfoRowContent] — a circle on the left and three
+ * stacked bars on the right — but filled with an animated shimmer instead of real content.
+ *
+ * @param iconSize The diameter of the circular placeholder on the left, matching
+ *   the size of the real stock logo so the layout does not shift when data loads.
+ * @param modifier Standard Compose modifier for positioning and sizing this row
+ *   from the outside (e.g. padding, fillMaxWidth).
+ */
+
 
 @Composable
 private fun SectorChip(ticker: com.example.tickerwatch.common.tickers.Ticker) {
@@ -149,35 +188,43 @@ fun StockPriceInfoColum(stock: SparkStockUiItem, subLabel: String? = null) {
     }
 
     Column(
-        horizontalAlignment = Alignment.End
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.spacedBy(AppDimens.Space4, Alignment.CenterVertically)
     ) {
-        Text(
-            text = "$%.2f".format(stock.close),
-            fontSize = AppType.BodyLarge,
-            fontWeight = FontWeight.SemiBold,
-            color = AppColors.Primary
-        )
-        Spacer(modifier = Modifier.height(AppDimens.Space4))
-        Box(
-            modifier = Modifier
-                .background(bgColor, shape = RoundedCornerShape(AppDimens.CornerSm))
-                .padding(horizontal = AppDimens.Space7, vertical = AppDimens.Space3)
-        ) {
+        if (stock.ticker !is InvalidTicker) {
             Text(
-                text = "$arrow ${stock.trend.progressPercent}",
-                fontSize = AppType.Badge,
-                fontWeight = FontWeight.Medium,
-                color = textColor
+                text = "$%.2f".format(stock.close),
+                fontSize = AppType.BodyLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = AppColors.Primary
             )
-        }
-        if (subLabel != null) {
-            Spacer(modifier = Modifier.height(AppDimens.Space3))
-            Text(
-                text = subLabel,
-                fontSize = AppType.NavLabel,
-                fontWeight = FontWeight.Normal,
-                color = AppColors.Quaternary
-            )
+            Box(
+                modifier = Modifier
+                    .background(bgColor, shape = RoundedCornerShape(AppDimens.CornerSm))
+                    .padding(horizontal = AppDimens.Space7, vertical = AppDimens.Space3)
+            ) {
+                Text(
+                    text = "$arrow ${stock.trend.progressPercent}",
+                    fontSize = AppType.Badge,
+                    fontWeight = FontWeight.Medium,
+                    color = textColor
+                )
+            }
+        } else {
+            val translateAnim = rememberShimmerTranslateAnim()
+            repeat(2) { StockPriceShimmer(translateAnim) }
+
         }
     }
+}
+
+@Composable
+private fun StockPriceShimmer(translateAnim: androidx.compose.runtime.State<Float>) {
+    Box(
+        modifier = Modifier
+            .size(width = 60.dp, height = 20.dp)
+            .padding(horizontal = AppDimens.Space7, vertical = AppDimens.Space3)
+            .clip(RoundedCornerShape(AppDimens.CornerSm))
+            .shimmer(translateAnim)
+    )
 }

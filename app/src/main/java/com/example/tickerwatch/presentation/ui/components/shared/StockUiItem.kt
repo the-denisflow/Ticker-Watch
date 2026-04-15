@@ -18,6 +18,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.MiniSparkline
 import com.example.tickerwatch.presentation.ui.components.homepagelist.composeable.StockInfoRow
@@ -52,22 +54,38 @@ fun StockUiItem(
                     .padding(horizontal = AppDimens.Space4)
             )
             StockPriceInfoColum(stock = stock)
-            IconButton(
-                onClick = onToggleWatchlist,
-                modifier = Modifier.size(AppDimens.IconXl)
-            ) {
-                Icon(
-                    imageVector = if (isInWatchlist) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
-                    contentDescription = if (isInWatchlist) "Remove from watchlist" else "Add to watchlist",
-                    tint = if (isInWatchlist) AppColors.Primary else AppColors.Tertiary,
-                    modifier = Modifier.size(AppDimens.IconSm)
-                )
-            }
+            WatchlistButton(
+                isInWatchlist = isInWatchlist,
+                enabled = stock.ticker !is InvalidTicker,
+                onToggleWatchlist = onToggleWatchlist
+            )
         }
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = AppDimens.Space16),
             thickness = AppDimens.DividerThickness,
             color = AppColors.Divider
+        )
+    }
+}
+
+@Composable
+private fun WatchlistButton(
+    isInWatchlist: Boolean,
+    enabled: Boolean,
+    onToggleWatchlist: () -> Unit
+) {
+    IconButton(
+        onClick = onToggleWatchlist,
+        enabled = enabled,
+        modifier = Modifier
+            .size(AppDimens.IconXl)
+            .alpha(if (enabled) 1f else 0.5f)
+    ) {
+        Icon(
+            imageVector = if (isInWatchlist) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+            contentDescription = if (isInWatchlist) "Remove from watchlist" else "Add to watchlist",
+            tint = if (isInWatchlist) AppColors.Primary else AppColors.Tertiary,
+            modifier = Modifier.size(AppDimens.IconSm)
         )
     }
 }

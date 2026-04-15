@@ -21,6 +21,19 @@ data class SparkStockUiItem(
     val prices: List<Double> = emptyList()
 )
 
+private const val PLACEHOLDER_COUNT = 10
+
+val placeholders: List<SparkStockUiItem> = (0 until PLACEHOLDER_COUNT).map { index ->
+    SparkStockUiItem(
+        symbol = "$index",
+        close = 0.0,
+        ticker = InvalidTicker.INVALIDTICKER,
+        trend = PriceProgressTrend(
+            progressTrend = PriceTrend.NEUTRAL,
+            progressPercent = ""
+        )
+    )
+}
 
 data class StockItem (val ticker: Ticker,
                       val longName: String,
