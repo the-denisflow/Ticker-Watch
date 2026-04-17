@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.tickerwatch.common.Logger
-import com.example.tickerwatch.presentation.fragments.StockListFragment
+import com.example.tickerwatch.presentation.fragment.StockListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -20,7 +20,7 @@ import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.domain.repository.model.createPlaceholderStockItem
 import com.example.tickerwatch.domain.use_case.GetStockItem
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
-import com.example.tickerwatch.presentation.ui.components.stockdetaildialog.state.StockState
+import com.example.tickerwatch.presentation.screen.stockdetail.StockState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted

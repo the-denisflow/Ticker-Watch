@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
@@ -54,19 +55,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:experimentalStrongSkipping=true"
-        )
     }
 
     kapt {
         javacOptions {
             option("-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED")
         }
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
     }
 }
 
@@ -98,7 +92,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation (libs.androidx.fragment.ktx)
 
-    implementation(platform("androidx.compose:compose-bom:2025.01.00")) // use current BOM
+    implementation(platform("androidx.compose:compose-bom:2026.03.01")) // use current BOM
 
     implementation(libs.androidx.activity.compose)          // Activity + Compose interop
     implementation(libs.androidx.ui)
@@ -111,7 +105,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    androidTestImplementation(platform("androidx.compose:compose-bom:2025.01.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2026.03.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
     implementation("io.coil-kt:coil-compose:2.6.0")
@@ -119,14 +113,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.11.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-
     implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation ("androidx.compose.material:material-icons-extended:1.6.0")
     implementation("androidx.compose.material3:material3:1.2.1")
-    implementation("androidx.lifecycle:lifecycle-process:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
 }
