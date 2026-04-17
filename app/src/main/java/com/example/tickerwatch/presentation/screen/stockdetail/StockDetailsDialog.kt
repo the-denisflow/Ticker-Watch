@@ -56,7 +56,7 @@ import com.github.mikephil.charting.charts.LineChart
 @Composable
 fun StockDetailsDialog(
     stockState: StockState,
-    currentSparkItem: SparkStockUiItem?,
+    currentSparkItem: SparkStockUiItem,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit = {},
 ) {
@@ -67,38 +67,38 @@ fun StockDetailsDialog(
     ) {
         Box(Modifier.background(AppColors.Surface)) {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                currentSparkItem?.let { Header(displayedItem = it) }
+                    Header(displayedItem = currentSparkItem)
 
-                Spacer(modifier = Modifier.height(AppDimens.Space8))
+                    Spacer(modifier = Modifier.height(AppDimens.Space8))
 
-                val validPrices = remember(stockState.item.prices) {
-                    stockState.item.prices.filterNotNull().filter { !it.isNaN() }
+                    val validPrices = remember(stockState.item.prices) {
+                        stockState.item.prices.filterNotNull().filter { !it.isNaN() }
+                    }
+
+                    val periodHigh = remember(validPrices) { validPrices.maxOrNull() }
+                    val periodLow = remember(validPrices) { validPrices.minOrNull() }
+
+                    StockChart(
+                        displayedRange = stockState.range,
+                        displayedItem = stockState.item,
+                        onRangeChange = onRangeChange
+                    )
+
+                    StockMetaRow(ticker = currentSparkItem.ticker)
+
+                    StockDetailsSection(
+                        item = stockState.item,
+                        periodLabel = stockState.range.value,
+                        periodHigh = periodHigh,
+                        periodLow = periodLow
+                    )
+
+                    Spacer(modifier = Modifier.height(AppDimens.Space24))
+
                 }
-
-                val periodHigh = remember(validPrices) { validPrices.maxOrNull() }
-                val periodLow = remember(validPrices) { validPrices.minOrNull() }
-
-                StockChart(
-                    displayedRange = stockState.range,
-                    displayedItem = stockState.item,
-                    onRangeChange = onRangeChange
-                )
-
-                currentSparkItem?.let { StockMetaRow(ticker = it.ticker) }
-
-                StockDetailsSection(
-                    item = stockState.item,
-                    periodLabel = stockState.range.value,
-                    periodHigh = periodHigh,
-                    periodLow = periodLow
-                )
-
-                Spacer(modifier = Modifier.height(AppDimens.Space24))
             }
         }
-
     }
-}
 
 @Composable
 private fun Header(displayedItem: SparkStockUiItem) {

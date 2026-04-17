@@ -15,8 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
-import android.util.Log
-import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +28,7 @@ import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.presentation.component.StockUiItem
-import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailsDialog
+import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
 import com.example.tickerwatch.presentation.screen.stockdetail.StockState
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
@@ -97,14 +95,13 @@ fun StockList(
                 }
             }
         }
-        if (itemIsSelected) {
-            StockDetailsDialog(
-                stockState = stockState,
-                currentSparkItem = currentSparkItem,
-                onRangeChange = onRangeChange,
-                onDismiss = { itemIsSelected = false }
-            )
-        }
+        StockDetailOverlay(
+            itemIsSelected = itemIsSelected,
+            stockState = stockState,
+            currentSparkItem = currentSparkItem,
+            onRangeChange = onRangeChange,
+            onDismiss = { itemIsSelected = false }
+        )
     }
 }
 

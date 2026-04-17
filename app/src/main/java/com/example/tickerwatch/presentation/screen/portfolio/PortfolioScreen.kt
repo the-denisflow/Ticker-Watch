@@ -39,7 +39,7 @@ import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
-import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailsDialog
+import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
 import com.example.tickerwatch.presentation.screen.stockdetail.StockState
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
@@ -139,16 +139,15 @@ private fun PortfolioContent(
             item { Spacer(modifier = Modifier.height(AppDimens.Space24)) }
         }
 
-        if (itemIsSelected) {
-            StockDetailsDialog(
-                stockState = stockState,
-                currentSparkItem = currentSparkItem,
-                onRangeChange = onRangeChange,
-                onDismiss = { itemIsSelected = false }
-            )
+        StockDetailOverlay(
+            itemIsSelected = itemIsSelected,
+            stockState = stockState,
+            currentSparkItem = currentSparkItem,
+            onRangeChange = onRangeChange,
+            onDismiss = { itemIsSelected = false }
+        )
         }
     }
-}
 
 @Composable
 private fun SummaryCard(totalValue: Double, dailyChange: Double, dailyPct: Double) {
