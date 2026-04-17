@@ -16,6 +16,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import android.util.Log
+import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -85,7 +86,7 @@ fun StockList(
                         isInWatchlist = stock.symbol in watchlistSymbols,
                         onClickListener = {
                             itemIsSelected = true
-                            onSymbolSelected(stock.symbol)
+                           onSymbolSelected(stock.symbol)
                         },
                         onToggleWatchlist = { onToggleWatchlist(stock.symbol) }
                     )

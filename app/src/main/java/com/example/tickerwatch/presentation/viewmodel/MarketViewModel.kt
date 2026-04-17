@@ -45,8 +45,8 @@ class MarketViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _displayedRange = MutableStateFlow<Range>(Range.ONE_YEAR)
-    private val _currentTickerSymbol = MutableStateFlow<String>("")
-    private val _currentDisplayedTicker = MutableStateFlow<StockItem>(createPlaceholderStockItem())
+    private val _selectedSymbol = MutableStateFlow<String>("")
+    private val _selectedStockDetail = MutableStateFlow<StockItem>(createPlaceholderStockItem())
     private var fetchStockDetailsJob: Job? = null
     private var syncJob: Job? = null
 
@@ -88,22 +88,22 @@ class MarketViewModel @Inject constructor(
 
 
     val currentSparkItem: StateFlow<SparkStockUiItem?> = combine(
-        _currentTickerSymbol,
+        _selectedSymbol,
         _batchStocks
     ) { symbol, stocks ->
         stocks.find { it.symbol == symbol }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val stockState: StateFlow<StockState> =
+    val stockDetailState: StateFlow<StockState> =
         combine(
-            _currentDisplayedTicker,
+            _selectedStockDetail,
             _displayedRange
         ) { item, range ->
             StockState(item, range)
         }.stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
-            StockState(createPlaceholderStockItem(), Range.ONE_YEAR)
+            StockState(_selectedStockDetail.value, _displayedRange.value)
         )
 
     init {
@@ -134,7 +134,7 @@ class MarketViewModel @Inject constructor(
     }
 
     fun updateCurrentSymbol(currentSymbol: String) {
-        _currentTickerSymbol.value = currentSymbol
+        _selectedSymbol.value = currentSymbol
         updateDisplayedRange(Range.ONE_YEAR)
     }
 
@@ -148,11 +148,11 @@ class MarketViewModel @Inject constructor(
         fetchStockDetailsJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 val fetchedItem = getStockItem(
-                    symbol = _currentTickerSymbol.value,
+                    symbol = _selectedSymbol.value,
                     range = _displayedRange.value
                 )
                 if (fetchedItem != null) {
-                    _currentDisplayedTicker.value = fetchedItem
+                    _selectedStockDetail.value = fetchedItem
                 }
             }.onFailure { exception ->
                 logger.error("Failed to update displayed range: ${exception.message}")

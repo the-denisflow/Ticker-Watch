@@ -68,11 +68,13 @@ fun StockDetailsDialog(
         Box(Modifier.background(AppColors.Surface)) {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 currentSparkItem?.let { Header(displayedItem = it) }
+
                 Spacer(modifier = Modifier.height(AppDimens.Space8))
 
                 val validPrices = remember(stockState.item.prices) {
-                    stockState.item.prices.filter { !it.isNaN() }
-                }
+                       stockState.item.prices.filterNotNull().filter { !it.isNaN() }
+                   }
+
                 val periodHigh = remember(validPrices) { validPrices.maxOrNull() }
                 val periodLow = remember(validPrices) { validPrices.minOrNull() }
 
@@ -91,6 +93,7 @@ fun StockDetailsDialog(
                 Spacer(modifier = Modifier.height(AppDimens.Space24))
             }
         }
+
     }
 }
 
