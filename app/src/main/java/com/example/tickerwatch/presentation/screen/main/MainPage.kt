@@ -46,7 +46,7 @@ import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.presentation.screen.marketlist.StockList
 import com.example.tickerwatch.presentation.screen.portfolio.PortfolioScreen
-import com.example.tickerwatch.presentation.screen.stockdetail.StockState
+import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
 import com.example.tickerwatch.presentation.screen.watchlist.WatchlistScreen
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
@@ -66,7 +66,7 @@ private enum class BottomTab(val label: String, val icon: ImageVector) {
 @Composable
 fun MainPage(
     stockList: List<SparkStockUiItem>,
-    stockState: StockState,
+    stockChartUiState: StockChartUiState,
     currentSparkItem: SparkStockUiItem?,
     sortOption: SortOption,
     watchlistSymbols: Set<String>,
@@ -95,7 +95,7 @@ fun MainPage(
                             )
                             StockList(
                                 list = stockList,
-                                stockState = stockState,
+                                stockChartUiState = stockChartUiState,
                                 currentSparkItem = currentSparkItem,
                                 watchlistSymbols = watchlistSymbols,
                                 onSymbolSelected = onSymbolSelected,
@@ -106,7 +106,7 @@ fun MainPage(
                     }
                 BottomTab.WATCHLIST -> WatchlistScreen(
                     items = stockList.filter { it.symbol in watchlistSymbols },
-                    stockState = stockState,
+                    stockChartUiState = stockChartUiState,
                     currentSparkItem = currentSparkItem,
                     onSymbolSelected = onSymbolSelected,
                     onRangeChange = onRangeChange,
@@ -114,7 +114,7 @@ fun MainPage(
                 )
                 BottomTab.PORTFOLIO -> PortfolioScreen(
                     holdings = stockList.filter { it.symbol in watchlistSymbols },
-                    stockState = stockState,
+                    stockChartUiState = stockChartUiState,
                     currentSparkItem = currentSparkItem,
                     onSymbolSelected = onSymbolSelected,
                     onRangeChange = onRangeChange

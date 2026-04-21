@@ -3,6 +3,8 @@ package com.example.tickerwatch.domain.repository.model
 import androidx.compose.runtime.Immutable
 import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.presentation.screen.stockdetail.PriceChangeDetails
+import com.example.tickerwatch.presentation.screen.stockdetail.getPriceChangedDetails
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}
 
@@ -18,8 +20,11 @@ data class SparkStockUiItem(
     val close: Double,
     val trend: PriceProgressTrend,
     val ticker: Ticker,
-    val prices: List<Double> = emptyList()
-)
+    val prices: List<Double> = emptyList(),
+    val chartPreviousClose: Double? = null
+) {
+    val priceChangeDetails: PriceChangeDetails = getPriceChangedDetails(prices, chartPreviousClose)
+}
 
 private const val PLACEHOLDER_COUNT = 10
 

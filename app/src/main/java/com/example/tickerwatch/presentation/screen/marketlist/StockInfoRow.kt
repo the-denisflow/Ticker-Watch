@@ -1,11 +1,5 @@
 package com.example.tickerwatch.presentation.screen.marketlist
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -43,6 +36,7 @@ import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
 import com.example.tickerwatch.presentation.component.shimmer
+import com.example.tickerwatch.presentation.screen.stockdetail.PriceChangeDetails
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -142,46 +136,9 @@ private fun SectorChip(ticker: com.example.tickerwatch.common.tickers.Ticker) {
 }
 
 @Composable
-fun MiniSparkline(
-    prices: List<Double>,
-    trend: PriceTrend,
-    modifier: Modifier = Modifier
-) {
-    if (prices.size < 2) return
-
-    val lineColor = when (trend) {
-        PriceTrend.UP -> AppColors.TrendUp
-        PriceTrend.DOWN -> AppColors.TrendDown
-        PriceTrend.NEUTRAL -> AppColors.Secondary
-    }
-
-    Canvas(modifier = modifier) {
-        val min = prices.min()
-        val max = prices.max()
-        val range = (max - min).takeIf { it > 0 } ?: 1.0
-
-        val path = Path()
-        prices.forEachIndexed { index, price ->
-            val x = index / (prices.size - 1f) * size.width
-            val y = (1f - ((price - min) / range).toFloat()) * size.height
-            if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
-        }
-
-        drawPath(
-            path = path,
-            color = lineColor,
-            style = Stroke(
-                width = AppDimens.SparklineStroke.toPx(),
-                cap = StrokeCap.Round,
-                join = StrokeJoin.Round
-            )
-        )
-    }
-}
-
-@Composable
 fun StockPriceInfoColum(stock: SparkStockUiItem, subLabel: String? = null) {
-    val (bgColor, textColor, arrow) = when (stock.trend.progressTrend) {
+    if (stock.priceChangeDetails is PriceChangeDetails.Available) {
+    val (bgColor, textColor, arrow) = when (stock.priceChangeDetails.changeTrend) {
         PriceTrend.UP -> Triple(AppColors.TrendUpSurface, AppColors.TrendUp, "▲")
         PriceTrend.DOWN -> Triple(AppColors.TrendDownSurface, AppColors.TrendDown, "▼")
         PriceTrend.NEUTRAL -> Triple(AppColors.SurfaceVariant, AppColors.Secondary, "–")
@@ -204,7 +161,7 @@ fun StockPriceInfoColum(stock: SparkStockUiItem, subLabel: String? = null) {
                     .padding(horizontal = AppDimens.Space7, vertical = AppDimens.Space3)
             ) {
                 Text(
-                    text = "$arrow ${stock.trend.progressPercent}",
+                    text = "$arrow ${stock.priceChangeDetails.changePercent}",
                     fontSize = AppType.Badge,
                     fontWeight = FontWeight.Medium,
                     color = textColor
@@ -213,8 +170,8 @@ fun StockPriceInfoColum(stock: SparkStockUiItem, subLabel: String? = null) {
         } else {
             val translateAnim = rememberShimmerTranslateAnim()
             repeat(2) { StockPriceShimmer(translateAnim) }
-
         }
+       }
     }
 }
 

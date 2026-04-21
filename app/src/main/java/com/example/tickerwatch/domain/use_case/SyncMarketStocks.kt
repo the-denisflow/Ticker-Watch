@@ -28,7 +28,9 @@ class SyncMarketStocks @Inject constructor(
             val symbols = allTickers.joinToString(",") { it.symbol }
             val fresh = getStocksBatch(
                 symbols = symbols,
-                tickers = allTickers
+                tickers = allTickers,
+                interval = "60m",
+                range = "1d"
             )
             if (fresh.isNotEmpty()) {
                 saveBatchToDb(fresh)

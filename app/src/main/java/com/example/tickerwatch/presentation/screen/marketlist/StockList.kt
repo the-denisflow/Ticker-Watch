@@ -29,7 +29,7 @@ import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 import com.example.tickerwatch.presentation.component.StockUiItem
 import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
-import com.example.tickerwatch.presentation.screen.stockdetail.StockState
+import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -45,7 +45,7 @@ private enum class SectorFilter(val label: String) {
 @Composable
 fun StockList(
     list: List<SparkStockUiItem>,
-    stockState: StockState,
+    stockChartUiState: StockChartUiState,
     currentSparkItem: SparkStockUiItem?,
     watchlistSymbols: Set<String> = emptySet(),
     onSymbolSelected: (String) -> Unit,
@@ -89,15 +89,11 @@ fun StockList(
                         onToggleWatchlist = { onToggleWatchlist(stock.symbol) }
                     )
                 }
-            } else {
-                items(11) {
-
-                }
             }
         }
         StockDetailOverlay(
             itemIsSelected = itemIsSelected,
-            stockState = stockState,
+            stockChartUiState = stockChartUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = { itemIsSelected = false }

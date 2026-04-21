@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
@@ -21,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
-import com.example.tickerwatch.presentation.screen.marketlist.MiniSparkline
 import com.example.tickerwatch.presentation.screen.marketlist.StockInfoRow
 import com.example.tickerwatch.presentation.screen.marketlist.StockPriceInfoColum
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -45,15 +43,9 @@ fun StockUiItem(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             StockInfoRow(stock = stock, modifier = Modifier.weight(1f))
-            MiniSparkline(
-                prices = stock.prices,
-                trend = stock.trend.progressTrend,
-                modifier = Modifier
-                    .width(AppDimens.SparklineWidth)
-                    .height(AppDimens.SparklineHeight)
-                    .padding(horizontal = AppDimens.Space4)
-            )
+
             StockPriceInfoColum(stock = stock)
+
             WatchlistButton(
                 isInWatchlist = isInWatchlist,
                 enabled = stock.ticker !is InvalidTicker,

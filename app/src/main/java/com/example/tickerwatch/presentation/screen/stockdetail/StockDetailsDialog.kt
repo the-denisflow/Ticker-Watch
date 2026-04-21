@@ -36,7 +36,7 @@ import com.example.tickerwatch.presentation.theme.AppType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockDetailsDialog(
-    stockState: StockState,
+    stockChartUiState: StockChartUiState,
     currentSparkItem: SparkStockUiItem,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit = {},
@@ -52,24 +52,23 @@ fun StockDetailsDialog(
 
                 Spacer(modifier = Modifier.height(AppDimens.Space8))
 
-                val validPrices = remember(stockState.item.prices) {
-                    stockState.item.prices.filterNotNull().filter { !it.isNaN() }
+                val validPrices = remember(stockChartUiState.item.prices) {
+                    stockChartUiState.item.prices.filterNotNull().filter { !it.isNaN() }
                 }
 
                 val periodHigh = remember(validPrices) { validPrices.maxOrNull() }
                 val periodLow = remember(validPrices) { validPrices.minOrNull() }
 
                 StockChart(
-                    displayedRange = stockState.range,
-                    displayedItem = stockState.item,
+                    stockChartUiState = stockChartUiState,
                     onRangeChange = onRangeChange
                 )
 
                 StockMetaRow(ticker = currentSparkItem.ticker)
 
                 StockDetailsSection(
-                    item = stockState.item,
-                    periodLabel = stockState.range.value,
+                    item = stockChartUiState.item,
+                    periodLabel = stockChartUiState.range.value,
                     periodHigh = periodHigh,
                     periodLow = periodLow
                 )

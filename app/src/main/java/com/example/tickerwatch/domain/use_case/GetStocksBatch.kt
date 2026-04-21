@@ -13,8 +13,8 @@ class GetStocksBatch @Inject constructor(
 ) {
     suspend operator fun invoke(
         symbols: String,
-        range: String = "1d",
-        interval: String = "1d",
+        range: String,
+        interval: String ,
         tickers: List<Ticker>
     ): List<SparkStockUiItem> {
         val result = yahooRepository.getBatchSpark(symbols, range, interval)

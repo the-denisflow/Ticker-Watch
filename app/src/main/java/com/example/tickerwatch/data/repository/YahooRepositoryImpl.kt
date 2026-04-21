@@ -27,7 +27,7 @@ class YahooRepositoryImpl @Inject constructor(
         range: String,
         interval: String
     ): Result<Map<String, SparkItemDto>>  =   try {
-        val yahooResult = api.getSparkBatch(symbols = symbols, range = range, interval = range)
+        val yahooResult = api.getSparkBatch(symbols = symbols, range = range, interval = interval)
         Result.success(yahooResult)
     } catch (e: Exception) {
         logger.error("Failed to fetch data for symbols: $symbols")

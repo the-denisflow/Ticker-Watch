@@ -10,7 +10,7 @@ import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
 @Composable
 fun StockDetailOverlay(
     itemIsSelected: Boolean,
-    stockState: StockState,
+    stockChartUiState: StockChartUiState,
     currentSparkItem: SparkStockUiItem?,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit
@@ -19,7 +19,7 @@ fun StockDetailOverlay(
 
     if (currentSparkItem != null) {
         StockDetailsDialog(
-            stockState = stockState,
+            stockChartUiState = stockChartUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = onDismiss

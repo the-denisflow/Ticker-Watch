@@ -22,8 +22,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
+import com.example.tickerwatch.presentation.component.shimmer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,60 +44,53 @@ import com.github.mikephil.charting.charts.LineChart
 
 @Composable
 internal fun StockChart(
-    displayedRange: Range,
-    displayedItem: StockItem,
+    stockChartUiState: StockChartUiState,
     onRangeChange: (Range) -> Unit
 ) {
-    val validPrices = remember(displayedItem.prices) {
-        displayedItem.prices.filterNotNull().filter { !it.isNaN() }
-    }
-    val periodTrend = remember(validPrices) {
-        if (validPrices.size >= 2) when {
-            validPrices.last() > validPrices.first() -> PriceTrend.UP
-            validPrices.last() < validPrices.first() -> PriceTrend.DOWN
-            else -> PriceTrend.NEUTRAL
-        } else PriceTrend.NEUTRAL
-    }
-    val periodPercent = remember(validPrices) {
-        if (validPrices.size >= 2 && validPrices.first() != 0.0) {
-            val pct = ((validPrices.last() - validPrices.first()) / validPrices.first()) * 100.0
-            "%.2f%%".format(kotlin.math.abs(pct))
-        } else null
-    }
-    val periodAbsoluteChange = remember(validPrices) {
-        if (validPrices.size >= 2) validPrices.last() - validPrices.first() else null
-    }
-
-    if (periodPercent != null && periodAbsoluteChange != null) {
+    val details = stockChartUiState.priceChangeDetails
+    if (!stockChartUiState.isLoading && details is PriceChangeDetails.Available) {
         PeriodPerformanceRow(
-            price = "$" + displayedItem.price.toString(),
-            trend = periodTrend,
-            periodPercent = periodPercent,
-            periodAbsoluteChange = periodAbsoluteChange,
+            price = "$" + stockChartUiState.item.price.toString(),
+            trend = details.changeTrend,
+            periodPercent = details.changePercent,
+            periodAbsoluteChange = details.changeAbsolut,
         )
     }
 
-    AndroidView(
-        factory = { ctx ->
-            val view = LayoutInflater.from(ctx).inflate(R.layout.frame_linechart, null, false)
-            val chart = view.findViewById<LineChart>(R.id.line_chart)
-            chart.description.isEnabled = false
-            chart.setNoDataText("Loading…")
-            view
-        },
-        update = { view ->
-            val chart = view.findViewById<LineChart>(R.id.line_chart)
-            plotDiagram(
-                displayedItem.prices,
-                displayedItem.timestamp,
-                displayedRange,
-                chart,
-                periodTrend
-            )
-        }
-    )
+    if (stockChartUiState.isLoading) {
+        val shimmerAnim = rememberShimmerTranslateAnim()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(horizontal = AppDimens.Space20)
+                .clip(RoundedCornerShape(AppDimens.CornerSm))
+                .shimmer(shimmerAnim)
+        )
+    } else {
+        val chartTrend = if (details is PriceChangeDetails.Available) details.changeTrend else PriceTrend.NEUTRAL
+        AndroidView(
+            factory = { ctx ->
+                val view = LayoutInflater.from(ctx).inflate(R.layout.frame_linechart, null, false)
+                val chart = view.findViewById<LineChart>(R.id.line_chart)
+                chart.description.isEnabled = false
+                chart.setNoDataText("Loading…")
+                view
+            },
+            update = { view ->
+                val chart = view.findViewById<LineChart>(R.id.line_chart)
+                plotDiagram(
+                    stockChartUiState.item.prices,
+                    stockChartUiState.item.timestamp,
+                    stockChartUiState.range,
+                    chart,
+                    chartTrend
+                )
+            }
+        )
+    }
 
-    PeriodSelector(displayedRange, onRangeChange)
+    PeriodSelector(stockChartUiState.range, onRangeChange)
 }
 
 @Composable
