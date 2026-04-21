@@ -22,11 +22,11 @@ data class YahooResultDto(
                 )
 
                 data class Quote(
-                    var close: List<Double>,
-                    var high: List<Double>,
-                    var low: List<Double>,
-                    var `open`: List<Double>,
-                    var volume: List<Long>
+                    var close: List<Double?>,
+                    var high: List<Double?>,
+                    var low: List<Double?>,
+                    var `open`: List<Double?>,
+                    var volume: List<Long?>
                 )
             }
 

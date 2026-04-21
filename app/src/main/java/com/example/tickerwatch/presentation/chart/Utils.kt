@@ -11,7 +11,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
 fun plotDiagram(
-    closePrices: List<Double>?,
+    closePrices: List<Double?>?,
     timestampList: List<Int>?,
     displayedRange: Range,
     chart: LineChart,
@@ -28,7 +28,8 @@ fun plotDiagram(
         PriceTrend.NEUTRAL -> Color.argb(40, 100, 100, 100)
     }
 
-    val entries = closePrices?.mapIndexed { index, price ->
+    val entries = closePrices?.mapIndexedNotNull { index, price ->
+        if (price == null) return@mapIndexedNotNull null
         val timestamp = timestampList?.getOrNull(index)?.toFloat() ?: index.toFloat()
         Entry(timestamp, price.toFloat())
     }

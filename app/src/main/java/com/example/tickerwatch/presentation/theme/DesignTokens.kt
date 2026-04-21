@@ -112,7 +112,7 @@ object AppDimens {
     val DividerThickness   = 0.5.dp
     val SparklineStroke    = 1.5.dp
     val ChartUnderlineHeight = 2.dp
-    val ChartUnderlineWidth  = 28.dp
+    val ChartUnderlineWidth  = 34.dp
     val CardShadow           = 4.dp
 
     // Drag-and-drop (watchlist grid)
