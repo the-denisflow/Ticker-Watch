@@ -15,7 +15,7 @@ data class PriceProgressTrend(
 )
 
 @Immutable
-data class SparkStockUiItem(
+data class StockSummary(
     val symbol: String,
     val close: Double,
     val trend: PriceProgressTrend,
@@ -28,8 +28,8 @@ data class SparkStockUiItem(
 
 private const val PLACEHOLDER_COUNT = 10
 
-val placeholders: List<SparkStockUiItem> = (0 until PLACEHOLDER_COUNT).map { index ->
-    SparkStockUiItem(
+val placeholders: List<StockSummary> = (0 until PLACEHOLDER_COUNT).map { index ->
+    StockSummary(
         symbol = "$index",
         close = 0.0,
         ticker = InvalidTicker.INVALIDTICKER,
@@ -40,7 +40,7 @@ val placeholders: List<SparkStockUiItem> = (0 until PLACEHOLDER_COUNT).map { ind
     )
 }
 
-data class StockItem (val ticker: Ticker,
+data class StockChart (val ticker: Ticker,
                       val longName: String,
                       val shortName: String,
                       var price: Double,
@@ -51,9 +51,9 @@ data class StockItem (val ticker: Ticker,
                       val exchangeName: String? = null,
                       val currency: String? = null)
 
-fun YahooResultDto.toStockItem(ticker: Ticker): StockItem {
+fun YahooResultDto.toStockChart(ticker: Ticker): StockChart {
     val meta = chart.result.firstOrNull()?.meta
-    return StockItem(
+    return StockChart(
         ticker = ticker,
         longName = meta?.longName ?: "",
         shortName = meta?.shortName ?: "",
@@ -67,7 +67,7 @@ fun YahooResultDto.toStockItem(ticker: Ticker): StockItem {
     )
 }
 
-fun createPlaceholderStockItem() = StockItem (
+fun createPlaceholderStockChart() = StockChart (
     ticker = InvalidTicker.INVALIDTICKER,
     longName = "",
     shortName = "",

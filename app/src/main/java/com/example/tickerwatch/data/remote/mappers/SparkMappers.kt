@@ -4,13 +4,13 @@ import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.data.remote.dto.SparkItemDto
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import kotlin.math.abs
 
-fun SparkItemDto.toUiModel(ticker: Ticker): SparkStockUiItem? {
+fun SparkItemDto.toUiModel(ticker: Ticker): StockSummary? {
     val symbol = symbol ?: return null
     val latestClose = close?.filterNotNull()?.lastOrNull() ?: return null
-    return SparkStockUiItem(
+    return StockSummary(
         symbol = symbol,
         close = latestClose,
         trend = this.calculateTrend(),

@@ -38,7 +38,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
 import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -49,9 +49,9 @@ private const val MOCK_SHARES = 10
 
 @Composable
 fun PortfolioScreen(
-    holdings: List<SparkStockUiItem>,
+    holdings: List<StockSummary>,
     stockChartUiState: StockChartUiState,
-    currentSparkItem: SparkStockUiItem?,
+    currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit
 ) {
@@ -70,9 +70,9 @@ fun PortfolioScreen(
 
 @Composable
 private fun PortfolioContent(
-    holdings: List<SparkStockUiItem>,
+    holdings: List<StockSummary>,
     stockChartUiState: StockChartUiState,
-    currentSparkItem: SparkStockUiItem?,
+    currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit
 ) {
@@ -218,7 +218,7 @@ private fun SummaryCard(totalValue: Double, dailyChange: Double, dailyPct: Doubl
 }
 
 @Composable
-private fun HoldingRow(stock: SparkStockUiItem, onClick: () -> Unit) {
+private fun HoldingRow(stock: StockSummary, onClick: () -> Unit) {
     val currentValue = stock.close * MOCK_SHARES
     val pct = stock.trend.progressPercent
         .replace("%", "").replace("+", "")

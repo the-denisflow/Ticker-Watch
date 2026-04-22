@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.dp
 
 data object DialogConstants {
     object Header {
-        val backgroundColor: Color = Color.White
+        val backgroundColor: Color = Color.Transparent
         val verticalPadding: Dp = 8.dp
     }
 

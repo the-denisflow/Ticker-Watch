@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import com.example.tickerwatch.common.tickers.InvalidTicker
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.screen.marketlist.StockInfoRow
 import com.example.tickerwatch.presentation.screen.marketlist.StockPriceInfoColum
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -27,7 +27,7 @@ import com.example.tickerwatch.presentation.theme.AppDimens
 
 @Composable
 fun StockUiItem(
-    stock: SparkStockUiItem,
+    stock: StockSummary,
     isInWatchlist: Boolean = false,
     onClickListener: () -> Unit = {},
     onToggleWatchlist: () -> Unit = {}

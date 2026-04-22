@@ -42,7 +42,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
 import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -51,9 +51,9 @@ import com.example.tickerwatch.presentation.theme.AppType
 
 @Composable
 fun WatchlistScreen(
-    items: List<SparkStockUiItem>,
+    items: List<StockSummary>,
     stockChartUiState: StockChartUiState,
-    currentSparkItem: SparkStockUiItem?,
+    currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit,
     onToggleWatchlist: (String) -> Unit = {}
@@ -74,9 +74,9 @@ fun WatchlistScreen(
 
 @Composable
 private fun WatchlistGrid(
-    items: List<SparkStockUiItem>,
+    items: List<StockSummary>,
     StockChartUiState: StockChartUiState,
-    currentSparkItem: SparkStockUiItem?,
+    currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit,
     onToggleWatchlist: (String) -> Unit
@@ -157,7 +157,7 @@ private fun WatchlistEmptyState() {
 
 @Composable
 private fun WatchlistCard(
-    stock: SparkStockUiItem,
+    stock: StockSummary,
     onRemove: () -> Unit,
     modifier: Modifier = Modifier
 ) {

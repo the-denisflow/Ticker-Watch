@@ -25,8 +25,8 @@ import com.example.tickerwatch.common.tickers.CryptoEnum
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
-import com.example.tickerwatch.domain.repository.model.StockItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
+import com.example.tickerwatch.domain.repository.model.StockChart
 import com.example.tickerwatch.presentation.screen.marketlist.StockInfoRow
 import com.example.tickerwatch.presentation.screen.marketlist.StockPriceInfoColum
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -37,7 +37,7 @@ import com.example.tickerwatch.presentation.theme.AppType
 @Composable
 fun StockDetailsDialog(
     stockChartUiState: StockChartUiState,
-    currentSparkItem: SparkStockUiItem,
+    currentSparkItem: StockSummary,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit = {},
 ) {
@@ -45,42 +45,41 @@ fun StockDetailsDialog(
         scrimColor = AppColors.Scrim,
         dragHandle = { DialogHeader() },
         onDismissRequest = { onDismiss() },
+        containerColor = AppColors.Surface,
     ) {
-        Box(Modifier.background(AppColors.Surface)) {
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Header(displayedItem = currentSparkItem)
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            Header(displayedItem = currentSparkItem)
 
-                Spacer(modifier = Modifier.height(AppDimens.Space8))
+            Spacer(modifier = Modifier.height(AppDimens.Space8))
 
-                val validPrices = remember(stockChartUiState.item.prices) {
-                    stockChartUiState.item.prices.filterNotNull().filter { !it.isNaN() }
-                }
-
-                val periodHigh = remember(validPrices) { validPrices.maxOrNull() }
-                val periodLow = remember(validPrices) { validPrices.minOrNull() }
-
-                StockChart(
-                    stockChartUiState = stockChartUiState,
-                    onRangeChange = onRangeChange
-                )
-
-                StockMetaRow(ticker = currentSparkItem.ticker)
-
-                StockDetailsSection(
-                    item = stockChartUiState.item,
-                    periodLabel = stockChartUiState.range.value,
-                    periodHigh = periodHigh,
-                    periodLow = periodLow
-                )
-
-                Spacer(modifier = Modifier.height(AppDimens.Space24))
+            val validPrices = remember(stockChartUiState.item.prices) {
+                stockChartUiState.item.prices.filterNotNull().filter { !it.isNaN() }
             }
+
+            val periodHigh = remember(validPrices) { validPrices.maxOrNull() }
+            val periodLow = remember(validPrices) { validPrices.minOrNull() }
+
+            StockChart(
+                stockChartUiState = stockChartUiState,
+                onRangeChange = onRangeChange
+            )
+
+            StockMetaRow(ticker = currentSparkItem.ticker)
+
+            StockDetailsSection(
+                item = stockChartUiState.item,
+                periodLabel = stockChartUiState.range.value,
+                periodHigh = periodHigh,
+                periodLow = periodLow
+            )
+
+            Spacer(modifier = Modifier.height(AppDimens.Space24))
         }
     }
 }
 
 @Composable
-private fun Header(displayedItem: SparkStockUiItem) {
+private fun Header(displayedItem: StockSummary) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,7 +101,7 @@ private fun formatVolume(volume: Long): String = when {
 
 @Composable
 private fun StockDetailsSection(
-    item: StockItem,
+    item: StockChart,
     periodLabel: String,
     periodHigh: Double?,
     periodLow: Double?

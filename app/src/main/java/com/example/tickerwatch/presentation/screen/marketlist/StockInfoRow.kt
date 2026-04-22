@@ -33,7 +33,7 @@ import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.PriceTrend
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
 import com.example.tickerwatch.presentation.component.shimmer
 import com.example.tickerwatch.presentation.screen.stockdetail.PriceChangeDetails
@@ -43,7 +43,7 @@ import com.example.tickerwatch.presentation.theme.AppType
 
 @Composable
 fun StockInfoRow(
-    stock: SparkStockUiItem,
+    stock: StockSummary,
     modifier: Modifier = Modifier,
     iconSize: Dp = AppDimens.IconStockRow
 ) {
@@ -56,7 +56,7 @@ fun StockInfoRow(
 
 @Composable
 private fun StockInfoRowContent(
-    stock: SparkStockUiItem,
+    stock: StockSummary,
     iconSize: Dp,
     modifier: Modifier = Modifier
 ) {
@@ -136,7 +136,7 @@ private fun SectorChip(ticker: com.example.tickerwatch.common.tickers.Ticker) {
 }
 
 @Composable
-fun StockPriceInfoColum(stock: SparkStockUiItem, subLabel: String? = null) {
+fun StockPriceInfoColum(stock: StockSummary, subLabel: String? = null) {
     if (stock.priceChangeDetails is PriceChangeDetails.Available) {
     val (bgColor, textColor, arrow) = when (stock.priceChangeDetails.changeTrend) {
         PriceTrend.UP -> Triple(AppColors.TrendUpSurface, AppColors.TrendUp, "▲")

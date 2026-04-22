@@ -35,7 +35,7 @@ import com.example.tickerwatch.R
 import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockItem
+import com.example.tickerwatch.domain.repository.model.StockChart
 import com.example.tickerwatch.presentation.chart.plotDiagram
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens

@@ -3,7 +3,7 @@ package com.example.tickerwatch.domain.use_case
 import com.example.tickerwatch.common.Logger
 import com.example.tickerwatch.common.tickers.TickerRegistry
 import com.example.tickerwatch.domain.network.NetworkMonitor
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class SyncMarketStocks @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val logger: Logger
 ) {
-    operator fun invoke(): Flow<List<SparkStockUiItem>> = flow {
+    operator fun invoke(): Flow<List<StockSummary>> = flow {
         val cached = loadBatchFromDb()
         if (cached.isNotEmpty()) {
             logger.info("Emitting cached data")

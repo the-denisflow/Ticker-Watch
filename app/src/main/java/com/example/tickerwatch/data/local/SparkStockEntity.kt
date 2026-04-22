@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -18,7 +18,7 @@ data class SparkStockEntity(
     val pricesJson: String = "[]"
 )
 
-fun SparkStockUiItem.toEntity(): SparkStockEntity = SparkStockEntity(
+fun StockSummary.toEntity(): SparkStockEntity = SparkStockEntity(
     symbol = symbol,
     close = close,
     progressTrend = trend.progressTrend.name,
@@ -26,7 +26,7 @@ fun SparkStockUiItem.toEntity(): SparkStockEntity = SparkStockEntity(
     pricesJson = Gson().toJson(prices)
 )
 
-fun SparkStockEntity.toUiModel(ticker: Ticker): SparkStockUiItem = SparkStockUiItem(
+fun SparkStockEntity.toUiModel(ticker: Ticker): StockSummary = StockSummary(
     symbol = symbol,
     close = close,
     trend = PriceProgressTrend(

@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -36,6 +39,14 @@ class StockListFragment : Fragment() {
         )
 
         setContent {
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    surface = Color.White,
+                    background = Color.White,
+                    onSurface = Color(0xFF1C1C1E),
+                    primary = Color(0xFF007AFF),
+                )
+            ) {
             val sortedStocks by marketViewModel.sortedStocks.collectAsStateWithLifecycle()
             val stockChartUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
             val currentSparkItem by marketViewModel.currentSparkItem.collectAsStateWithLifecycle()
@@ -61,6 +72,7 @@ class StockListFragment : Fragment() {
                 onSortChange = onSortChange,
                 onToggleWatchlist = onToggleWatchlist
             )
+            }
         }
     }
 }

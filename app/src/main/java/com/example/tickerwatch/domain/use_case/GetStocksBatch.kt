@@ -4,7 +4,7 @@ import com.example.tickerwatch.common.Logger
 import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.domain.repository.YahooRepository
 import com.example.tickerwatch.data.remote.mappers.toUiModel
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import javax.inject.Inject
 
 class GetStocksBatch @Inject constructor(
@@ -16,7 +16,7 @@ class GetStocksBatch @Inject constructor(
         range: String,
         interval: String ,
         tickers: List<Ticker>
-    ): List<SparkStockUiItem> {
+    ): List<StockSummary> {
         val result = yahooRepository.getBatchSpark(symbols, range, interval)
         if (result.isFailure) {
             logger.error("Failed to fetch stocks batch: ${result.exceptionOrNull()?.message}")

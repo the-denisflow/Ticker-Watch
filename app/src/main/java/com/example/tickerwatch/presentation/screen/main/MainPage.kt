@@ -43,7 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.screen.marketlist.StockList
 import com.example.tickerwatch.presentation.screen.portfolio.PortfolioScreen
 import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
@@ -65,9 +65,9 @@ private enum class BottomTab(val label: String, val icon: ImageVector) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainPage(
-    stockList: List<SparkStockUiItem>,
+    stockList: List<StockSummary>,
     stockChartUiState: StockChartUiState,
-    currentSparkItem: SparkStockUiItem?,
+    currentSparkItem: StockSummary?,
     sortOption: SortOption,
     watchlistSymbols: Set<String>,
     onSymbolSelected: (String) -> Unit,

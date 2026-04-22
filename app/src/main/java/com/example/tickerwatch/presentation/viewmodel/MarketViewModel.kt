@@ -15,9 +15,9 @@ import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
-import com.example.tickerwatch.domain.repository.model.createPlaceholderStockItem
-import com.example.tickerwatch.domain.use_case.GetStockItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
+import com.example.tickerwatch.domain.repository.model.createPlaceholderStockChart
+import com.example.tickerwatch.domain.use_case.FetchStockChart
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
 import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
 import kotlinx.coroutines.Dispatchers
@@ -38,19 +38,16 @@ enum class SortOption(val label: String) {
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
-    private val getStockItem: GetStockItem,
+    private val FetchStockChart: FetchStockChart,
     private val syncMarketStocks: SyncMarketStocks,
     private val watchlistDao: WatchlistDao
 ) : ViewModel() {
 
     private val _selectedSymbol = MutableStateFlow<String>("")
-    private val _stockChartUiState = MutableStateFlow(StockChartUiState(createPlaceholderStockItem(), Range.ONE_YEAR))
+    private val _stockChartUiState = MutableStateFlow(StockChartUiState(createPlaceholderStockChart(), Range.ONE_YEAR))
     private var fetchStockDetailsJob: Job? = null
     private var syncJob: Job? = null
-
-    private val _batchStocks = MutableStateFlow<List<SparkStockUiItem>>(emptyList())
-    val batchStocks: StateFlow<List<SparkStockUiItem>> = _batchStocks
-
+    private val _batchStocks = MutableStateFlow<List<StockSummary>>(emptyList())
     private val _sortOption = MutableStateFlow(SortOption.DEFAULT)
     val sortOption: StateFlow<SortOption> = _sortOption
 
@@ -60,7 +57,7 @@ class MarketViewModel @Inject constructor(
         .map { it.toSet() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
 
-    val sortedStocks: StateFlow<List<SparkStockUiItem>> = combine(
+    val sortedStocks: StateFlow<List<StockSummary>> = combine(
         _batchStocks, _sortOption
     ) { stocks, sort ->
         logger.info("combine emitted — stocks size: ${stocks.size}, sort: $sort")
@@ -85,7 +82,7 @@ class MarketViewModel @Inject constructor(
     )
 
 
-    val currentSparkItem: StateFlow<SparkStockUiItem?> = combine(
+    val currentSparkItem: StateFlow<StockSummary?> = combine(
         _selectedSymbol,
         _batchStocks
     ) { symbol, stocks ->
@@ -135,9 +132,9 @@ class MarketViewModel @Inject constructor(
 
         fetchStockDetailsJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                val fetchedItem = getStockItem(symbol = _selectedSymbol.value, range = range)
+                val fetchedItem = FetchStockChart(symbol = _selectedSymbol.value, range = range)
                 if (fetchedItem != null) {
-                    _stockChartUiState.value = StockChartUiState(fetchedItem, range)
+                    _stockChartUiState.value = StockChartUiState(fetchedItem, range, isLoading = false)
                 }
             }.onFailure { exception ->
                 logger.error("Failed to update displayed range: ${exception.message}")

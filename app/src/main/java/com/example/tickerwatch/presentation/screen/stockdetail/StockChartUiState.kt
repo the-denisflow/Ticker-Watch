@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockItem
+import com.example.tickerwatch.domain.repository.model.StockChart
 
 sealed class PriceChangeDetails {
     data class Available(
@@ -17,7 +17,7 @@ sealed class PriceChangeDetails {
 }
 
 data class StockChartUiState(
-    val item: StockItem,
+    val item: StockChart,
     val range: Range,
     val isLoading: Boolean = false,
 ) {

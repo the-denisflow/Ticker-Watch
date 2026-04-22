@@ -5,13 +5,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.SparkStockUiItem
+import com.example.tickerwatch.domain.repository.model.StockSummary
 
 @Composable
 fun StockDetailOverlay(
     itemIsSelected: Boolean,
     stockChartUiState: StockChartUiState,
-    currentSparkItem: SparkStockUiItem?,
+    currentSparkItem: StockSummary?,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit
 ) {
