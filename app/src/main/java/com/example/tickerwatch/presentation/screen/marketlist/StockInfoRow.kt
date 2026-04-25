@@ -74,23 +74,23 @@ private fun StockInfoRowContent(
             tint = Color.Unspecified
         )
         Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(start = AppDimens.Space12)
+            verticalArrangement = Arrangement.spacedBy(AppDimens.Space2, Alignment.CenterVertically),
+            modifier = Modifier.padding(start = AppDimens.Space12, top = AppDimens.Space3, bottom = AppDimens.Space3)
         ) {
             Text(
                 text = stock.ticker.tickerName,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = AppType.BodyMedium,
+                lineHeight = AppType.BodyMedium,
                 color = AppColors.Primary
             )
-            Spacer(modifier = Modifier.height(AppDimens.Space2))
             Text(
                 text = stock.ticker.symbol,
                 fontSize = AppType.Badge,
+                lineHeight = AppType.Badge,
                 fontWeight = FontWeight.Normal,
                 color = AppColors.Secondary
             )
-            Spacer(modifier = Modifier.height(AppDimens.Space3))
             SectorChip(stock.ticker)
         }
     }
@@ -124,11 +124,13 @@ private fun SectorChip(ticker: com.example.tickerwatch.common.tickers.Ticker) {
     Box(
         modifier = Modifier
             .background(bg, shape = RoundedCornerShape(AppDimens.CornerXs))
-            .padding(horizontal = AppDimens.Space5, vertical = AppDimens.Space1)
+            .padding(horizontal = AppDimens.Space5, vertical = AppDimens.Space1),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
             fontSize = AppType.SectorChip,
+            lineHeight = AppType.SectorChip,
             fontWeight = FontWeight.Medium,
             color = fg
         )

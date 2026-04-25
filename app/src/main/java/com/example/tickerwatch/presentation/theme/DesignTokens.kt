@@ -134,7 +134,7 @@ object AppType {
     val Badge       = 11.sp   // trend badge, change percentage
     val Caption     = 12.sp   // symbol, secondary info, metadata chips
     val Body        = 13.sp   // filter chips, sort descriptions, period buttons
-    val BodyMedium  = 14.sp   // detail rows, empty-state description
+    val BodyMedium  = 11.sp   // detail rows, empty-state description
     val BodyLarge   = 15.sp   // stock name in list, prices, holding name
     val CardTitle   = 16.sp   // watchlist card price
     val SectionTitle= 18.sp   // section headers, sort sheet title, dialog perf row

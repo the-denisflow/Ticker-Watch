@@ -26,7 +26,7 @@ import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 
 @Composable
-fun StockUiItem(
+fun StockUiListItem(
     stock: StockSummary,
     isInWatchlist: Boolean = false,
     onClickListener: () -> Unit = {},

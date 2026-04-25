@@ -27,7 +27,7 @@ import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.component.StockUiItem
+import com.example.tickerwatch.presentation.component.StockUiListItem
 import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
 import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -79,7 +79,7 @@ fun StockList(
             }
             if(list.isNotEmpty()) {
                 items(filteredList, key = { stock -> stock.symbol }) { stock ->
-                    StockUiItem(
+                    StockUiListItem(
                         stock = stock,
                         isInWatchlist = stock.symbol in watchlistSymbols,
                         onClickListener = {
