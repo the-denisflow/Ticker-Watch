@@ -3,8 +3,9 @@ package com.example.tickerwatch.domain.repository.model
 import androidx.compose.runtime.Immutable
 import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.common.tickers.Ticker
-import com.example.tickerwatch.presentation.component.stockdialog.PriceChangeDetails
-import com.example.tickerwatch.presentation.component.stockdialog.getPriceChangedDetails
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.PriceChangeDetails
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.getPriceChangedDetails
+
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}
 
@@ -23,7 +24,11 @@ data class StockSummary(
     val prices: List<Double> = emptyList(),
     val chartPreviousClose: Double? = null
 ) {
-    val priceChangeDetails: PriceChangeDetails = getPriceChangedDetails(prices, chartPreviousClose)
+    val priceChangeDetails: PriceChangeDetails =
+        getPriceChangedDetails(
+            prices,
+            chartPreviousClose
+        )
 }
 
 private const val PLACEHOLDER_COUNT = 10

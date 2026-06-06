@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.chart
+package com.example.tickerwatch.presentation.androidview.chart
 
 import android.content.Context
 import android.widget.TextView

@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.component.stockdialog
+package com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util
 
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import kotlin.math.abs

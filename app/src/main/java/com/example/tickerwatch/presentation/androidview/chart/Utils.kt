@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.chart
+package com.example.tickerwatch.presentation.androidview.chart
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable

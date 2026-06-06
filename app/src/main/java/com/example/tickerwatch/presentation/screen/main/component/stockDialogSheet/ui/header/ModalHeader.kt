@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.component.stockdialog
+package com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.header
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,10 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.DialogConstants
 
 @Preview
 @Composable
-fun DialogHeader() {
+fun ModalHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()

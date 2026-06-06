@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.component
+package com.example.tickerwatch.presentation.screen.main.component.marketlist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,8 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.screen.marketlist.StockInfoRow
-import com.example.tickerwatch.presentation.screen.marketlist.StockPriceInfoColum
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 

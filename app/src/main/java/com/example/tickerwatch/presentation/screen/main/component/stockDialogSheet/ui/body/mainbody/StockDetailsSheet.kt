@@ -14,6 +14,10 @@ import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.mapper.toDetails
 import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart.StockChart
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.metadatasection.StockMetaRow
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.moredetailssection.StockDetailsSection
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.header.ModalHeader
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 
@@ -28,14 +32,14 @@ fun StockDetailsSheet(
 ) {
     ModalBottomSheet(
         scrimColor = AppColors.Scrim,
-        dragHandle = { DialogHeader() },
+        dragHandle = { ModalHeader() },
         onDismissRequest = { onDismiss() },
         containerColor = AppColors.Surface,
     ) {
         val detailsRow  = remember(stockChartUiState.uiItem) { stockChartUiState.uiItem.toDetails().rows }
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Header(displayedItem = currentSparkItem)
+            SheetHeader(displayedItem = currentSparkItem)
 
             Spacer(modifier = Modifier.height(AppDimens.Space8))
 

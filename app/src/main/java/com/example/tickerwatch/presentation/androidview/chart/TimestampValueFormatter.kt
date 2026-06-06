@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.chart
+package com.example.tickerwatch.presentation.androidview.chart
 
 import com.example.tickerwatch.domain.repository.model.Range
 import com.github.mikephil.charting.components.AxisBase

@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.screen.marketlist
+package com.example.tickerwatch.presentation.screen.main.component.marketlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -26,7 +26,6 @@ import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.component.StockUiListItem
 import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 import com.example.tickerwatch.presentation.theme.AppColors

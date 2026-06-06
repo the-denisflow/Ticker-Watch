@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.component.stockdialog
+package com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart
 
 import android.view.LayoutInflater
 import androidx.compose.animation.core.Spring
@@ -24,8 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
-import com.example.tickerwatch.presentation.component.shimmer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,8 +32,11 @@ import com.example.tickerwatch.R
 import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.presentation.chart.plotDiagram
+import com.example.tickerwatch.presentation.androidview.chart.plotDiagram
 import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.screen.main.component.shared.rememberShimmerTranslateAnim
+import com.example.tickerwatch.presentation.screen.main.component.shared.shimmer
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.PriceChangeDetails
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType

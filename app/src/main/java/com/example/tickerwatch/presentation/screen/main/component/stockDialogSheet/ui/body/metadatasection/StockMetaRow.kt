@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.component.stockdialog
+package com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.metadatasection
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.screen.marketlist
+package com.example.tickerwatch.presentation.screen.main.component.marketlist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,8 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
-import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
-import com.example.tickerwatch.presentation.component.shimmer
+import com.example.tickerwatch.presentation.screen.main.component.shared.rememberShimmerTranslateAnim
+import com.example.tickerwatch.presentation.screen.main.component.shared.shimmer
 import com.example.tickerwatch.presentation.theme.AppDimens
 
 @Composable

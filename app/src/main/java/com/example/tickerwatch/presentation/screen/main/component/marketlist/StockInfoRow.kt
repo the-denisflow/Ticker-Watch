@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.screen.marketlist
+package com.example.tickerwatch.presentation.screen.main.component.marketlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
@@ -27,12 +28,13 @@ import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
-import com.example.tickerwatch.presentation.component.shimmer
-import com.example.tickerwatch.presentation.component.stockdialog.PriceChangeDetails
+import com.example.tickerwatch.presentation.screen.main.component.shared.rememberShimmerTranslateAnim
+import com.example.tickerwatch.presentation.screen.main.component.shared.shimmer
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.PriceChangeDetails
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -105,7 +107,7 @@ private fun StockInfoRowContent(
 
 
 @Composable
-private fun SectorChip(ticker: com.example.tickerwatch.common.tickers.Ticker) {
+private fun SectorChip(ticker: Ticker) {
     val sector = (ticker as? StockMarketEnum)?.sector
     val isCrypto = ticker is CryptoEnum
 
@@ -174,7 +176,7 @@ fun StockPriceInfoColum(stock: StockSummary, subLabel: String? = null) {
 }
 
 @Composable
-private fun StockPriceShimmer(translateAnim: androidx.compose.runtime.State<Float>) {
+private fun StockPriceShimmer(translateAnim: State<Float>) {
     Box(
         modifier = Modifier
             .size(width = 60.dp, height = 20.dp)
