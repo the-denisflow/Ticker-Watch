@@ -1,27 +1,22 @@
 package com.example.tickerwatch.presentation.screen.marketlist
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -32,11 +27,12 @@ import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
 import com.example.tickerwatch.presentation.component.shimmer
-import com.example.tickerwatch.presentation.screen.stockdetail.PriceChangeDetails
+import com.example.tickerwatch.presentation.component.stockdialog.PriceChangeDetails
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -186,4 +182,40 @@ private fun StockPriceShimmer(translateAnim: androidx.compose.runtime.State<Floa
             .clip(RoundedCornerShape(AppDimens.CornerSm))
             .shimmer(translateAnim)
     )
+}
+
+private val previewStockTech = StockSummary(
+    symbol = "AAPL",
+    close = 189.84,
+    ticker = StockMarketEnum.APPLE,
+    trend = PriceProgressTrend(PriceTrend.UP, "+1.23%"),
+    prices = listOf(185.0, 187.0, 188.0, 189.84),
+    chartPreviousClose = 185.0
+)
+
+private val previewStockCrypto = StockSummary(
+    symbol = "BTC-USD",
+    close = 67_000.0,
+    ticker = CryptoEnum.BITCOIN,
+    trend = PriceProgressTrend(PriceTrend.DOWN, "-2.10%"),
+    prices = listOf(70_000.0, 68_000.0, 67_500.0, 67_000.0),
+    chartPreviousClose = 70_000.0
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun StockInfoRowTechPreview() {
+    StockInfoRow(stock = previewStockTech)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StockInfoRowCryptoPreview() {
+    StockInfoRow(stock = previewStockCrypto)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StockPriceInfoColumPreview() {
+    StockPriceInfoColum(stock = previewStockTech)
 }

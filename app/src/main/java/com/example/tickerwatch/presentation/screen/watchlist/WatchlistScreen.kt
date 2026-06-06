@@ -43,8 +43,8 @@ import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
-import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -104,7 +104,7 @@ private fun WatchlistGrid(
             }
         }
 
-        StockDetailOverlay(
+        StockDetailsOverlay(
             itemIsSelected = itemIsSelected,
             stockChartUiState = StockChartUiState,
             currentSparkItem = currentSparkItem,

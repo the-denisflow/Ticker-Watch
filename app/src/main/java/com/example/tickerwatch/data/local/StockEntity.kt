@@ -21,7 +21,7 @@ fun StockChart.toEntity(): StockEntity = StockEntity(
     longName = longName,
     shortName = shortName,
     price = price,
-    pricesJson = Gson().toJson(prices)
+    pricesJson = Gson().toJson(validPrices)
 )
 
 fun StockEntity.toDomain(ticker: Ticker): StockChart = StockChart(

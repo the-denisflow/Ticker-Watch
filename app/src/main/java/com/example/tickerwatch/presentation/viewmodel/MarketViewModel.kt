@@ -11,15 +11,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
-import com.example.tickerwatch.common.tickers.InvalidTicker
-import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
-import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.domain.repository.model.createPlaceholderStockChart
 import com.example.tickerwatch.domain.use_case.FetchStockChart
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
-import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockChartUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted

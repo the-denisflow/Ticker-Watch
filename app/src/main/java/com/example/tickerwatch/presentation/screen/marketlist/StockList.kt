@@ -16,7 +16,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,8 +27,8 @@ import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.component.StockUiListItem
-import com.example.tickerwatch.presentation.screen.stockdetail.StockDetailOverlay
-import com.example.tickerwatch.presentation.screen.stockdetail.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -52,7 +51,7 @@ fun StockList(
     onRangeChange: (Range) -> Unit,
     onToggleWatchlist: (String) -> Unit = {}
 ) {
-    var itemIsSelected by remember { mutableStateOf(false) }
+    var stockDetailsOverlayIsShown by remember { mutableStateOf(false) }
     var activeFilter by remember { mutableStateOf(SectorFilter.ALL) }
 
     val filteredList = remember(list, activeFilter) {
@@ -83,20 +82,20 @@ fun StockList(
                         stock = stock,
                         isInWatchlist = stock.symbol in watchlistSymbols,
                         onClickListener = {
-                            itemIsSelected = true
-                           onSymbolSelected(stock.symbol)
+                            stockDetailsOverlayIsShown = true
+                            onSymbolSelected(stock.symbol)
                         },
                         onToggleWatchlist = { onToggleWatchlist(stock.symbol) }
                     )
                 }
             }
         }
-        StockDetailOverlay(
-            itemIsSelected = itemIsSelected,
+        StockDetailsOverlay(
+            itemIsSelected = stockDetailsOverlayIsShown,
             stockChartUiState = stockChartUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
-            onDismiss = { itemIsSelected = false }
+            onDismiss = { stockDetailsOverlayIsShown = false }
         )
     }
 }

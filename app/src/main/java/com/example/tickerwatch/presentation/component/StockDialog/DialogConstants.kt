@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.screen.stockdetail
+package com.example.tickerwatch.presentation.component.stockdialog
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp

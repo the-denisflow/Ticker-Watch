@@ -37,7 +37,9 @@ fun StockUiListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(AppDimens.StockRowHeight)
-                .clickable { onClickListener() }
+                .clickable {
+                    onClickListener()
+                }
                 .padding(start = AppDimens.Space16, end = AppDimens.Space4),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,

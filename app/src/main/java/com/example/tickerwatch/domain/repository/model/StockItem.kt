@@ -3,8 +3,8 @@ package com.example.tickerwatch.domain.repository.model
 import androidx.compose.runtime.Immutable
 import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.common.tickers.Ticker
-import com.example.tickerwatch.presentation.screen.stockdetail.PriceChangeDetails
-import com.example.tickerwatch.presentation.screen.stockdetail.getPriceChangedDetails
+import com.example.tickerwatch.presentation.component.stockdialog.PriceChangeDetails
+import com.example.tickerwatch.presentation.component.stockdialog.getPriceChangedDetails
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}
 
@@ -40,16 +40,20 @@ val placeholders: List<StockSummary> = (0 until PLACEHOLDER_COUNT).map { index -
     )
 }
 
-data class StockChart (val ticker: Ticker,
-                      val longName: String,
-                      val shortName: String,
-                      var price: Double,
-                      var prices: List<Double?> = emptyList(),
-                      var timestamp: List<Int> = emptyList(),
-                      val previousClose: Double? = null,
-                      val volume: Long? = null,
-                      val exchangeName: String? = null,
-                      val currency: String? = null)
+data class StockChart(
+    val ticker: Ticker,
+    val longName: String,
+    val shortName: String,
+    var price: Double,
+    var timestamp: List<Int> = emptyList(),
+    val previousClose: Double? = null,
+    val volume: Long? = null,
+    val exchangeName: String? = null,
+    val currency: String? = null,
+    val currentRange: String? = null,
+    private var prices: List<Double?> = emptyList()) {
+    val validPrices = prices.mapNotNull { it?.takeIf { !it.isNaN() } }
+}
 
 fun YahooResultDto.toStockChart(ticker: Ticker): StockChart {
     val meta = chart.result.firstOrNull()?.meta
@@ -63,6 +67,7 @@ fun YahooResultDto.toStockChart(ticker: Ticker): StockChart {
         previousClose = meta?.chartPreviousClose,
         volume = meta?.regularMarketVolume,
         exchangeName = meta?.fullExchangeName,
+        currentRange = meta?.range,
         currency = meta?.currency
     )
 }

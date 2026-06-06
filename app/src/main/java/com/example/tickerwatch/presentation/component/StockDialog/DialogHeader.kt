@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.screen.stockdetail
+package com.example.tickerwatch.presentation.component.stockdialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.sync.Mutex
 
 @Preview
 @Composable

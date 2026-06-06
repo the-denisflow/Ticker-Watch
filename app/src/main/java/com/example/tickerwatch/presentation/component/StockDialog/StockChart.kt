@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.screen.stockdetail
+package com.example.tickerwatch.presentation.component.stockdialog
 
 import android.view.LayoutInflater
 import androidx.compose.animation.core.Spring
@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.example.tickerwatch.presentation.component.rememberShimmerTranslateAnim
 import com.example.tickerwatch.presentation.component.shimmer
@@ -35,12 +34,13 @@ import com.example.tickerwatch.R
 import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockChart
 import com.example.tickerwatch.presentation.chart.plotDiagram
+import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
 import com.github.mikephil.charting.charts.LineChart
+import kotlin.math.abs
 
 @Composable
 internal fun StockChart(
@@ -50,7 +50,7 @@ internal fun StockChart(
     val details = stockChartUiState.priceChangeDetails
     if (!stockChartUiState.isLoading && details is PriceChangeDetails.Available) {
         PeriodPerformanceRow(
-            price = "$" + stockChartUiState.item.price.toString(),
+            price = "$" + stockChartUiState.uiItem.price.toString(),
             trend = details.changeTrend,
             periodPercent = details.changePercent,
             periodAbsoluteChange = details.changeAbsolut,
@@ -80,8 +80,8 @@ internal fun StockChart(
             update = { view ->
                 val chart = view.findViewById<LineChart>(R.id.line_chart)
                 plotDiagram(
-                    stockChartUiState.item.prices,
-                    stockChartUiState.item.timestamp,
+                    stockChartUiState.uiItem.prices,
+                    stockChartUiState.uiItem.timestamp,
                     stockChartUiState.range,
                     chart,
                     chartTrend
@@ -161,7 +161,7 @@ private fun PeriodPerformanceRow(
         PriceTrend.NEUTRAL -> Triple("–", AppColors.Secondary, AppColors.SurfaceVariant)
     }
     val sign = if (periodAbsoluteChange >= 0) "+" else "-"
-    val absFormatted = "%.2f".format(kotlin.math.abs(periodAbsoluteChange))
+    val absFormatted = "%.2f".format(abs(periodAbsoluteChange))
     val formattedAmount = "${sign}$$absFormatted"
 
     Row(

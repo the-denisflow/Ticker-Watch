@@ -1,10 +1,7 @@
-package com.example.tickerwatch.presentation.screen.stockdetail
+package com.example.tickerwatch.presentation.component.stockdialog
 
-import android.util.Log
-import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.domain.repository.model.PriceTrend
-import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockChart
+import kotlin.math.abs
 
 sealed class PriceChangeDetails {
     data class Available(
@@ -14,14 +11,6 @@ sealed class PriceChangeDetails {
     ) : PriceChangeDetails()
 
     data object Unavailable : PriceChangeDetails()
-}
-
-data class StockChartUiState(
-    val item: StockChart,
-    val range: Range,
-    val isLoading: Boolean = false,
-) {
-    val priceChangeDetails: PriceChangeDetails = getPriceChangedDetails(item.prices, item.previousClose)
 }
 
 fun getPriceChangedDetails(prices: List<Double?>, previousClose: Double? = null): PriceChangeDetails {
@@ -42,7 +31,7 @@ fun getPriceChangedDetails(prices: List<Double?>, previousClose: Double? = null)
 
     return PriceChangeDetails.Available(
         changeTrend = trend,
-        changePercent = "%.2f%%".format(kotlin.math.abs(pct)),
+        changePercent = "%.2f%%".format(abs(pct)),
         changeAbsolut = lastPrice - baseline
     )
 }
