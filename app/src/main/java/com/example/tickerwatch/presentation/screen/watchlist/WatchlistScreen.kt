@@ -43,7 +43,7 @@ import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockChartViewUiState
 import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
@@ -52,7 +52,7 @@ import com.example.tickerwatch.presentation.theme.AppType
 @Composable
 fun WatchlistScreen(
     items: List<StockSummary>,
-    stockChartUiState: StockChartUiState,
+    StockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit,
@@ -63,7 +63,7 @@ fun WatchlistScreen(
     } else {
         WatchlistGrid(
             items = items,
-            StockChartUiState = stockChartUiState,
+            StockChartViewUiState = StockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onSymbolSelected = onSymbolSelected,
             onRangeChange = onRangeChange,
@@ -75,7 +75,7 @@ fun WatchlistScreen(
 @Composable
 private fun WatchlistGrid(
     items: List<StockSummary>,
-    StockChartUiState: StockChartUiState,
+    StockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit,
@@ -106,7 +106,7 @@ private fun WatchlistGrid(
 
         StockDetailsOverlay(
             itemIsSelected = itemIsSelected,
-            stockChartUiState = StockChartUiState,
+            StockChartViewUiState = StockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = { itemIsSelected = false }

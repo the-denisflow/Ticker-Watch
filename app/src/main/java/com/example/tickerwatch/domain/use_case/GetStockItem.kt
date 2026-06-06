@@ -4,17 +4,17 @@ import com.example.tickerwatch.common.tickers.TickerRegistry.replaceSymbolWithTi
 import com.example.tickerwatch.domain.repository.YahooRepository
 import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator.getValidIntervalsFor
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockChart
-import com.example.tickerwatch.domain.repository.model.toStockChart
+import com.example.tickerwatch.domain.repository.model.StockChartView
+import com.example.tickerwatch.domain.repository.model.toStockChartView
 import javax.inject.Inject
 
-class FetchStockChart @Inject constructor(
+class FetchStockChartView @Inject constructor(
     private val yahooRepository: YahooRepository
 ) {
     suspend operator fun invoke(
         symbol: String,
         range: Range
-    ): StockChart? {
+    ): StockChartView? {
         val chartResult = yahooRepository.getSingleChart(
             symbol = symbol,
             range = range.value,
@@ -24,7 +24,7 @@ class FetchStockChart @Inject constructor(
         val chart = chartResult.getOrNull() ?: return null
         val ticker = replaceSymbolWithTickerEnum(symbol)
 
-        return chart.toStockChart(
+        return chart.toStockChartView(
             ticker = ticker
         )
     }

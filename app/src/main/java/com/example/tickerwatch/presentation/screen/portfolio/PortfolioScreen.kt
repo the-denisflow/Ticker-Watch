@@ -39,7 +39,7 @@ import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockChartViewUiState
 import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
@@ -50,7 +50,7 @@ private const val MOCK_SHARES = 10
 @Composable
 fun PortfolioScreen(
     holdings: List<StockSummary>,
-    stockChartUiState: StockChartUiState,
+    StockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit
@@ -60,7 +60,7 @@ fun PortfolioScreen(
     } else {
         PortfolioContent(
             holdings = holdings,
-            stockChartUiState = stockChartUiState,
+            StockChartViewUiState = StockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onSymbolSelected = onSymbolSelected,
             onRangeChange = onRangeChange
@@ -71,7 +71,7 @@ fun PortfolioScreen(
 @Composable
 private fun PortfolioContent(
     holdings: List<StockSummary>,
-    stockChartUiState: StockChartUiState,
+    StockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit
@@ -141,7 +141,7 @@ private fun PortfolioContent(
 
         StockDetailsOverlay(
             itemIsSelected = itemIsSelected,
-            stockChartUiState = stockChartUiState,
+            StockChartViewUiState = StockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = { itemIsSelected = false }

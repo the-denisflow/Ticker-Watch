@@ -48,7 +48,7 @@ class StockListFragment : Fragment() {
                 )
             ) {
             val sortedStocks by marketViewModel.sortedStocks.collectAsStateWithLifecycle()
-            val stockChartUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
+            val StockChartViewUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
             val currentSparkItem by marketViewModel.currentSparkItem.collectAsStateWithLifecycle()
             val sortOption by marketViewModel.sortOption.collectAsStateWithLifecycle()
             val watchlistSymbols by marketViewModel.watchlistSymbols.collectAsStateWithLifecycle()
@@ -63,7 +63,7 @@ class StockListFragment : Fragment() {
 
             MainPage(
                 stockList = listOfStocks,
-                stockChartUiState = stockChartUiState,
+                StockChartViewUiState = StockChartViewUiState,
                 currentSparkItem = currentSparkItem,
                 sortOption = sortOption,
                 watchlistSymbols = watchlistSymbols,

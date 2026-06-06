@@ -2,7 +2,7 @@ package com.example.tickerwatch.presentation.model
 
 import com.example.tickerwatch.common.tickers.Ticker
 
-data class StockChartUi(
+data class StockChartViewUi(
     val ticker: Ticker,
     val longName: String,
     val shortName: String,

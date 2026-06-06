@@ -26,8 +26,8 @@ import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
+import com.example.tickerwatch.presentation.model.StockChartViewUiState
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -43,7 +43,7 @@ private enum class SectorFilter(val label: String) {
 @Composable
 fun StockList(
     list: List<StockSummary>,
-    stockChartUiState: StockChartUiState,
+    StockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     watchlistSymbols: Set<String> = emptySet(),
     onSymbolSelected: (String) -> Unit,
@@ -91,7 +91,7 @@ fun StockList(
         }
         StockDetailsOverlay(
             itemIsSelected = stockDetailsOverlayIsShown,
-            stockChartUiState = stockChartUiState,
+            StockChartViewUiState = StockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = { stockDetailsOverlayIsShown = false }

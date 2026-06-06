@@ -6,12 +6,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockChartViewUiState
 
 @Composable
 fun StockDetailsOverlay(
     itemIsSelected: Boolean,
-    stockChartUiState: StockChartUiState,
+    StockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit
@@ -20,7 +20,7 @@ fun StockDetailsOverlay(
 
     if (currentSparkItem != null) {
         StockDetailsSheet(
-            stockChartUiState = stockChartUiState,
+            StockChartViewUiState = StockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = onDismiss

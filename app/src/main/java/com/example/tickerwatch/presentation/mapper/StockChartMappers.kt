@@ -1,10 +1,10 @@
 package com.example.tickerwatch.presentation.mapper
 
-import com.example.tickerwatch.domain.repository.model.StockChart
-import com.example.tickerwatch.presentation.model.StockChartUi
+import com.example.tickerwatch.domain.repository.model.StockChartView
+import com.example.tickerwatch.presentation.model.StockChartViewUi
 import com.example.tickerwatch.presentation.model.StockDetailsUi
 
-fun StockChart.toUi(): StockChartUi = StockChartUi(
+fun StockChartView.toUi(): StockChartViewUi = StockChartViewUi(
     ticker = this.ticker,
     longName = this.longName,
     shortName = this.shortName,
@@ -17,7 +17,7 @@ fun StockChart.toUi(): StockChartUi = StockChartUi(
     currentRange = this.currentRange,
     prices = this.validPrices)
 
-fun StockChartUi.toDetails(): StockDetailsUi {
+fun StockChartViewUi.toDetails(): StockDetailsUi {
     val low = prices.minOrNull()
     val high = prices.maxOrNull()
     val rows = buildList {

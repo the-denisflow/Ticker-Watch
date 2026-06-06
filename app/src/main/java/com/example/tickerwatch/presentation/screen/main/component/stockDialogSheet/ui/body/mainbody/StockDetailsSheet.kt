@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.mapper.toDetails
-import com.example.tickerwatch.presentation.model.StockChartUiState
-import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart.StockChart
+import com.example.tickerwatch.presentation.model.StockChartViewUiState
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart.StockChartView
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.metadatasection.StockMetaRow
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.moredetailssection.StockDetailsSection
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.header.ModalHeader
@@ -25,7 +25,7 @@ import com.example.tickerwatch.presentation.theme.AppDimens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockDetailsSheet(
-    stockChartUiState: StockChartUiState,
+    StockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit = {},
@@ -36,15 +36,15 @@ fun StockDetailsSheet(
         onDismissRequest = { onDismiss() },
         containerColor = AppColors.Surface,
     ) {
-        val detailsRow  = remember(stockChartUiState.uiItem) { stockChartUiState.uiItem.toDetails().rows }
+        val detailsRow  = remember(StockChartViewUiState.uiItem) { StockChartViewUiState.uiItem.toDetails().rows }
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             SheetHeader(displayedItem = currentSparkItem)
 
             Spacer(modifier = Modifier.height(AppDimens.Space8))
 
-            StockChart(
-                stockChartUiState = stockChartUiState,
+            StockChartView(
+                StockChartViewUiState = StockChartViewUiState,
                 onRangeChange = onRangeChange
             )
 

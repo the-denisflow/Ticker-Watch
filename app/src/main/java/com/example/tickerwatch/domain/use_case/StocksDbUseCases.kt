@@ -6,7 +6,7 @@ import com.example.tickerwatch.data.local.toEntity
 import com.example.tickerwatch.data.local.toUiModel
 import com.example.tickerwatch.data.repository.DbRepository
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.domain.repository.model.StockChart
+import com.example.tickerwatch.domain.repository.model.StockChartView
 import javax.inject.Inject
 
 class LoadStocksFromDb @Inject constructor(private val dbRepository: DbRepository) {
@@ -14,7 +14,7 @@ class LoadStocksFromDb @Inject constructor(private val dbRepository: DbRepositor
 }
 
 class SaveStocksInDb @Inject constructor(private val dbRepository: DbRepository) {
-    suspend operator fun invoke(stocks: List<StockChart>) {
+    suspend operator fun invoke(stocks: List<StockChartView>) {
         dbRepository.saveStocks(stocks.map { it.toEntity() })
     }
 }

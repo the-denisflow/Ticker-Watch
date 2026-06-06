@@ -13,10 +13,10 @@ import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.domain.repository.model.createPlaceholderStockChart
-import com.example.tickerwatch.domain.use_case.FetchStockChart
+import com.example.tickerwatch.domain.repository.model.createPlaceholderStockChartView
+import com.example.tickerwatch.domain.use_case.FetchStockChartView
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
-import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockChartViewUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,13 +35,13 @@ enum class SortOption(val label: String) {
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
-    private val FetchStockChart: FetchStockChart,
+    private val FetchStockChartView: FetchStockChartView,
     private val syncMarketStocks: SyncMarketStocks,
     private val watchlistDao: WatchlistDao
 ) : ViewModel() {
 
     private val _selectedSymbol = MutableStateFlow<String>("")
-    private val _stockChartUiState = MutableStateFlow(StockChartUiState(createPlaceholderStockChart(), Range.ONE_YEAR))
+    private val _StockChartViewUiState = MutableStateFlow(StockChartViewUiState(createPlaceholderStockChartView(), Range.ONE_YEAR))
     private var fetchStockDetailsJob: Job? = null
     private var syncJob: Job? = null
     private val _batchStocks = MutableStateFlow<List<StockSummary>>(emptyList())
@@ -86,7 +86,7 @@ class MarketViewModel @Inject constructor(
         stocks.find { it.symbol == symbol }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val stockDetailState: StateFlow<StockChartUiState> = _stockChartUiState
+    val stockDetailState: StateFlow<StockChartViewUiState> = _StockChartViewUiState
 
     init {
         syncBatchStocks()
@@ -124,18 +124,18 @@ class MarketViewModel @Inject constructor(
         logger.info("Update Displayed Range: ${range.value}")
         fetchStockDetailsJob?.cancel()
 
-        val stateBeforeFetch = _stockChartUiState.value
-        _stockChartUiState.value = stateBeforeFetch.copy(range = range, isLoading = true)
+        val stateBeforeFetch = _StockChartViewUiState.value
+        _StockChartViewUiState.value = stateBeforeFetch.copy(range = range, isLoading = true)
 
         fetchStockDetailsJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                val fetchedItem = FetchStockChart(symbol = _selectedSymbol.value, range = range)
+                val fetchedItem = FetchStockChartView(symbol = _selectedSymbol.value, range = range)
                 if (fetchedItem != null) {
-                    _stockChartUiState.value = StockChartUiState(fetchedItem, range, isLoading = false)
+                    _StockChartViewUiState.value = StockChartViewUiState(fetchedItem, range, isLoading = false)
                 }
             }.onFailure { exception ->
                 logger.error("Failed to update displayed range: ${exception.message}")
-                _stockChartUiState.value = stateBeforeFetch
+                _StockChartViewUiState.value = stateBeforeFetch
             }
         }
     }

@@ -87,5 +87,17 @@ fun plotDiagram(
     chart.isDragEnabled = false
     chart.isHighlightPerDragEnabled = true
     chart.marker = ChartMarkerView(chart.context, displayedRange)
+
+    chart.data = LineData(dataSet)
+
+    chart.setExtraOffsets(0f, 0f, 0f, 2f)
+
+    chart.axisLeft.apply {
+        axisMinimum = dataSet.yMin - 1f
+        axisMaximum = dataSet.yMax + 1f
+    }
+
+    chart.setClipValuesToContent(false)
+
     chart.invalidate()
 }

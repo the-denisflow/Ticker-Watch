@@ -9,218 +9,98 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.tickerwatch.R
-import com.example.tickerwatch.domain.repository.model.IntervalRangeValidator
+import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.StockChartView
 import com.example.tickerwatch.presentation.androidview.chart.plotDiagram
-import com.example.tickerwatch.presentation.model.StockChartUiState
-import com.example.tickerwatch.presentation.screen.main.component.shared.rememberShimmerTranslateAnim
-import com.example.tickerwatch.presentation.screen.main.component.shared.shimmer
+import com.example.tickerwatch.presentation.model.StockChartViewUiState
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.PriceChangeDetails
 import com.example.tickerwatch.presentation.theme.AppColors
-import com.example.tickerwatch.presentation.theme.AppDimens
-import com.example.tickerwatch.presentation.theme.AppType
 import com.github.mikephil.charting.charts.LineChart
-import kotlin.math.abs
 
 @Composable
-internal fun StockChart(
-    stockChartUiState: StockChartUiState,
+internal fun StockChartView(
+    StockChartViewUiState: StockChartViewUiState,
     onRangeChange: (Range) -> Unit
 ) {
-    val details = stockChartUiState.priceChangeDetails
-    if (!stockChartUiState.isLoading && details is PriceChangeDetails.Available) {
-        PeriodPerformanceRow(
-            price = "$" + stockChartUiState.uiItem.price.toString(),
-            trend = details.changeTrend,
-            periodPercent = details.changePercent,
-            periodAbsoluteChange = details.changeAbsolut,
-        )
-    }
+    val details = StockChartViewUiState.priceChangeDetails
+    var chartTrend: PriceTrend
 
-    if (stockChartUiState.isLoading) {
-        val shimmerAnim = rememberShimmerTranslateAnim()
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(horizontal = AppDimens.Space20)
-                .clip(RoundedCornerShape(AppDimens.CornerSm))
-                .shimmer(shimmerAnim)
-        )
-    } else {
-        val chartTrend = if (details is PriceChangeDetails.Available) details.changeTrend else PriceTrend.NEUTRAL
-        AndroidView(
-            factory = { ctx ->
-                val view = LayoutInflater.from(ctx).inflate(R.layout.frame_linechart, null, false)
-                val chart = view.findViewById<LineChart>(R.id.line_chart)
-                chart.description.isEnabled = false
-                chart.setNoDataText("Loading…")
-                view
-            },
-            update = { view ->
-                val chart = view.findViewById<LineChart>(R.id.line_chart)
-                plotDiagram(
-                    stockChartUiState.uiItem.prices,
-                    stockChartUiState.uiItem.timestamp,
-                    stockChartUiState.range,
-                    chart,
-                    chartTrend
-                )
-            }
-        )
-    }
+    if (details is PriceChangeDetails.Available) {
 
-    PeriodSelector(stockChartUiState.range, onRangeChange)
-}
+        chartTrend = details.changeTrend
 
-@Composable
-private fun PeriodSelector(
-    displayedRange: Range,
-    onRangeChange: (Range) -> Unit
-) {
-    val context = LocalContext.current
-    val density = context.resources.displayMetrics.density
-    val screenWidth = (context.resources.displayMetrics.widthPixels / density).dp
-
-    val horizontalPadding = AppDimens.Space16
-    val buttonCount = IntervalRangeValidator.allRanges.size
-    val buttonWidth = (screenWidth - horizontalPadding * 2) / buttonCount
-    val selectedIndex = IntervalRangeValidator.allRanges.indexOf(displayedRange)
-
-    val indicatorOffset by animateDpAsState(
-        targetValue = buttonWidth * selectedIndex,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "period_indicator"
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = horizontalPadding, vertical = AppDimens.Space12)
-    ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            IntervalRangeValidator.allRanges.forEachIndexed { index, range ->
-                PeriodButton(
-                    modifier = Modifier
-                        .width(buttonWidth)
-                        .height(AppDimens.ChartPeriodButtonHeight),
-                    isSelected = range == displayedRange,
-                    text = range.value,
-                    onClick = { onRangeChange(range) }
-                )
-            }
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .offset(indicatorOffset + (buttonWidth - AppDimens.ChartUnderlineWidth) / 2)
-                .width(AppDimens.ChartUnderlineWidth)
-                .height(AppDimens.ChartUnderlineHeight)
-                .background(
-                    AppColors.Accent,
-                    shape = RoundedCornerShape(AppDimens.CornerChartUnderline)
-                )
-        )
-    }
-
-}
-
-@Composable
-private fun PeriodPerformanceRow(
-    price: String,
-    trend: PriceTrend,
-    periodPercent: String,
-    periodAbsoluteChange: Double
-) {
-    val (arrow, trendColor, bg) = when (trend) {
-        PriceTrend.UP -> Triple("▲", AppColors.TrendUp, AppColors.TrendUpSurface)
-        PriceTrend.DOWN -> Triple("▼", AppColors.TrendDown, AppColors.TrendDownSurface)
-        PriceTrend.NEUTRAL -> Triple("–", AppColors.Secondary, AppColors.SurfaceVariant)
-    }
-    val sign = if (periodAbsoluteChange >= 0) "+" else "-"
-    val absFormatted = "%.2f".format(abs(periodAbsoluteChange))
-    val formattedAmount = "${sign}$$absFormatted"
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = AppDimens.Space24)
-            .padding(top = AppDimens.Space12, bottom = AppDimens.Space4),
-        horizontalArrangement = Arrangement.spacedBy(AppDimens.Space10),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = price,
-            fontSize = AppType.SectionTitle,
-            fontWeight = FontWeight.SemiBold,
-            color = AppColors.Strong
-        )
-        Text(
-            text = formattedAmount,
-            fontSize = AppType.SectionTitle,
-            fontWeight = FontWeight.SemiBold,
-            color = trendColor
-        )
-        Box(
-            modifier = Modifier
-                .background(bg, shape = RoundedCornerShape(AppDimens.CornerSm))
-                .padding(horizontal = AppDimens.Space8, vertical = AppDimens.Space4)
-        ) {
-            Text(
-                text = "$arrow $periodPercent",
-                fontSize = AppType.Body,
-                fontWeight = FontWeight.SemiBold,
-                color = trendColor
+        Column {
+            PeriodPerformanceRow(
+                price = "$" + StockChartViewUiState.uiItem.price.toString(),
+                trend = details.changeTrend,
+                periodPercent = details.changePercent,
+                periodAbsoluteChange = details.changeAbsolut,
             )
+
+            AndroidView(
+                factory = { ctx ->
+                    val view = LayoutInflater.from(ctx).inflate(R.layout.frame_linechart, null, false)
+                    val chart = view.findViewById<LineChart>(R.id.line_chart)
+                    chart.description.isEnabled = false
+                    chart.setNoDataText("Loading…")
+                    view
+                },
+                update = { view ->
+                    val chart = view.findViewById<LineChart>(R.id.line_chart)
+                    plotDiagram(
+                        StockChartViewUiState.uiItem.prices,
+                        StockChartViewUiState.uiItem.timestamp,
+                        StockChartViewUiState.range,
+                        chart,
+                        chartTrend
+                    )
+                }
+            )
+
+            PeriodSelector(StockChartViewUiState.range, onRangeChange)
         }
     }
 }
 
+@Preview
 @Composable
-private fun PeriodButton(
-    modifier: Modifier = Modifier,
-    isSelected: Boolean = false,
-    text: String = "1D",
-    onClick: () -> Unit = {}
-) {
-    Box(
-        modifier = modifier.clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() },
-            onClick = onClick
+private fun StockChartViewPreview() {
+    val mockStockChartView = StockChartView(
+        ticker = StockMarketEnum.entries.first(),
+        longName = "Apple Inc.",
+        shortName = "Apple",
+        price = 189.45,
+        timestamp = listOf(
+            1717600000, 1717603600, 1717607200,
+            1717610800, 1717614400, 1717618000
         ),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            textAlign = TextAlign.Center,
-            color = if (isSelected) AppColors.Accent else AppColors.Secondary,
-            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-            fontSize = AppType.Body
+        previousClose = 187.32,
+        volume = 52_340_000,
+        exchangeName = "NASDAQ",
+        currency = "USD",
+        currentRange = "1D",
+        prices = listOf(
+            187.5, 188.2, 189.0,
+            188.7, 189.3, 189.45
         )
+    )
+    val uiState = StockChartViewUiState(
+        item = mockStockChartView,
+        range = Range.ONE_DAY,
+        isLoading = false
+    )
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .background(AppColors.Surface)) {
+        StockChartView(StockChartViewUiState = uiState, onRangeChange = {})
     }
 }
