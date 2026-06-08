@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.screen.main.component.marketlist.StockInfoRow
-import com.example.tickerwatch.presentation.screen.main.component.marketlist.StockPriceInfoColum
+import com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem.StockInfoRow
+import com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem.StockPriceInfoColum
 import com.example.tickerwatch.presentation.theme.AppDimens
 
 

@@ -41,10 +41,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.tickerwatch.common.tickers.CryptoEnum
+import com.example.tickerwatch.common.tickers.Sector
+import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.model.StockChartViewUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.StockList
+import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
 import com.example.tickerwatch.presentation.screen.portfolio.PortfolioScreen
 import com.example.tickerwatch.presentation.screen.watchlist.WatchlistScreen
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -65,7 +69,7 @@ private enum class BottomTab(val label: String, val icon: ImageVector) {
 @Composable
 fun MainPage(
     stockList: List<StockSummary>,
-    StockChartViewUiState: StockChartViewUiState,
+    stockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     sortOption: SortOption,
     watchlistSymbols: Set<String>,
@@ -76,6 +80,20 @@ fun MainPage(
 ) {
     var selectedTab by remember { mutableStateOf(BottomTab.MARKETS) }
     var showSortSheet by remember { mutableStateOf(false) }
+
+
+    var stockDetailsOverlayIsShown by remember { mutableStateOf(false) }
+    var activeFilter by remember { mutableStateOf(SectorFilter.ALL) }
+
+    val filteredList = remember(stockList, activeFilter) {
+        when (activeFilter) {
+            SectorFilter.ALL -> stockList
+            SectorFilter.TECH -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.TECHNOLOGY }
+            SectorFilter.FINANCE -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.FINANCE }
+            SectorFilter.HEALTH -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.HEALTHCARE }
+            SectorFilter.CRYPTO -> stockList.filter { it.ticker is CryptoEnum }
+        }
+    }
 
     Scaffold(
         containerColor = AppColors.Surface,
@@ -93,19 +111,23 @@ fun MainPage(
                                 onSortClick = { showSortSheet = true }
                             )
                             StockList(
-                                list = stockList,
-                                StockChartViewUiState = StockChartViewUiState,
+                                filteredList = filteredList,
+                                stockDetailsOverlayIsShown = stockDetailsOverlayIsShown,
+                                stockChartViewUiState = stockChartViewUiState,
+                                setActiveFilter = { filter -> activeFilter = filter },
                                 currentSparkItem = currentSparkItem,
                                 watchlistSymbols = watchlistSymbols,
                                 onSymbolSelected = onSymbolSelected,
                                 onRangeChange = onRangeChange,
-                                onToggleWatchlist = onToggleWatchlist
+                                onToggleWatchlist = onToggleWatchlist,
+                                toggleStockDetailsOverlay = { isShown -> stockDetailsOverlayIsShown = isShown },
+                                activeFilter = activeFilter
                             )
                         }
                     }
                 BottomTab.WATCHLIST -> WatchlistScreen(
                     items = stockList.filter { it.symbol in watchlistSymbols },
-                    StockChartViewUiState = StockChartViewUiState,
+                    stockChartViewUiState = stockChartViewUiState,
                     currentSparkItem = currentSparkItem,
                     onSymbolSelected = onSymbolSelected,
                     onRangeChange = onRangeChange,
@@ -113,7 +135,7 @@ fun MainPage(
                 )
                 BottomTab.PORTFOLIO -> PortfolioScreen(
                     holdings = stockList.filter { it.symbol in watchlistSymbols },
-                    StockChartViewUiState = StockChartViewUiState,
+                    StockChartViewUiState = stockChartViewUiState,
                     currentSparkItem = currentSparkItem,
                     onSymbolSelected = onSymbolSelected,
                     onRangeChange = onRangeChange

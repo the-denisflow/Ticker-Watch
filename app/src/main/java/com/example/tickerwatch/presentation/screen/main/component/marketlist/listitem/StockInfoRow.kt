@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.screen.main.component.marketlist
+package com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

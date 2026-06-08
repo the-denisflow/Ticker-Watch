@@ -11,7 +11,7 @@ import com.example.tickerwatch.presentation.model.StockChartViewUiState
 @Composable
 fun StockDetailsOverlay(
     itemIsSelected: Boolean,
-    StockChartViewUiState: StockChartViewUiState,
+    stockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit
@@ -20,7 +20,7 @@ fun StockDetailsOverlay(
 
     if (currentSparkItem != null) {
         StockDetailsSheet(
-            StockChartViewUiState = StockChartViewUiState,
+            StockChartViewUiState = stockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = onDismiss

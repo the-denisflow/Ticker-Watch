@@ -52,7 +52,7 @@ import com.example.tickerwatch.presentation.theme.AppType
 @Composable
 fun WatchlistScreen(
     items: List<StockSummary>,
-    StockChartViewUiState: StockChartViewUiState,
+    stockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit,
@@ -63,7 +63,7 @@ fun WatchlistScreen(
     } else {
         WatchlistGrid(
             items = items,
-            StockChartViewUiState = StockChartViewUiState,
+            stockChartViewUiState = stockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onSymbolSelected = onSymbolSelected,
             onRangeChange = onRangeChange,
@@ -75,7 +75,7 @@ fun WatchlistScreen(
 @Composable
 private fun WatchlistGrid(
     items: List<StockSummary>,
-    StockChartViewUiState: StockChartViewUiState,
+    stockChartViewUiState: StockChartViewUiState,
     currentSparkItem: StockSummary?,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit,
@@ -106,7 +106,7 @@ private fun WatchlistGrid(
 
         StockDetailsOverlay(
             itemIsSelected = itemIsSelected,
-            StockChartViewUiState = StockChartViewUiState,
+            stockChartViewUiState = stockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = { itemIsSelected = false }

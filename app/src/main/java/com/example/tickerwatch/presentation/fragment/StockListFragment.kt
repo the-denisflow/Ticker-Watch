@@ -48,7 +48,7 @@ class StockListFragment : Fragment() {
                 )
             ) {
             val sortedStocks by marketViewModel.sortedStocks.collectAsStateWithLifecycle()
-            val StockChartViewUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
+            val stockChartViewUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
             val currentSparkItem by marketViewModel.currentSparkItem.collectAsStateWithLifecycle()
             val sortOption by marketViewModel.sortOption.collectAsStateWithLifecycle()
             val watchlistSymbols by marketViewModel.watchlistSymbols.collectAsStateWithLifecycle()
@@ -58,12 +58,11 @@ class StockListFragment : Fragment() {
             val onSortChange: (SortOption) -> Unit = remember { { sort -> marketViewModel.setSortOption(sort) } }
             val onToggleWatchlist: (String) -> Unit = remember { { symbol -> marketViewModel.toggleWatchlist(symbol) } }
 
-            // Shimmer placeholder is a UI concern, kept here so the ViewModel stays data-only
             val listOfStocks = sortedStocks.ifEmpty { placeholders }
 
             MainPage(
                 stockList = listOfStocks,
-                StockChartViewUiState = StockChartViewUiState,
+                stockChartViewUiState = stockChartViewUiState,
                 currentSparkItem = currentSparkItem,
                 sortOption = sortOption,
                 watchlistSymbols = watchlistSymbols,

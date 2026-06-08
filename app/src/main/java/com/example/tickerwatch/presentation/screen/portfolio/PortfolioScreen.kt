@@ -141,7 +141,7 @@ private fun PortfolioContent(
 
         StockDetailsOverlay(
             itemIsSelected = itemIsSelected,
-            StockChartViewUiState = StockChartViewUiState,
+            stockChartViewUiState = StockChartViewUiState,
             currentSparkItem = currentSparkItem,
             onRangeChange = onRangeChange,
             onDismiss = { itemIsSelected = false }
