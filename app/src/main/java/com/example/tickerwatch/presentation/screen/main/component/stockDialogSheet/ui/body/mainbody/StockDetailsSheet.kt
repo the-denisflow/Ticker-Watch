@@ -44,7 +44,7 @@ fun StockDetailsSheet(
             Spacer(modifier = Modifier.height(AppDimens.Space8))
 
             StockChartView(
-                StockChartViewUiState = StockChartViewUiState,
+                stockChartViewUiState = StockChartViewUiState,
                 onRangeChange = onRangeChange
             )
 

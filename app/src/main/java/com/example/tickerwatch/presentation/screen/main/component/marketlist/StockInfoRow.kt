@@ -29,12 +29,12 @@ import com.example.tickerwatch.common.tickers.LogoResource
 import com.example.tickerwatch.common.tickers.Sector
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.domain.repository.model.PriceChangeDetails
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.screen.main.component.shared.rememberShimmerTranslateAnim
 import com.example.tickerwatch.presentation.screen.main.component.shared.shimmer
-import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.PriceChangeDetails
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType

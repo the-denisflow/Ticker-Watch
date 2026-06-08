@@ -3,8 +3,7 @@ package com.example.tickerwatch.domain.repository.model
 import androidx.compose.runtime.Immutable
 import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.common.tickers.Ticker
-import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.PriceChangeDetails
-import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.getPriceChangedDetails
+import com.example.tickerwatch.data.remote.dto.YahooResultDto
 
 
 enum class PriceTrend {UP, DOWN, NEUTRAL}

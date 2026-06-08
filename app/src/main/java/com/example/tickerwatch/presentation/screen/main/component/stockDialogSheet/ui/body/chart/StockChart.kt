@@ -17,21 +17,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.tickerwatch.R
 import com.example.tickerwatch.common.tickers.StockMarketEnum
+import com.example.tickerwatch.domain.repository.model.PriceChangeDetails
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockChartView
 import com.example.tickerwatch.presentation.androidview.chart.plotDiagram
 import com.example.tickerwatch.presentation.model.StockChartViewUiState
-import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util.PriceChangeDetails
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.github.mikephil.charting.charts.LineChart
 
 @Composable
 internal fun StockChartView(
-    StockChartViewUiState: StockChartViewUiState,
+    stockChartViewUiState: StockChartViewUiState,
     onRangeChange: (Range) -> Unit
 ) {
-    val details = StockChartViewUiState.priceChangeDetails
+    val details = stockChartViewUiState.priceChangeDetails
     var chartTrend: PriceTrend
 
     if (details is PriceChangeDetails.Available) {
@@ -40,7 +40,7 @@ internal fun StockChartView(
 
         Column {
             PeriodPerformanceRow(
-                price = "$" + StockChartViewUiState.uiItem.price.toString(),
+                price = "$" + stockChartViewUiState.uiItem.price.toString(),
                 trend = details.changeTrend,
                 periodPercent = details.changePercent,
                 periodAbsoluteChange = details.changeAbsolut,
@@ -57,16 +57,16 @@ internal fun StockChartView(
                 update = { view ->
                     val chart = view.findViewById<LineChart>(R.id.line_chart)
                     plotDiagram(
-                        StockChartViewUiState.uiItem.prices,
-                        StockChartViewUiState.uiItem.timestamp,
-                        StockChartViewUiState.range,
+                        stockChartViewUiState.uiItem.prices,
+                        stockChartViewUiState.uiItem.timestamp,
+                        stockChartViewUiState.range,
                         chart,
                         chartTrend
                     )
                 }
             )
 
-            PeriodSelector(StockChartViewUiState.range, onRangeChange)
+            PeriodSelector(stockChartViewUiState.range, onRangeChange)
         }
     }
 }
@@ -101,6 +101,6 @@ private fun StockChartViewPreview() {
     Box(modifier = Modifier
         .fillMaxWidth()
         .background(AppColors.Surface)) {
-        StockChartView(StockChartViewUiState = uiState, onRangeChange = {})
+        StockChartView(stockChartViewUiState = uiState, onRangeChange = {})
     }
 }

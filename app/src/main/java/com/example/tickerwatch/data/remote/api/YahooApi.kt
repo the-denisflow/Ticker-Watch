@@ -1,7 +1,7 @@
 package com.example.tickerwatch.data.remote.api
 
 import com.example.tickerwatch.data.remote.dto.SparkItemDto
-import com.example.tickerwatch.domain.repository.model.YahooResultDto
+import com.example.tickerwatch.data.remote.dto.YahooResultDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

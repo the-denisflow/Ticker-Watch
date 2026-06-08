@@ -1,6 +1,5 @@
-package com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.util
+package com.example.tickerwatch.domain.repository.model
 
-import com.example.tickerwatch.domain.repository.model.PriceTrend
 import kotlin.math.abs
 
 sealed class PriceChangeDetails {

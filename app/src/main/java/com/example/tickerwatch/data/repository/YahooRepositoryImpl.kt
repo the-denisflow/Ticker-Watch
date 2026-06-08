@@ -1,11 +1,10 @@
 package com.example.tickerwatch.data.repository
 
 import com.example.tickerwatch.common.Logger
-import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.data.remote.api.YahooApi
 import com.example.tickerwatch.domain.repository.YahooRepository
 import com.example.tickerwatch.data.remote.dto.SparkItemDto
-import com.example.tickerwatch.domain.repository.model.YahooResultDto
+import com.example.tickerwatch.data.remote.dto.YahooResultDto
 import javax.inject.Inject
 
 class YahooRepositoryImpl @Inject constructor(
