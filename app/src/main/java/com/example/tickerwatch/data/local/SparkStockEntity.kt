@@ -6,6 +6,7 @@ import com.example.tickerwatch.common.tickers.Ticker
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.StockSummary
+import com.example.tickerwatch.domain.repository.model.StockSymbol
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -19,7 +20,7 @@ data class SparkStockEntity(
 )
 
 fun StockSummary.toEntity(): SparkStockEntity = SparkStockEntity(
-    symbol = symbol,
+    symbol = symbol.value,
     close = close,
     progressTrend = trend.progressTrend.name,
     progressPercent = trend.progressPercent,
@@ -27,7 +28,7 @@ fun StockSummary.toEntity(): SparkStockEntity = SparkStockEntity(
 )
 
 fun SparkStockEntity.toUiModel(ticker: Ticker): StockSummary = StockSummary(
-    symbol = symbol,
+    symbol = StockSymbol(symbol),
     close = close,
     trend = PriceProgressTrend(
         progressTrend = PriceTrend.valueOf(progressTrend),

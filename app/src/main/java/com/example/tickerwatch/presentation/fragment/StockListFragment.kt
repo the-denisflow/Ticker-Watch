@@ -47,30 +47,24 @@ class StockListFragment : Fragment() {
                     primary = Color(0xFF007AFF),
                 )
             ) {
-            val sortedStocks by marketViewModel.sortedStocks.collectAsStateWithLifecycle()
-            val stockChartViewUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
-            val currentSparkItem by marketViewModel.currentSparkItem.collectAsStateWithLifecycle()
-            val sortOption by marketViewModel.sortOption.collectAsStateWithLifecycle()
-            val watchlistSymbols by marketViewModel.watchlistSymbols.collectAsStateWithLifecycle()
+                val sortedStocks by marketViewModel.sortedStocks.collectAsStateWithLifecycle()
+                val stockChartViewUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
+                val dialogStock by marketViewModel.dialogStock.collectAsStateWithLifecycle()
+                val sortOption by marketViewModel.sortOption.collectAsStateWithLifecycle()
+                val watchlistSymbols by marketViewModel.watchlistSymbols.collectAsStateWithLifecycle()
+                val stockDialogUiState by marketViewModel.stockDialogUiState.collectAsStateWithLifecycle()
 
-            val onSymbolSelected: (String) -> Unit = remember { { symbol -> marketViewModel.updateCurrentSymbol(symbol) } }
-            val onRangeChange: (Range) -> Unit = remember { { range -> marketViewModel.updateDisplayedRange(range) } }
-            val onSortChange: (SortOption) -> Unit = remember { { sort -> marketViewModel.setSortOption(sort) } }
-            val onToggleWatchlist: (String) -> Unit = remember { { symbol -> marketViewModel.toggleWatchlist(symbol) } }
-
-            val listOfStocks = sortedStocks.ifEmpty { placeholders }
-
-            MainPage(
-                stockList = listOfStocks,
-                stockChartViewUiState = stockChartViewUiState,
-                currentSparkItem = currentSparkItem,
-                sortOption = sortOption,
-                watchlistSymbols = watchlistSymbols,
-                onSymbolSelected = onSymbolSelected,
-                onRangeChange = onRangeChange,
-                onSortChange = onSortChange,
-                onToggleWatchlist = onToggleWatchlist
-            )
+                MainPage(
+                    stockList = sortedStocks.ifEmpty { placeholders },
+                    stockDialogUiState = stockDialogUiState ,
+                    sortOption = sortOption,
+                    watchlistSymbols = watchlistSymbols,
+                    onSymbolSelected = marketViewModel::updateCurrentSymbol,
+                    onRangeChange = marketViewModel::updateDisplayedRange,
+                    onSortChange = marketViewModel::setSortOption,
+                    onToggleWatchlist = marketViewModel::toggleWatchlist,
+                    dismissDialog = marketViewModel::dismissDialog
+                )
             }
         }
     }

@@ -11,16 +11,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.tickerwatch.common.tickers.InvalidTicker
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
+import com.example.tickerwatch.domain.repository.model.StockSymbol
 import com.example.tickerwatch.domain.repository.model.createPlaceholderStockChartView
 import com.example.tickerwatch.domain.use_case.FetchStockChartView
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
 import com.example.tickerwatch.presentation.model.StockChartViewUiState
+import com.example.tickerwatch.presentation.model.StockDialogUiState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
@@ -35,19 +41,17 @@ enum class SortOption(val label: String) {
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
-    private val FetchStockChartView: FetchStockChartView,
+    private val fetchStockChartView: FetchStockChartView,
     private val syncMarketStocks: SyncMarketStocks,
     private val watchlistDao: WatchlistDao
 ) : ViewModel() {
-
-    private val _selectedSymbol = MutableStateFlow<String>("")
-    private val _StockChartViewUiState = MutableStateFlow(StockChartViewUiState(createPlaceholderStockChartView(), Range.ONE_YEAR))
+    private val _selectedSymbol = MutableStateFlow<StockSymbol>(StockSymbol.Invalid)
+    private val _stockChartViewUiState = MutableStateFlow(StockChartViewUiState(createPlaceholderStockChartView(), Range.ONE_YEAR))
     private var fetchStockDetailsJob: Job? = null
     private var syncJob: Job? = null
     private val _batchStocks = MutableStateFlow<List<StockSummary>>(emptyList())
     private val _sortOption = MutableStateFlow(SortOption.DEFAULT)
     val sortOption: StateFlow<SortOption> = _sortOption
-
     // Reactive: emits every time the DB watchlist table changes
     val watchlistSymbols: StateFlow<Set<String>> = watchlistDao
         .getAllSymbols()
@@ -79,17 +83,37 @@ class MarketViewModel @Inject constructor(
     )
 
 
-    val currentSparkItem: StateFlow<StockSummary?> = combine(
-        _selectedSymbol,
-        _batchStocks
-    ) { symbol, stocks ->
-        stocks.find { it.symbol == symbol }
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val dialogStock: StateFlow<StockSummary?> = _selectedSymbol
+        .flatMapLatest { symbol ->
+            if (!symbol.isValid) flowOf(null)
+            else _batchStocks.map { stocks -> stocks.find { it.symbol == symbol } }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val stockDetailState: StateFlow<StockChartViewUiState> = _StockChartViewUiState
+    val stockDetailState: StateFlow<StockChartViewUiState> = _stockChartViewUiState
+
+    val stockDialogUiState: StateFlow<StockDialogUiState> = combine(
+        _stockChartViewUiState,
+        dialogStock
+    ) { chartView, stockSummary ->
+        StockDialogUiState(
+            chartView = chartView,
+            stockSummary = stockSummary,
+            isVisible = stockSummary != null
+        ).also {
+            logger.info("Combined StockDialogUiState emitted: isVisible=${it.isVisible}, stockSummary=${it.stockSummary?.symbol}")
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, StockDialogUiState())
 
     init {
         syncBatchStocks()
+    }
+
+    fun dismissDialog() {
+        logger.info("Dialog dismissed")
+        _selectedSymbol.value = StockSymbol.Invalid
+        stockDialogUiState.value.reset()
     }
 
     private fun syncBatchStocks() {
@@ -116,26 +140,28 @@ class MarketViewModel @Inject constructor(
     }
 
     fun updateCurrentSymbol(currentSymbol: String) {
-        _selectedSymbol.value = currentSymbol
+        logger.info("Selected symbol: $currentSymbol")
+        _selectedSymbol.value = StockSymbol(currentSymbol)
         updateDisplayedRange(Range.ONE_YEAR)
     }
+
 
     fun updateDisplayedRange(range: Range) {
         logger.info("Update Displayed Range: ${range.value}")
         fetchStockDetailsJob?.cancel()
 
-        val stateBeforeFetch = _StockChartViewUiState.value
-        _StockChartViewUiState.value = stateBeforeFetch.copy(range = range, isLoading = true)
+        val stateBeforeFetch = _stockChartViewUiState.value
+        _stockChartViewUiState.value = stateBeforeFetch.copy(range = range, isLoading = true)
 
         fetchStockDetailsJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                val fetchedItem = FetchStockChartView(symbol = _selectedSymbol.value, range = range)
+                val fetchedItem = fetchStockChartView(symbol = _selectedSymbol.value.value, range = range)
                 if (fetchedItem != null) {
-                    _StockChartViewUiState.value = StockChartViewUiState(fetchedItem, range, isLoading = false)
+                    _stockChartViewUiState.value = StockChartViewUiState(fetchedItem, range, isLoading = false)
                 }
             }.onFailure { exception ->
                 logger.error("Failed to update displayed range: ${exception.message}")
-                _StockChartViewUiState.value = stateBeforeFetch
+                _stockChartViewUiState.value = stateBeforeFetch
             }
         }
     }

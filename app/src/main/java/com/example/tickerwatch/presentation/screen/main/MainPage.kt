@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,16 +42,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.tickerwatch.common.tickers.CryptoEnum
-import com.example.tickerwatch.common.tickers.Sector
-import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
-import com.example.tickerwatch.presentation.model.StockChartViewUiState
+import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
+import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.StockList
-import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
-import com.example.tickerwatch.presentation.screen.portfolio.PortfolioScreen
-import com.example.tickerwatch.presentation.screen.watchlist.WatchlistScreen
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -69,31 +65,19 @@ private enum class BottomTab(val label: String, val icon: ImageVector) {
 @Composable
 fun MainPage(
     stockList: List<StockSummary>,
-    stockChartViewUiState: StockChartViewUiState,
-    currentSparkItem: StockSummary?,
+    stockDialogUiState: StockDialogUiState,
     sortOption: SortOption,
     watchlistSymbols: Set<String>,
     onSymbolSelected: (String) -> Unit,
     onRangeChange: (Range) -> Unit,
     onSortChange: (SortOption) -> Unit,
-    onToggleWatchlist: (String) -> Unit
+    onToggleWatchlist: (String) -> Unit,
+    dismissDialog: () -> Unit
 ) {
     var selectedTab by remember { mutableStateOf(BottomTab.MARKETS) }
     var showSortSheet by remember { mutableStateOf(false) }
-
-
-    var stockDetailsOverlayIsShown by remember { mutableStateOf(false) }
-    var activeFilter by remember { mutableStateOf(SectorFilter.ALL) }
-
-    val filteredList = remember(stockList, activeFilter) {
-        when (activeFilter) {
-            SectorFilter.ALL -> stockList
-            SectorFilter.TECH -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.TECHNOLOGY }
-            SectorFilter.FINANCE -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.FINANCE }
-            SectorFilter.HEALTH -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.HEALTHCARE }
-            SectorFilter.CRYPTO -> stockList.filter { it.ticker is CryptoEnum }
-        }
-    }
+    var stockDetailsOverlayIsShown by remember(stockDialogUiState)
+    { mutableStateOf(stockDialogUiState.isVisible) }
 
     Scaffold(
         containerColor = AppColors.Surface,
@@ -111,36 +95,35 @@ fun MainPage(
                                 onSortClick = { showSortSheet = true }
                             )
                             StockList(
-                                filteredList = filteredList,
-                                stockDetailsOverlayIsShown = stockDetailsOverlayIsShown,
-                                stockChartViewUiState = stockChartViewUiState,
-                                setActiveFilter = { filter -> activeFilter = filter },
-                                currentSparkItem = currentSparkItem,
+                                stockList = stockList,
+                                stockDialogUiState = stockDialogUiState,
                                 watchlistSymbols = watchlistSymbols,
                                 onSymbolSelected = onSymbolSelected,
-                                onRangeChange = onRangeChange,
                                 onToggleWatchlist = onToggleWatchlist,
-                                toggleStockDetailsOverlay = { isShown -> stockDetailsOverlayIsShown = isShown },
-                                activeFilter = activeFilter
                             )
                         }
                     }
-                BottomTab.WATCHLIST -> WatchlistScreen(
-                    items = stockList.filter { it.symbol in watchlistSymbols },
-                    stockChartViewUiState = stockChartViewUiState,
-                    currentSparkItem = currentSparkItem,
-                    onSymbolSelected = onSymbolSelected,
-                    onRangeChange = onRangeChange,
-                    onToggleWatchlist = onToggleWatchlist
-                )
-                BottomTab.PORTFOLIO -> PortfolioScreen(
-                    holdings = stockList.filter { it.symbol in watchlistSymbols },
-                    StockChartViewUiState = stockChartViewUiState,
-                    currentSparkItem = currentSparkItem,
-                    onSymbolSelected = onSymbolSelected,
-                    onRangeChange = onRangeChange
-                )
-            }
+                BottomTab.WATCHLIST -> {
+//                    WatchlistScreen(
+//                        items = stockList.filter { it.symbol in watchlistSymbols },
+//                        stockChartViewUiState = stockChartViewUiState,
+//                        dialogStock = dialogStock,
+//                        onSymbolSelected = onSymbolSelected,
+//                        onRangeChange = onRangeChange,
+//                        onToggleWatchlist = onToggleWatchlist
+//                    )
+                }
+                BottomTab.PORTFOLIO ->
+                {
+                    //PortfolioScreen(
+//                    holdings = stockList.filter { it.symbol in watchlistSymbols },
+//                    StockChartViewUiState = stockChartViewUiState,
+//                    dialogStock = dialogStock,
+//                    onSymbolSelected = onSymbolSelected,
+//                    onRangeChange = onRangeChange
+//                )
+
+                }}
         }
     }
 
@@ -152,6 +135,18 @@ fun MainPage(
                 showSortSheet = false
             },
             onDismiss = { showSortSheet = false }
+        )
+    }
+
+    if(stockDetailsOverlayIsShown) {
+        LaunchedEffect(stockDialogUiState.isVisible) {
+            println("LaunchedEffect} triggered: stockDialogUiState.isVisible = ${stockDialogUiState.isVisible}")
+            stockDetailsOverlayIsShown = stockDialogUiState.isVisible
+        }
+        StockDetailsOverlay(
+            stockDialogUiState = stockDialogUiState,
+            onRangeChange = onRangeChange,
+            onDismiss = { dismissDialog() },
         )
     }
 }
@@ -169,7 +164,12 @@ private fun MarketsHeader(
         modifier = Modifier
             .fillMaxWidth()
             .background(AppColors.Surface)
-            .padding(start = AppDimens.Space20, end = AppDimens.Space16, top = AppDimens.Space20, bottom = AppDimens.Space12)
+            .padding(
+                start = AppDimens.Space20,
+                end = AppDimens.Space16,
+                top = AppDimens.Space20,
+                bottom = AppDimens.Space12
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

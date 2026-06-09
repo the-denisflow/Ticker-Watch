@@ -33,6 +33,7 @@ import com.example.tickerwatch.domain.repository.model.PriceChangeDetails
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.StockSummary
+import com.example.tickerwatch.domain.repository.model.StockSymbol
 import com.example.tickerwatch.presentation.screen.main.component.shared.rememberShimmerTranslateAnim
 import com.example.tickerwatch.presentation.screen.main.component.shared.shimmer
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -187,7 +188,7 @@ private fun StockPriceShimmer(translateAnim: State<Float>) {
 }
 
 private val previewStockTech = StockSummary(
-    symbol = "AAPL",
+    symbol = StockSymbol("AAPL"),
     close = 189.84,
     ticker = StockMarketEnum.APPLE,
     trend = PriceProgressTrend(PriceTrend.UP, "+1.23%"),
@@ -196,7 +197,7 @@ private val previewStockTech = StockSummary(
 )
 
 private val previewStockCrypto = StockSummary(
-    symbol = "BTC-USD",
+    symbol = StockSymbol("BTC-USD"),
     close = 67_000.0,
     ticker = CryptoEnum.BITCOIN,
     trend = PriceProgressTrend(PriceTrend.DOWN, "-2.10%"),

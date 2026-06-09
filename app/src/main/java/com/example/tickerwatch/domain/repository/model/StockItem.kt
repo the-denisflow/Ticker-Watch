@@ -16,15 +16,14 @@ data class PriceProgressTrend(
 
 @Immutable
 data class StockSummary(
-    val symbol: String,
+    val symbol: StockSymbol,
     val close: Double,
     val trend: PriceProgressTrend,
     val ticker: Ticker,
     val prices: List<Double> = emptyList(),
     val chartPreviousClose: Double? = null
 ) {
-    val priceChangeDetails: PriceChangeDetails =
-        getPriceChangedDetails(
+    val priceChangeDetails: PriceChangeDetails = getPriceChangedDetails(
             prices,
             chartPreviousClose
         )
@@ -34,7 +33,7 @@ private const val PLACEHOLDER_COUNT = 10
 
 val placeholders: List<StockSummary> = (0 until PLACEHOLDER_COUNT).map { index ->
     StockSummary(
-        symbol = "$index",
+        symbol = StockSymbol("mock_$index"),
         close = 0.0,
         ticker = InvalidTicker.INVALIDTICKER,
         trend = PriceProgressTrend(

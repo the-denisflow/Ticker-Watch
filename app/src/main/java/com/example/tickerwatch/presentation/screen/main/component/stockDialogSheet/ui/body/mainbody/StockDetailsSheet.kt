@@ -1,4 +1,4 @@
-package com.example.tickerwatch.presentation.component.stockdialog
+package com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.mainbody
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockSummary
+import com.example.tickerwatch.presentation.component.stockdialog.SheetHeader
 import com.example.tickerwatch.presentation.mapper.toDetails
 import com.example.tickerwatch.presentation.model.StockChartViewUiState
+import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart.StockChartView
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.metadatasection.StockMetaRow
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.moredetailssection.StockDetailsSection
@@ -25,30 +26,37 @@ import com.example.tickerwatch.presentation.theme.AppDimens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockDetailsSheet(
-    StockChartViewUiState: StockChartViewUiState,
-    currentSparkItem: StockSummary,
+    stockDialogUiState: StockDialogUiState,
     onRangeChange: (Range) -> Unit,
     onDismiss: () -> Unit = {},
 ) {
+
+
+    //             stockChartViewUiState = stockChartViewUiState,
+    //            dialogStock = dialogStock,
+
+
+
+
     ModalBottomSheet(
         scrimColor = AppColors.Scrim,
         dragHandle = { ModalHeader() },
         onDismissRequest = { onDismiss() },
         containerColor = AppColors.Surface,
     ) {
-        val detailsRow  = remember(StockChartViewUiState.uiItem) { StockChartViewUiState.uiItem.toDetails().rows }
+        val detailsRow  = remember(stockDialogUiState.chartView!!.uiItem) { stockDialogUiState.chartView.uiItem.toDetails().rows }
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            SheetHeader(displayedItem = currentSparkItem)
+            SheetHeader(displayedItem = stockDialogUiState.stockSummary!!)
 
             Spacer(modifier = Modifier.height(AppDimens.Space8))
 
             StockChartView(
-                stockChartViewUiState = StockChartViewUiState,
+                stockChartViewUiState = stockDialogUiState.chartView,
                 onRangeChange = onRangeChange
             )
 
-            StockMetaRow(ticker = currentSparkItem.ticker)
+            StockMetaRow(ticker = stockDialogUiState.stockSummary.ticker)
 
             StockDetailsSection(
                 detailsRow = detailsRow
