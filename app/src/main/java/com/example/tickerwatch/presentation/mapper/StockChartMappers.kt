@@ -1,10 +1,11 @@
 package com.example.tickerwatch.presentation.mapper
 
-import com.example.tickerwatch.domain.repository.model.StockChartView
-import com.example.tickerwatch.presentation.model.StockChartViewUi
-import com.example.tickerwatch.presentation.model.StockDetailsUi
+import com.example.tickerwatch.domain.repository.model.StockChartState
+import com.example.tickerwatch.presentation.model.StockChartStateUi
+import com.example.tickerwatch.presentation.model.StockDetailRow
+import com.example.tickerwatch.presentation.model.StockRowDetailsUi
 
-fun StockChartView.toUi(): StockChartViewUi = StockChartViewUi(
+fun StockChartState.toUi(): StockChartStateUi = StockChartStateUi(
     ticker = this.ticker,
     longName = this.longName,
     shortName = this.shortName,
@@ -17,20 +18,20 @@ fun StockChartView.toUi(): StockChartViewUi = StockChartViewUi(
     currentRange = this.currentRange,
     prices = this.validPrices)
 
-fun StockChartViewUi.toDetails(): StockDetailsUi {
+fun StockChartStateUi.toDetails(): StockRowDetailsUi {
     val low = prices.minOrNull()
     val high = prices.maxOrNull()
     val rows = buildList {
         if (low != null && high != null) {
-            add("$currentRange Range" to "${priceFormat(low)} – ${priceFormat(high)}")
+            add(StockDetailRow("$currentRange Range", "${priceFormat(low)} – ${priceFormat(high)}"))
         }
-        volume?.let { add("Volume" to formatVolume(it)) }
-        previousClose?.let { add("Prev. Close" to "%.2f".format(it)) }
-        exchangeName?.let { add("Exchange" to it) }
-        currency?.let { add("Currency" to it) }
+        volume?.let { add(StockDetailRow("Volume", formatVolume(it))) }
+        previousClose?.let { add(StockDetailRow("Prev. Close", "%.2f".format(it))) }
+        exchangeName?.let { add(StockDetailRow("Exchange", it)) }
+        currency?.let { add(StockDetailRow("Currency", it)) }
     }
 
-    return StockDetailsUi(
+    return StockRowDetailsUi(
         rows
     )
 }

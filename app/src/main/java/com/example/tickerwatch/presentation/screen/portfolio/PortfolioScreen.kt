@@ -39,7 +39,7 @@
 //import com.example.tickerwatch.domain.repository.model.PriceTrend
 //import com.example.tickerwatch.domain.repository.model.Range
 //import com.example.tickerwatch.domain.repository.model.StockSummary
-//import com.example.tickerwatch.presentation.model.StockChartViewUiState
+//import com.example.tickerwatch.presentation.model.StockChartUiState
 //import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 //import com.example.tickerwatch.presentation.model.StockDialogUiState
 //import com.example.tickerwatch.presentation.theme.AppColors
@@ -61,7 +61,7 @@
 //    } else {
 //        PortfolioContent(
 //            holdings = holdings,
-//            StockChartViewUiState = stockDialogUiState,
+//            StockChartUiState = stockDialogUiState,
 //            dialogStock = dialogStock,
 //            onSymbolSelected = onSymbolSelected,
 //            onRangeChange = onRangeChange
@@ -72,7 +72,7 @@
 //@Composable
 //private fun PortfolioContent(
 //    holdings: List<StockSummary>,
-//    stockDialogUiState: StockChartViewUiState,
+//    stockDialogUiState: StockChartUiState,
 //    dialogStock: StockSummary?,
 //    onSymbolSelected: (String) -> Unit,
 //    onRangeChange: (Range) -> Unit

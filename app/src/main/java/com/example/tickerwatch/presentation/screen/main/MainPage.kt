@@ -47,6 +47,7 @@ import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.StockList
+import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
@@ -72,7 +73,9 @@ fun MainPage(
     onRangeChange: (Range) -> Unit,
     onSortChange: (SortOption) -> Unit,
     onToggleWatchlist: (String) -> Unit,
-    dismissDialog: () -> Unit
+    dismissDialog: () -> Unit,
+    activeFilter: SectorFilter,
+    onFilterSelected: (SectorFilter) -> Unit,
 ) {
     var selectedTab by remember { mutableStateOf(BottomTab.MARKETS) }
     var showSortSheet by remember { mutableStateOf(false) }
@@ -96,7 +99,8 @@ fun MainPage(
                             )
                             StockList(
                                 stockList = stockList,
-                                stockDialogUiState = stockDialogUiState,
+                                activeFilter = activeFilter,
+                                onFilterSelected = onFilterSelected,
                                 watchlistSymbols = watchlistSymbols,
                                 onSymbolSelected = onSymbolSelected,
                                 onToggleWatchlist = onToggleWatchlist,
@@ -106,7 +110,7 @@ fun MainPage(
                 BottomTab.WATCHLIST -> {
 //                    WatchlistScreen(
 //                        items = stockList.filter { it.symbol in watchlistSymbols },
-//                        stockChartViewUiState = stockChartViewUiState,
+//                        StockChartUiState = StockChartUiState,
 //                        dialogStock = dialogStock,
 //                        onSymbolSelected = onSymbolSelected,
 //                        onRangeChange = onRangeChange,
@@ -117,7 +121,7 @@ fun MainPage(
                 {
                     //PortfolioScreen(
 //                    holdings = stockList.filter { it.symbol in watchlistSymbols },
-//                    StockChartViewUiState = stockChartViewUiState,
+//                    StockChartUiState = StockChartUiState,
 //                    dialogStock = dialogStock,
 //                    onSymbolSelected = onSymbolSelected,
 //                    onRangeChange = onRangeChange
@@ -271,7 +275,6 @@ private fun SortOptionRow(
         SortOption.NAME_ASC -> Pair(Icons.Rounded.SortByAlpha, "Alphabetical order")
         SortOption.PRICE_DESC -> Pair(Icons.Rounded.ArrowDownward, "Highest price first")
         SortOption.CHANGE_DESC -> Pair(Icons.Rounded.Timeline, "Biggest movers first")
-        SortOption.SECTOR -> Pair(Icons.Rounded.BarChart, "Group by sector")
     }
 
     Row(

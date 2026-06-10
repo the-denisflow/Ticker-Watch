@@ -48,11 +48,10 @@ class StockListFragment : Fragment() {
                 )
             ) {
                 val sortedStocks by marketViewModel.sortedStocks.collectAsStateWithLifecycle()
-                val stockChartViewUiState by marketViewModel.stockDetailState.collectAsStateWithLifecycle()
-                val dialogStock by marketViewModel.dialogStock.collectAsStateWithLifecycle()
                 val sortOption by marketViewModel.sortOption.collectAsStateWithLifecycle()
                 val watchlistSymbols by marketViewModel.watchlistSymbols.collectAsStateWithLifecycle()
                 val stockDialogUiState by marketViewModel.stockDialogUiState.collectAsStateWithLifecycle()
+                val activeFilter by marketViewModel.activeFilter.collectAsStateWithLifecycle()
 
                 MainPage(
                     stockList = sortedStocks.ifEmpty { placeholders },
@@ -63,7 +62,9 @@ class StockListFragment : Fragment() {
                     onRangeChange = marketViewModel::updateDisplayedRange,
                     onSortChange = marketViewModel::setSortOption,
                     onToggleWatchlist = marketViewModel::toggleWatchlist,
-                    dismissDialog = marketViewModel::dismissDialog
+                    dismissDialog = marketViewModel::dismissDialog,
+                    activeFilter = activeFilter,
+                    onFilterSelected = marketViewModel::setFilter
                 )
             }
         }

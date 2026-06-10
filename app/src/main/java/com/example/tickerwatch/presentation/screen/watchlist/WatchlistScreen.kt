@@ -43,7 +43,7 @@
 //import com.example.tickerwatch.domain.repository.model.PriceTrend
 //import com.example.tickerwatch.domain.repository.model.Range
 //import com.example.tickerwatch.domain.repository.model.StockSummary
-//import com.example.tickerwatch.presentation.model.StockChartViewUiState
+//import com.example.tickerwatch.presentation.model.StockChartUiState
 //import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
 //import com.example.tickerwatch.presentation.theme.AppColors
 //import com.example.tickerwatch.presentation.theme.AppDimens
@@ -52,7 +52,7 @@
 //@Composable
 //fun WatchlistScreen(
 //    items: List<StockSummary>,
-//    stockChartViewUiState: StockChartViewUiState,
+//    StockChartUiState: StockChartUiState,
 //    dialogStock: StockSummary?,
 //    onSymbolSelected: (String) -> Unit,
 //    onRangeChange: (Range) -> Unit,
@@ -63,7 +63,7 @@
 //    } else {
 //        WatchlistGrid(
 //            items = items,
-//            stockChartViewUiState = stockChartViewUiState,
+//            StockChartUiState = StockChartUiState,
 //            dialogStock = dialogStock,
 //            onSymbolSelected = onSymbolSelected,
 //            onRangeChange = onRangeChange,
@@ -75,7 +75,7 @@
 //@Composable
 //private fun WatchlistGrid(
 //    items: List<StockSummary>,
-//    stockChartViewUiState: StockChartViewUiState,
+//    StockChartUiState: StockChartUiState,
 //    dialogStock: StockSummary?,
 //    onSymbolSelected: (String) -> Unit,
 //    onRangeChange: (Range) -> Unit,
@@ -106,7 +106,7 @@
 //
 //        StockDetailsOverlay(
 //            itemIsSelected = itemIsSelected,
-//            stockChartViewUiState = stockChartViewUiState,
+//            StockChartUiState = StockChartUiState,
 //            dialogStock = dialogStock,
 //            onRangeChange = onRangeChange,
 //            onDismiss = { itemIsSelected = false }

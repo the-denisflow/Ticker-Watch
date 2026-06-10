@@ -20,18 +20,18 @@ import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.PriceChangeDetails
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockChartView
+import com.example.tickerwatch.domain.repository.model.StockChartState
 import com.example.tickerwatch.presentation.androidview.chart.plotDiagram
-import com.example.tickerwatch.presentation.model.StockChartViewUiState
+import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.github.mikephil.charting.charts.LineChart
 
 @Composable
-internal fun StockChartView(
-    stockChartViewUiState: StockChartViewUiState,
+internal fun StockChartState(
+    StockChartUiState: StockChartUiState,
     onRangeChange: (Range) -> Unit
 ) {
-    val details = stockChartViewUiState.priceChangeDetails
+    val details = StockChartUiState.priceChangeDetails
     var chartTrend: PriceTrend
 
     if (details is PriceChangeDetails.Available) {
@@ -40,7 +40,7 @@ internal fun StockChartView(
 
         Column {
             PeriodPerformanceRow(
-                price = "$" + stockChartViewUiState.uiItem.price.toString(),
+                price = "$" + StockChartUiState.uiItem.price.toString(),
                 trend = details.changeTrend,
                 periodPercent = details.changePercent,
                 periodAbsoluteChange = details.changeAbsolut,
@@ -57,24 +57,24 @@ internal fun StockChartView(
                 update = { view ->
                     val chart = view.findViewById<LineChart>(R.id.line_chart)
                     plotDiagram(
-                        stockChartViewUiState.uiItem.prices,
-                        stockChartViewUiState.uiItem.timestamp,
-                        stockChartViewUiState.range,
+                        StockChartUiState.uiItem.prices,
+                        StockChartUiState.uiItem.timestamp,
+                        StockChartUiState.range,
                         chart,
                         chartTrend
                     )
                 }
             )
 
-            PeriodSelector(stockChartViewUiState.range, onRangeChange)
+            PeriodSelector(StockChartUiState.range, onRangeChange)
         }
     }
 }
 
 @Preview
 @Composable
-private fun StockChartViewPreview() {
-    val mockStockChartView = StockChartView(
+private fun StockChartStatePreview() {
+    val mockStockChartState = StockChartState(
         ticker = StockMarketEnum.entries.first(),
         longName = "Apple Inc.",
         shortName = "Apple",
@@ -93,14 +93,14 @@ private fun StockChartViewPreview() {
             188.7, 189.3, 189.45
         )
     )
-    val uiState = StockChartViewUiState(
-        item = mockStockChartView,
+    val uiState = StockChartUiState(
+        item = mockStockChartState,
         range = Range.ONE_DAY,
         isLoading = false
     )
     Box(modifier = Modifier
         .fillMaxWidth()
         .background(AppColors.Surface)) {
-        StockChartView(stockChartViewUiState = uiState, onRangeChange = {})
+        StockChartState(StockChartUiState = uiState, onRangeChange = {})
     }
 }

@@ -1,5 +1,13 @@
 package com.example.tickerwatch.presentation.model
 
-data class StockDetailsUi(
-    val rows: List<Pair<String, String>>
+/**
+ * TODO: document this
+ */
+data class StockDetailRow(
+    val label: String,
+    val value: String
+)
+
+data class StockRowDetailsUi(
+    val rows: List<StockDetailRow>
 )

@@ -13,14 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.example.tickerwatch.presentation.model.StockDetailRow
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
 
 @Composable
 internal fun StockDetailsSection(
-    detailsRow: List<Pair<String, String>>
-
+    detailsRow: List<StockDetailRow>
 ) {
     if (detailsRow.isEmpty()) return
 
@@ -31,7 +31,7 @@ internal fun StockDetailsSection(
             .background(AppColors.SurfaceVariant, shape = RoundedCornerShape(AppDimens.CornerCard))
             .padding(horizontal = AppDimens.Space16)
     ) {
-        detailsRow.forEachIndexed { index, (label, value) ->
+        detailsRow.forEachIndexed { index, row ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -40,13 +40,13 @@ internal fun StockDetailsSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = label,
+                    text = row.label,
                     fontSize = AppType.BodyMedium,
                     fontWeight = FontWeight.Normal,
                     color = AppColors.Secondary
                 )
                 Text(
-                    text = value,
+                    text = row.value,
                     fontSize = AppType.BodyMedium,
                     fontWeight = FontWeight.Medium,
                     color = AppColors.Primary

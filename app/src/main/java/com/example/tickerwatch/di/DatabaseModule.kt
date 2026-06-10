@@ -6,6 +6,8 @@ import com.example.tickerwatch.data.local.AppDatabase
 import com.example.tickerwatch.data.local.StockDao
 import com.example.tickerwatch.data.local.WatchlistDao
 import com.example.tickerwatch.data.repository.DbRepository
+import com.example.tickerwatch.data.repository.WatchlistRepositoryImpl
+import com.example.tickerwatch.domain.repository.WatchlistRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,4 +38,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDbRepository(stockDao: StockDao) = DbRepository(stockDao)
+
+    @Provides
+    @Singleton
+    fun provideWatchlistRepository(watchlistDao: WatchlistDao): WatchlistRepository =
+        WatchlistRepositoryImpl(watchlistDao)
 }

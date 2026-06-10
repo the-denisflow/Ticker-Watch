@@ -43,7 +43,7 @@ val placeholders: List<StockSummary> = (0 until PLACEHOLDER_COUNT).map { index -
     )
 }
 
-data class StockChartView(
+data class StockChartState(
     val ticker: Ticker,
     val longName: String,
     val shortName: String,
@@ -58,9 +58,9 @@ data class StockChartView(
     val validPrices = prices.mapNotNull { it?.takeIf { !it.isNaN() } }
 }
 
-fun YahooResultDto.toStockChartView(ticker: Ticker): StockChartView {
+fun YahooResultDto.toStockChartState(ticker: Ticker): StockChartState {
     val meta = chart.result.firstOrNull()?.meta
-    return StockChartView(
+    return StockChartState(
         ticker = ticker,
         longName = meta?.longName ?: "",
         shortName = meta?.shortName ?: "",
@@ -75,7 +75,7 @@ fun YahooResultDto.toStockChartView(ticker: Ticker): StockChartView {
     )
 }
 
-fun createPlaceholderStockChartView() = StockChartView (
+fun createPlaceholderStockChartState() = StockChartState (
     ticker = InvalidTicker.INVALIDTICKER,
     longName = "",
     shortName = "",

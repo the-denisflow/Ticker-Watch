@@ -22,12 +22,12 @@ import com.example.tickerwatch.domain.repository.model.PriceChangeDetails
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
-import com.example.tickerwatch.domain.repository.model.StockChartView
+import com.example.tickerwatch.domain.repository.model.StockChartState
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.domain.repository.model.StockSymbol
 import com.example.tickerwatch.domain.repository.model.getPriceChangedDetails
 import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
-import com.example.tickerwatch.presentation.model.StockChartViewUiState
+import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem.StockUiListItem
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
@@ -37,23 +37,13 @@ import com.example.tickerwatch.presentation.theme.AppColors
 @Composable
 fun StockList(
     stockList: List<StockSummary>,
-    stockDialogUiState: StockDialogUiState,
     watchlistSymbols: Set<String> = emptySet(),
     onSymbolSelected: (String) -> Unit = {},
     onToggleWatchlist: (String) -> Unit = {},
-
+    activeFilter: SectorFilter,
+    onFilterSelected: (SectorFilter) -> Unit,
 ) {
-    var activeFilter by remember { mutableStateOf(SectorFilter.ALL) }
 
-    val filteredList = remember(stockList, activeFilter) {
-        when (activeFilter) {
-            SectorFilter.ALL -> stockList
-            SectorFilter.TECH -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.TECHNOLOGY }
-            SectorFilter.FINANCE -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.FINANCE }
-            SectorFilter.HEALTH -> stockList.filter { (it.ticker as? StockMarketEnum)?.sector == Sector.HEALTHCARE }
-            SectorFilter.CRYPTO -> stockList.filter { it.ticker is CryptoEnum }
-        }
-    }
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
@@ -63,10 +53,10 @@ fun StockList(
             item {
                 SectorFilterChips(
                     activeFilter = activeFilter,
-                    onFilterSelected = { filter -> activeFilter = filter })
+                    onFilterSelected = { filter -> onFilterSelected(filter) })
             }
-            if(filteredList.isNotEmpty()) {
-                items(filteredList, key = { stock -> stock.symbol.value }) { stock ->
+            if(stockList.isNotEmpty()) {
+                items(stockList, key = { stock -> stock.symbol.value }) { stock ->
                     StockUiListItem(
                         stock = stock,
                         isInWatchlist = stock.symbol.value in watchlistSymbols,
@@ -131,7 +121,7 @@ fun StockListPreview() {
         ),
     )
 
-    val mockStockChartView = StockChartView(
+    val mockStockChartState = StockChartState(
         ticker = StockMarketEnum.entries.first(),
         longName = "Apple Inc.",
         shortName = "Apple",
@@ -150,8 +140,8 @@ fun StockListPreview() {
             188.7, 189.3, 189.45
         )
     )
-    val uiState = StockChartViewUiState(
-        item = mockStockChartView,
+    val uiState = StockChartUiState(
+        item = mockStockChartState,
         range = Range.ONE_DAY,
         isLoading = false
     )

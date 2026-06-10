@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.presentation.component.stockdialog.SheetHeader
 import com.example.tickerwatch.presentation.mapper.toDetails
-import com.example.tickerwatch.presentation.model.StockChartViewUiState
+import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.model.StockDialogUiState
-import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart.StockChartView
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart.StockChartState
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.metadatasection.StockMetaRow
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.moredetailssection.StockDetailsSection
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.header.ModalHeader
@@ -32,7 +32,7 @@ fun StockDetailsSheet(
 ) {
 
 
-    //             stockChartViewUiState = stockChartViewUiState,
+    //             StockChartUiState = StockChartUiState,
     //            dialogStock = dialogStock,
 
 
@@ -44,15 +44,15 @@ fun StockDetailsSheet(
         onDismissRequest = { onDismiss() },
         containerColor = AppColors.Surface,
     ) {
-        val detailsRow  = remember(stockDialogUiState.chartView!!.uiItem) { stockDialogUiState.chartView.uiItem.toDetails().rows }
+        val detailsRow  = remember(stockDialogUiState.chartUiState!!.uiItem) { stockDialogUiState.chartUiState.uiItem.toDetails().rows }
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             SheetHeader(displayedItem = stockDialogUiState.stockSummary!!)
 
             Spacer(modifier = Modifier.height(AppDimens.Space8))
 
-            StockChartView(
-                stockChartViewUiState = stockDialogUiState.chartView,
+            StockChartState(
+                StockChartUiState = stockDialogUiState.chartUiState,
                 onRangeChange = onRangeChange
             )
 

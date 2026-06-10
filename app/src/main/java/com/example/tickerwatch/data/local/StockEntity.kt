@@ -3,7 +3,7 @@ package com.example.tickerwatch.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.tickerwatch.common.tickers.Ticker
-import com.example.tickerwatch.domain.repository.model.StockChartView
+import com.example.tickerwatch.domain.repository.model.StockChartState
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -16,7 +16,7 @@ data class StockEntity (
     val pricesJson: String
 )
 
-fun StockChartView.toEntity(): StockEntity = StockEntity(
+fun StockChartState.toEntity(): StockEntity = StockEntity(
     symbol = ticker.symbol,
     longName = longName,
     shortName = shortName,
@@ -24,7 +24,7 @@ fun StockChartView.toEntity(): StockEntity = StockEntity(
     pricesJson = Gson().toJson(validPrices)
 )
 
-fun StockEntity.toDomain(ticker: Ticker): StockChartView = StockChartView(
+fun StockEntity.toDomain(ticker: Ticker): StockChartState = StockChartState(
     ticker = ticker,
     longName = longName,
     shortName = shortName,
