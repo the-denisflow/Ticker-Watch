@@ -187,7 +187,7 @@ private fun StockPriceShimmer(translateAnim: State<Float>) {
     )
 }
 
-private val previewStockTech = StockSummary(
+internal val previewStockTech = StockSummary(
     symbol = StockSymbol("AAPL"),
     close = 189.84,
     ticker = StockMarketEnum.APPLE,
@@ -196,7 +196,7 @@ private val previewStockTech = StockSummary(
     chartPreviousClose = 185.0
 )
 
-private val previewStockCrypto = StockSummary(
+internal val previewStockCrypto = StockSummary(
     symbol = StockSymbol("BTC-USD"),
     close = 67_000.0,
     ticker = CryptoEnum.BITCOIN,

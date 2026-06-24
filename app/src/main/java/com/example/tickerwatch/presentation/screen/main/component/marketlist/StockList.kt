@@ -30,6 +30,8 @@ import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOv
 import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem.StockUiListItem
+import com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem.previewStockCrypto
+import com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem.previewStockTech
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilterChips
 import com.example.tickerwatch.presentation.theme.AppColors
@@ -40,8 +42,8 @@ fun StockList(
     watchlistSymbols: Set<String> = emptySet(),
     onSymbolSelected: (String) -> Unit = {},
     onToggleWatchlist: (String) -> Unit = {},
-    activeFilter: SectorFilter,
-    onFilterSelected: (SectorFilter) -> Unit,
+    activeFilter: SectorFilter = SectorFilter.ALL,
+    onFilterSelected: (SectorFilter) -> Unit = {},
 ) {
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -71,89 +73,11 @@ fun StockList(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun StockListPreview() {
-    val stockList = listOf(
-        StockSummary(
-            symbol = StockSymbol("AAPL"),
-            close = 150.0,
-            trend = PriceProgressTrend(
-                progressPercent = "1.5%",
-                progressTrend = PriceTrend.UP
-            ),
-            ticker = StockMarketEnum.valueOf("AAPL"),
-            prices = listOf(140.0, 145.0, 148.0, 150.0),
-            chartPreviousClose = 148.0
-        ),
-        StockSummary(
-            symbol = StockSymbol("GOOGL"),
-            close = 2800.0,
-            trend = PriceProgressTrend(
-                progressPercent = "2.5%",
-                progressTrend = PriceTrend.DOWN
-            ),
-            ticker = StockMarketEnum.valueOf("GOOGL"),
-            prices = listOf(2850.0, 2825.0, 2810.0, 2800.0),
-            chartPreviousClose = 2810.0
-        ),
-        StockSummary(
-            symbol = StockSymbol("META"),
-            close = 2800.0,
-            trend = PriceProgressTrend(
-                progressPercent = "1.5%",
-                progressTrend = PriceTrend.UP
-            ),
-            ticker = StockMarketEnum.valueOf("META"),
-            prices = listOf(2850.0, 2825.0, 2810.0, 2800.0),
-            chartPreviousClose = 2810.0
-        ),
-        StockSummary(
-            symbol = StockSymbol("IBM"),
-            close = 2800.0,
-            trend = PriceProgressTrend(
-                progressPercent = "0.5%",
-                progressTrend = PriceTrend.UP
-            ),
-            ticker = StockMarketEnum.valueOf("IBM"),
-            prices = listOf(2850.0, 2825.0, 2810.0, 2800.0),
-            chartPreviousClose = 2810.0
-        ),
+    StockList(
+        stockList = listOf(previewStockTech, previewStockCrypto),
+        watchlistSymbols = setOf("AAPL"),
     )
-
-    val mockStockChartState = StockChartState(
-        ticker = StockMarketEnum.entries.first(),
-        longName = "Apple Inc.",
-        shortName = "Apple",
-        price = 189.45,
-        timestamp = listOf(
-            1717600000, 1717603600, 1717607200,
-            1717610800, 1717614400, 1717618000
-        ),
-        previousClose = 187.32,
-        volume = 52_340_000,
-        exchangeName = "NASDAQ",
-        currency = "USD",
-        currentRange = "1D",
-        prices = listOf(
-            187.5, 188.2, 189.0,
-            188.7, 189.3, 189.45
-        )
-    )
-    val uiState = StockChartUiState(
-        item = mockStockChartState,
-        range = Range.ONE_DAY,
-        isLoading = false
-    )
-
-//    @Immutable
-//    data class StockSummary(
-//        val symbol: String,
-//        val close: Double,
-//        val trend: PriceProgressTrend,
-//        val ticker: Ticker,
-//        val prices: List<Double> = emptyList(),
-//        val chartPreviousClose: Double? = null
-//    )
-
 }
