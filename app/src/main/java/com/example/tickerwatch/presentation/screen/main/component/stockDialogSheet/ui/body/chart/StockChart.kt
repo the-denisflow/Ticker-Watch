@@ -1,13 +1,7 @@
 package com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart
 
 import android.view.LayoutInflater
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,16 +16,16 @@ import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockChartState
 import com.example.tickerwatch.presentation.androidview.chart.plotDiagram
-import com.example.tickerwatch.presentation.model.StockChartUiState
+import com.example.tickerwatch.presentation.model.StockSheetUiState
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.github.mikephil.charting.charts.LineChart
 
 @Composable
 internal fun StockChartState(
-    StockChartUiState: StockChartUiState,
+    stockChartUiState: StockSheetUiState,
     onRangeChange: (Range) -> Unit
 ) {
-    val details = StockChartUiState.priceChangeDetails
+    val details = stockChartUiState.priceChangeDetails
     var chartTrend: PriceTrend
 
     if (details is PriceChangeDetails.Available) {
@@ -40,7 +34,7 @@ internal fun StockChartState(
 
         Column {
             PeriodPerformanceRow(
-                price = "$" + StockChartUiState.uiItem.price.toString(),
+                price = "$" + stockChartUiState.uiItem.price.toString(),
                 trend = details.changeTrend,
                 periodPercent = details.changePercent,
                 periodAbsoluteChange = details.changeAbsolut,
@@ -57,16 +51,16 @@ internal fun StockChartState(
                 update = { view ->
                     val chart = view.findViewById<LineChart>(R.id.line_chart)
                     plotDiagram(
-                        StockChartUiState.uiItem.prices,
-                        StockChartUiState.uiItem.timestamp,
-                        StockChartUiState.range,
+                        stockChartUiState.uiItem.prices,
+                        stockChartUiState.uiItem.timestamps,
+                        stockChartUiState.range,
                         chart,
                         chartTrend
                     )
                 }
             )
 
-            PeriodSelector(StockChartUiState.range, onRangeChange)
+            PeriodSelector(stockChartUiState.range, onRangeChange)
         }
     }
 }
@@ -93,7 +87,7 @@ private fun StockChartStatePreview() {
             188.7, 189.3, 189.45
         )
     )
-    val uiState = StockChartUiState(
+    val uiState = StockSheetUiState(
         item = mockStockChartState,
         range = Range.ONE_DAY,
         isLoading = false
@@ -101,6 +95,6 @@ private fun StockChartStatePreview() {
     Box(modifier = Modifier
         .fillMaxWidth()
         .background(AppColors.Surface)) {
-        StockChartState(StockChartUiState = uiState, onRangeChange = {})
+        StockChartState(stockChartUiState = uiState, onRangeChange = {})
     }
 }

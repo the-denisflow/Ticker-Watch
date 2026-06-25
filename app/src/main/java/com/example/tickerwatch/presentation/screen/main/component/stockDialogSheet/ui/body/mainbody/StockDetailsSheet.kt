@@ -16,16 +16,15 @@ import com.example.tickerwatch.domain.repository.model.StockChartState as StockC
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.component.stockdialog.SheetHeader
 import com.example.tickerwatch.presentation.mapper.toDetails
-import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.model.StockDialogUiState
+import com.example.tickerwatch.presentation.model.StockSheetUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.listitem.previewStockTech
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.chart.StockChartState
-import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.metadatasection.StockMetaRow
+import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.metadatasection.TickerTagsRow
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.body.moredetailssection.StockDetailsSection
 import com.example.tickerwatch.presentation.screen.main.component.stockDialogSheet.ui.header.ModalHeader
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +50,7 @@ fun StockDetailsSheet(
 @Composable
 fun StockDetailsSheetContent(
     stockSummary: StockSummary,
-    chartUiState: StockChartUiState,
+    chartUiState: StockSheetUiState,
     onRangeChange: (Range) -> Unit,
 ) {
     val detailsRow = remember(chartUiState.uiItem) {
@@ -64,11 +63,11 @@ fun StockDetailsSheetContent(
         Spacer(modifier = Modifier.height(AppDimens.Space8))
 
         StockChartState(
-            StockChartUiState = chartUiState,
+            stockChartUiState = chartUiState,
             onRangeChange = onRangeChange
         )
 
-        StockMetaRow(ticker = stockSummary.ticker)
+        TickerTagsRow(chips = chartUiState.uiItem.tags)
 
         StockDetailsSection(detailsRow = detailsRow)
 
@@ -78,7 +77,7 @@ fun StockDetailsSheetContent(
 
 private val previewDialogUiState = StockDialogUiState(
     stockSummary = previewStockTech,
-    chartUiState = StockChartUiState(
+    chartUiState = StockSheetUiState(
         item = StockChartStateDomain(
             ticker = previewStockTech.ticker,
             longName = "Apple Inc.",
@@ -95,7 +94,7 @@ private val previewDialogUiState = StockDialogUiState(
         range = Range.ONE_DAY,
         isLoading = false
     ),
-    isVisible = true
+    isLoaded = true
 )
 
 @Preview(showBackground = true)

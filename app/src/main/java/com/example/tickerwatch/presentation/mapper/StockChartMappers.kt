@@ -1,24 +1,27 @@
 package com.example.tickerwatch.presentation.mapper
 
+import com.example.tickerwatch.common.tickers.getTagsFromTicker
 import com.example.tickerwatch.domain.repository.model.StockChartState
-import com.example.tickerwatch.presentation.model.StockChartStateUi
 import com.example.tickerwatch.presentation.model.StockDetailRow
 import com.example.tickerwatch.presentation.model.StockRowDetailsUi
+import com.example.tickerwatch.presentation.model.StockSheetUiSnapshot
 
-fun StockChartState.toUi(): StockChartStateUi = StockChartStateUi(
+fun StockChartState.toStockSheetUiSnapshot(): StockSheetUiSnapshot = StockSheetUiSnapshot(
     ticker = this.ticker,
     longName = this.longName,
     shortName = this.shortName,
     price = this.price,
-    timestamp = this.timestamp,
+    timestamps = this.timestamp,
     previousClose = this.previousClose,
     volume = this.volume,
     exchangeName = this.exchangeName,
     currency = this.currency,
     currentRange = this.currentRange,
-    prices = this.validPrices)
+    prices = this.validPrices,
+    tags = ticker.getTagsFromTicker()
+    )
 
-fun StockChartStateUi.toDetails(): StockRowDetailsUi {
+fun StockSheetUiSnapshot.toDetails(): StockRowDetailsUi {
     val low = prices.minOrNull()
     val high = prices.maxOrNull()
     val rows = buildList {

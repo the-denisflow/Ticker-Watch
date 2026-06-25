@@ -77,3 +77,12 @@ object TickerRegistry {
         return CryptoEnum.entries.toTypedArray().find { it.symbol == symbol} ?: InvalidTicker.INVALIDTICKER
     }
 }
+
+fun Ticker.getTagsFromTicker(): List<String> = when (this) {
+    is StockMarketEnum -> listOfNotNull(
+        this.sector?.name?.lowercase()?.replaceFirstChar { it.titlecase() },
+        this.country?.let { "${it.flag} ${it.displayName}" }
+    )
+    is CryptoEnum -> listOf("Crypto")
+    else -> emptyList()
+}

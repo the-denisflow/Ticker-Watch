@@ -19,8 +19,8 @@ import com.example.tickerwatch.domain.use_case.FetchStockChartState
 import com.example.tickerwatch.domain.use_case.ObserveWatchlist
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
 import com.example.tickerwatch.domain.use_case.ToggleWatchlist
-import com.example.tickerwatch.presentation.model.StockChartUiState
 import com.example.tickerwatch.presentation.model.StockDialogUiState
+import com.example.tickerwatch.presentation.model.StockSheetUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,7 +49,12 @@ class MarketViewModel @Inject constructor(
     private val toggleWatchlistUseCase: ToggleWatchlist
 ) : ViewModel() {
     private val _selectedSymbol = MutableStateFlow<StockSymbol>(StockSymbol.Invalid)
-    private val _StockChartUiState = MutableStateFlow(StockChartUiState(createPlaceholderStockChartState(), Range.ONE_YEAR))
+    private val stockChartUiState = MutableStateFlow(
+        StockSheetUiState(
+            createPlaceholderStockChartState(),
+            Range.ONE_YEAR
+        )
+    )
 
     private val _activeFilter = MutableStateFlow(SectorFilter.ALL)
     val activeFilter = _activeFilter.asStateFlow()
@@ -63,6 +68,13 @@ class MarketViewModel @Inject constructor(
     val watchlistSymbols: StateFlow<Set<String>> = observeWatchlist()
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
 
+    /**
+     * Market list after applying the active [SortOption] and [SectorFilter]
+     *
+     * Re-emits whenever any of its three upstream flows change: [_batchStocks], [_sortOption],
+     * or [_activeFilter]. Sorting is applied before filtering, so sector chips always reflect
+     * the chosen order within each category.
+     */
     val sortedStocks: StateFlow<List<StockSummary>> = combine(
         _batchStocks, _sortOption, _activeFilter
     ) { stocks, sort, activeFilter ->
@@ -101,16 +113,22 @@ class MarketViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    /**
+     * Full state consumed by the stock detail bottom sheet.
+     *
+     * Combines [stockChartUiState] (chart data, fetched async per range) with [dialogStock]
+     * (the matching [StockSummary] resolved from the already loaded batch)
+     */
     val stockDialogUiState: StateFlow<StockDialogUiState> = combine(
-        _StockChartUiState,
+        stockChartUiState,
         dialogStock
     ) { chartUiState, stockSummary ->
         StockDialogUiState(
             chartUiState = chartUiState,
             stockSummary = stockSummary,
-            isVisible = stockSummary != null
+            isLoaded = stockSummary != null
         ).also {
-            logger.info("Combined StockDialogUiState emitted: isVisible=${it.isVisible}, stockSummary=${it.stockSummary?.symbol}")
+            logger.info("Combined StockDialogUiState emitted: isVisible=${it.isLoaded}, stockSummary=${it.stockSummary?.symbol}")
         }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, StockDialogUiState())
 
@@ -154,18 +172,18 @@ class MarketViewModel @Inject constructor(
         logger.info("Update Displayed Range: ${range.value}")
         fetchStockDetailsJob?.cancel()
 
-        val stateBeforeFetch = _StockChartUiState.value
-        _StockChartUiState.value = stateBeforeFetch.copy(range = range, isLoading = true)
+        val stateBeforeFetch = stockChartUiState.value
+        stockChartUiState.value = stateBeforeFetch.copy(range = range, isLoading = true)
 
         fetchStockDetailsJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 val fetchedItem = fetchStockChartState(symbol = _selectedSymbol.value.value, range = range)
                 if (fetchedItem != null) {
-                    _StockChartUiState.value = StockChartUiState(fetchedItem, range, isLoading = false)
+                    stockChartUiState.value = StockSheetUiState(fetchedItem, range, isLoading = false)
                 }
             }.onFailure { exception ->
                 logger.error("Failed to update displayed range: ${exception.message}")
-                _StockChartUiState.value = stateBeforeFetch
+                stockChartUiState.value = stateBeforeFetch
             }
         }
     }

@@ -80,7 +80,7 @@ fun MainPage(
     var selectedTab by remember { mutableStateOf(BottomTab.MARKETS) }
     var showSortSheet by remember { mutableStateOf(false) }
     var stockDetailsOverlayIsShown by remember(stockDialogUiState)
-    { mutableStateOf(stockDialogUiState.isVisible) }
+    { mutableStateOf(stockDialogUiState.isLoaded) }
 
     Scaffold(
         containerColor = AppColors.Surface,
@@ -143,9 +143,9 @@ fun MainPage(
     }
 
     if(stockDetailsOverlayIsShown) {
-        LaunchedEffect(stockDialogUiState.isVisible) {
-            println("LaunchedEffect} triggered: stockDialogUiState.isVisible = ${stockDialogUiState.isVisible}")
-            stockDetailsOverlayIsShown = stockDialogUiState.isVisible
+        LaunchedEffect(stockDialogUiState.isLoaded) {
+            println("LaunchedEffect} triggered: stockDialogUiState.isVisible = ${stockDialogUiState.isLoaded}")
+            stockDetailsOverlayIsShown = stockDialogUiState.isLoaded
         }
         StockDetailsOverlay(
             stockDialogUiState = stockDialogUiState,

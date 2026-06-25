@@ -16,7 +16,7 @@ fun SparkItemDto.toUiModel(ticker: Ticker): StockSummary? {
         close = latestClose,
         trend = this.calculateTrend(),
         ticker = ticker,
-        prices = close?.filterNotNull() ?: emptyList(),
+        prices = close.filterNotNull(),
         chartPreviousClose = chartPreviousClose ?: previousClose
     )
 }
