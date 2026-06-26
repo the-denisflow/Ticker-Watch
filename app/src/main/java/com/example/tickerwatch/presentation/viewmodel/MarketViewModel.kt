@@ -16,9 +16,8 @@ import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.domain.repository.model.StockSymbol
 import com.example.tickerwatch.domain.repository.model.createPlaceholderStockChartState
 import com.example.tickerwatch.domain.use_case.FetchStockChartState
-import com.example.tickerwatch.domain.use_case.ObserveWatchlist
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
-import com.example.tickerwatch.domain.use_case.ToggleWatchlist
+import com.example.tickerwatch.presentation.model.SortOption
 import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.model.StockSheetUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
@@ -33,20 +32,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-enum class SortOption(val label: String) {
-    DEFAULT("Default"),
-    NAME_ASC("Name A–Z"),
-    PRICE_DESC("Price ↓"),
-    CHANGE_DESC("Change %")
-}
-
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val logger: Logger,
     private val fetchStockChartState: FetchStockChartState,
     private val syncMarketStocks: SyncMarketStocks,
-    private val observeWatchlist: ObserveWatchlist,
-    private val toggleWatchlistUseCase: ToggleWatchlist
 ) : ViewModel() {
     private val _selectedSymbol = MutableStateFlow<StockSymbol>(StockSymbol.Invalid)
     private val stockChartUiState = MutableStateFlow(
@@ -55,7 +45,6 @@ class MarketViewModel @Inject constructor(
             Range.ONE_YEAR
         )
     )
-
     private val _activeFilter = MutableStateFlow(SectorFilter.ALL)
     val activeFilter = _activeFilter.asStateFlow()
 
@@ -63,10 +52,19 @@ class MarketViewModel @Inject constructor(
     private var syncJob: Job? = null
     private val _batchStocks = MutableStateFlow<List<StockSummary>>(emptyList())
     private val _sortOption = MutableStateFlow(SortOption.DEFAULT)
-    val sortOption: StateFlow<SortOption> = _sortOption
 
-    val watchlistSymbols: StateFlow<Set<String>> = observeWatchlist()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
+    init {
+        syncBatchStocks()
+    }
+
+    /**
+     * Currently selected symbol.
+     *
+     * Exposes [_sortOption] as a read-only flow. Updated via [setSortOption];
+     * consumed by [sortedStocks] to reorder the list whenever the user picks
+     * a new option.
+     */
+    val sortOption: StateFlow<SortOption> = _sortOption
 
     /**
      * Market list after applying the active [SortOption] and [SectorFilter]
@@ -132,10 +130,6 @@ class MarketViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, StockDialogUiState())
 
-    init {
-        syncBatchStocks()
-    }
-
     fun dismissDialog() {
         logger.info("Dialog dismissed")
         _selectedSymbol.value = StockSymbol.Invalid
@@ -155,18 +149,11 @@ class MarketViewModel @Inject constructor(
         _sortOption.value = sort
     }
 
-    fun toggleWatchlist(symbol: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            toggleWatchlistUseCase(symbol, isWatchlisted = symbol in watchlistSymbols.value)
-        }
-    }
-
     fun updateCurrentSymbol(currentSymbol: String) {
         logger.info("Selected symbol: $currentSymbol")
         _selectedSymbol.value = StockSymbol(currentSymbol)
         updateDisplayedRange(Range.ONE_YEAR)
     }
-
 
     fun updateDisplayedRange(range: Range) {
         logger.info("Update Displayed Range: ${range.value}")

@@ -45,13 +45,13 @@ import androidx.compose.ui.unit.dp
 import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.component.stockdialog.StockDetailsOverlay
+import com.example.tickerwatch.presentation.model.SortOption
 import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.StockList
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
 import com.example.tickerwatch.presentation.theme.AppColors
 import com.example.tickerwatch.presentation.theme.AppDimens
 import com.example.tickerwatch.presentation.theme.AppType
-import com.example.tickerwatch.presentation.viewmodel.SortOption
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -15,17 +15,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tickerwatch.common.Logger
-import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.placeholders
 import com.example.tickerwatch.presentation.screen.main.MainPage
 import com.example.tickerwatch.presentation.viewmodel.MarketViewModel
-import com.example.tickerwatch.presentation.viewmodel.SortOption
+import com.example.tickerwatch.presentation.viewmodel.WatchListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class StockListFragment : Fragment() {
     private val marketViewModel: MarketViewModel by viewModels()
+    private val watchListViewModel: WatchListViewModel by viewModels()
+
     @Inject
     lateinit var logger: Logger
 
@@ -49,7 +50,7 @@ class StockListFragment : Fragment() {
             ) {
                 val sortedStocks by marketViewModel.sortedStocks.collectAsStateWithLifecycle()
                 val sortOption by marketViewModel.sortOption.collectAsStateWithLifecycle()
-                val watchlistSymbols by marketViewModel.watchlistSymbols.collectAsStateWithLifecycle()
+                val watchlistSymbols by watchListViewModel.watchlistSymbols.collectAsStateWithLifecycle()
                 val stockDialogUiState by marketViewModel.stockDialogUiState.collectAsStateWithLifecycle()
                 val activeFilter by marketViewModel.activeFilter.collectAsStateWithLifecycle()
 
@@ -61,7 +62,7 @@ class StockListFragment : Fragment() {
                     onSymbolSelected = marketViewModel::updateCurrentSymbol,
                     onRangeChange = marketViewModel::updateDisplayedRange,
                     onSortChange = marketViewModel::setSortOption,
-                    onToggleWatchlist = marketViewModel::toggleWatchlist,
+                    onToggleWatchlist = watchListViewModel::toggleWatchlist,
                     dismissDialog = marketViewModel::dismissDialog,
                     activeFilter = activeFilter,
                     onFilterSelected = marketViewModel::setFilter
