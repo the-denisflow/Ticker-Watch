@@ -14,6 +14,7 @@ import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.PriceChangeDetails
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.StockChartDataPoint
 import com.example.tickerwatch.domain.repository.model.StockChartState
 import com.example.tickerwatch.presentation.androidview.chart.plotDiagram
 import com.example.tickerwatch.presentation.model.StockSheetUiState
@@ -51,8 +52,7 @@ internal fun StockChartState(
                 update = { view ->
                     val chart = view.findViewById<LineChart>(R.id.line_chart)
                     plotDiagram(
-                        stockChartUiState.uiItem.prices,
-                        stockChartUiState.uiItem.timestamps,
+                        stockChartUiState.uiItem.dataPoints,
                         stockChartUiState.range,
                         chart,
                         chartTrend
@@ -73,19 +73,19 @@ private fun StockChartStatePreview() {
         longName = "Apple Inc.",
         shortName = "Apple",
         price = 189.45,
-        timestamp = listOf(
-            1717600000, 1717603600, 1717607200,
-            1717610800, 1717614400, 1717618000
-        ),
         previousClose = 187.32,
         volume = 52_340_000,
         exchangeName = "NASDAQ",
         currency = "USD",
         currentRange = "1D",
-        prices = listOf(
-            187.5, 188.2, 189.0,
-            188.7, 189.3, 189.45
-        )
+        dataPoints = listOf(
+            StockChartDataPoint(1717600000, 187.5),
+            StockChartDataPoint(1717603600, 188.2),
+            StockChartDataPoint(1717607200, 189.0),
+            StockChartDataPoint(1717610800, 188.7),
+            StockChartDataPoint(1717614400, 189.3),
+            StockChartDataPoint(1717618000, 189.45),
+        ),
     )
     val uiState = StockSheetUiState(
         item = mockStockChartState,

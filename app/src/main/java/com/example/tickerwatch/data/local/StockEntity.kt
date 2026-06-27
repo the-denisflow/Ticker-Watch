@@ -21,14 +21,5 @@ fun StockChartState.toEntity(): StockEntity = StockEntity(
     longName = longName,
     shortName = shortName,
     price = price,
-    pricesJson = Gson().toJson(validPrices)
+    pricesJson = Gson().toJson(dataPoints)
 )
-
-fun StockEntity.toDomain(ticker: Ticker): StockChartState = StockChartState(
-    ticker = ticker,
-    longName = longName,
-    shortName = shortName,
-    price = price,
-    prices = Gson().fromJson(pricesJson, object : TypeToken<List<Double>>() {}.type)
-)
-

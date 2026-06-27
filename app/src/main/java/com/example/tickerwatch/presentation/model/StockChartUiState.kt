@@ -25,8 +25,9 @@ data class StockSheetUiState(
     val isLoading: Boolean = false,
 ) {
     val uiItem = item.toStockSheetUiSnapshot()
-    val priceChangeDetails: PriceChangeDetails = getPriceChangedDetails(
-            item.validPrices,
+    val priceChangeDetails: PriceChangeDetails
+    get() = getPriceChangedDetails(
+            item.dataPoints.map { it.price },
             item.previousClose
         )
 }

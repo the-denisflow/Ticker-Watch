@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import com.example.tickerwatch.domain.repository.model.PriceTrend
 import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.StockChartDataPoint
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -11,8 +12,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
 fun plotDiagram(
-    closePrices: List<Double?>?,
-    timestampList: List<Int>?,
+    dataPoints: List<StockChartDataPoint>,
     displayedRange: Range,
     chart: LineChart,
     trend: PriceTrend = PriceTrend.NEUTRAL
@@ -28,9 +28,11 @@ fun plotDiagram(
         PriceTrend.NEUTRAL -> Color.argb(40, 100, 100, 100)
     }
 
-    val entries = closePrices?.mapIndexedNotNull { index, price ->
-        if (price == null) return@mapIndexedNotNull null
-        val timestamp = timestampList?.getOrNull(index)?.toFloat() ?: index.toFloat()
+    val closePrices = dataPoints.map { it.price }
+    val timestampList = dataPoints.map { it.timestamp }
+
+    val entries = closePrices.mapIndexed { index, price ->
+        val timestamp = timestampList.getOrNull(index)?.toFloat() ?: index.toFloat()
         Entry(timestamp, price.toFloat())
     }
 

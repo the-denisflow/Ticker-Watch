@@ -1,5 +1,6 @@
 package com.example.tickerwatch.presentation.model
 import com.example.tickerwatch.common.tickers.Ticker
+import com.example.tickerwatch.domain.repository.model.StockChartDataPoint
 
 /**
  * Point-in-time UI model for the stock details bottom sheet.
@@ -25,12 +26,11 @@ data class StockSheetUiSnapshot(
     val longName: String,
     val shortName: String,
     var price: Double,
-    var timestamps: List<Int> = emptyList(),
+    val dataPoints: List<StockChartDataPoint> = emptyList(),
     val previousClose: Double? = null,
     val volume: Long? = null,
     val exchangeName: String? = null,
     val currency: String? = null,
     val currentRange: String? = null,
-    val prices: List<Double>,
     val tags: List<String>
 )

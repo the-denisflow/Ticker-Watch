@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tickerwatch.domain.repository.model.Range
+import com.example.tickerwatch.domain.repository.model.StockChartDataPoint
 import com.example.tickerwatch.domain.repository.model.StockChartState as StockChartStateDomain
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.presentation.component.stockdialog.SheetHeader
@@ -83,13 +84,19 @@ private val previewDialogUiState = StockDialogUiState(
             longName = "Apple Inc.",
             shortName = "Apple",
             price = 189.84,
-            timestamp = listOf(1717600000, 1717603600, 1717607200, 1717610800),
+            dataPoints = listOf(
+                StockChartDataPoint(1717600000, 187.5),
+                StockChartDataPoint(1717603600, 188.2),
+                StockChartDataPoint(1717607200, 189.0),
+                StockChartDataPoint(1717610800, 188.7),
+                StockChartDataPoint(1717614400, 189.3),
+                StockChartDataPoint(1717618000, 189.45),
+            ),
             previousClose = 185.0,
             volume = 52_340_000,
             exchangeName = "NASDAQ",
             currency = "USD",
             currentRange = "1D",
-            prices = listOf(185.0, 187.0, 188.0, 189.84)
         ),
         range = Range.ONE_DAY,
         isLoading = false

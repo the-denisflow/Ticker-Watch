@@ -43,30 +43,37 @@ val placeholders: List<StockSummary> = (0 until PLACEHOLDER_COUNT).map { index -
     )
 }
 
+data class StockChartDataPoint(
+    val timestamp: Int,
+    val price: Double
+)
+
 data class StockChartState(
     val ticker: Ticker,
     val longName: String,
     val shortName: String,
     var price: Double,
-    var timestamp: List<Int> = emptyList(),
+    val dataPoints: List<StockChartDataPoint> = emptyList(),
     val previousClose: Double? = null,
     val volume: Long? = null,
     val exchangeName: String? = null,
     val currency: String? = null,
     val currentRange: String? = null,
-    private var prices: List<Double?> = emptyList()) {
-    val validPrices = prices.mapNotNull { it?.takeIf { !it.isNaN() } }
-}
+    )
 
 fun YahooResultDto.toStockChartState(ticker: Ticker): StockChartState {
     val meta = chart.result.firstOrNull()?.meta
+    val prices = chart.result.firstOrNull()?.indicators?.quote?.firstOrNull()?.close ?: emptyList()
+    val timestamps = chart.result.firstOrNull()?.timestamp ?: emptyList()
     return StockChartState(
         ticker = ticker,
         longName = meta?.longName ?: "",
         shortName = meta?.shortName ?: "",
         price = meta?.regularMarketPrice ?: 0.0,
-        prices = chart.result.firstOrNull()?.indicators?.quote?.firstOrNull()?.close ?: emptyList(),
-        timestamp = chart.result.firstOrNull()?.timestamp ?: emptyList(),
+        dataPoints = timestamps.zip(prices).mapNotNull { (timestamp, price) ->
+            price?.takeIf { !it.isNaN() }?.let { StockChartDataPoint(timestamp, it) }
+        }
+        ,
         previousClose = meta?.chartPreviousClose,
         volume = meta?.regularMarketVolume,
         exchangeName = meta?.fullExchangeName,

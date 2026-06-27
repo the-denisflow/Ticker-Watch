@@ -11,17 +11,17 @@ fun StockChartState.toStockSheetUiSnapshot(): StockSheetUiSnapshot = StockSheetU
     longName = this.longName,
     shortName = this.shortName,
     price = this.price,
-    timestamps = this.timestamp,
     previousClose = this.previousClose,
     volume = this.volume,
     exchangeName = this.exchangeName,
     currency = this.currency,
     currentRange = this.currentRange,
-    prices = this.validPrices,
-    tags = ticker.getTagsFromTicker()
+    tags = ticker.getTagsFromTicker(),
+    dataPoints = this.dataPoints
     )
 
 fun StockSheetUiSnapshot.toDetails(): StockRowDetailsUi {
+    val prices = dataPoints.map{ it.price }
     val low = prices.minOrNull()
     val high = prices.maxOrNull()
     val rows = buildList {
