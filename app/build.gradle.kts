@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.process)
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -94,15 +95,19 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation (libs.androidx.fragment.ktx)
 
-    implementation(platform("androidx.compose:compose-bom:2026.03.01")) // use current BOM
+    implementation(platform("androidx.compose:compose-bom:2026.03.01"))
 
-    implementation(libs.androidx.activity.compose)          // Activity + Compose interop
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    testImplementation(kotlin("test-junit"))
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
