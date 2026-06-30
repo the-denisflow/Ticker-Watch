@@ -6,13 +6,16 @@ import com.example.tickerwatch.common.tickers.CryptoEnum
 import com.example.tickerwatch.common.tickers.StockMarketEnum
 import com.example.tickerwatch.domain.repository.model.PriceProgressTrend
 import com.example.tickerwatch.domain.repository.model.PriceTrend
+import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockChartState
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.domain.repository.model.StockSymbol
 import com.example.tickerwatch.domain.use_case.FetchStockChartState
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
 import com.example.tickerwatch.presentation.model.SortOption
+import com.example.tickerwatch.presentation.model.StockSheetUiState
 import com.example.tickerwatch.presentation.viewmodel.MarketViewModel
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +24,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MarketViewModelTest {
@@ -63,7 +67,12 @@ class MarketViewModelTest {
     @Before
     fun setUp() {
         every { syncMarketStocksMock.invoke() } returns flowOf(allStocks)
-        viewModelUnderTest = MarketViewModel(loggerMock, fetchStockChartStateMock, syncMarketStocksMock)
+        viewModelUnderTest = MarketViewModel(
+            loggerMock,
+            fetchStockChartStateMock,
+            syncMarketStocksMock,
+            ioDispatcher = mainDispatcherRule.testDispatcher
+        )
     }
 
     @Test
@@ -83,6 +92,15 @@ class MarketViewModelTest {
         }
     }
 
+    @Test
+    fun testStockDialogUiState() {
+        coEvery { fetchStockChartStateMock.invoke(symbol = appleStock.symbol.value, range = Range.ONE_YEAR) } returns aChartState()
+        viewModelUnderTest.updateCurrentSymbol(appleStock.symbol.value)
+
+        val expectedChartUiState = StockSheetUiState(aChartState(), Range.ONE_YEAR, isLoading = false)
+
+        assertEquals(expectedChartUiState, viewModelUnderTest.stockDialogUiState.value.chartUiState)
+    }
 
     private fun aChartState() = StockChartState(
         ticker = StockMarketEnum.APPLE,

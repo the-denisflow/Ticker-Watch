@@ -15,13 +15,14 @@ import com.example.tickerwatch.domain.repository.model.Range
 import com.example.tickerwatch.domain.repository.model.StockSummary
 import com.example.tickerwatch.domain.repository.model.StockSymbol
 import com.example.tickerwatch.domain.repository.model.createPlaceholderStockChartState
+import com.example.tickerwatch.di.IoDispatcher
 import com.example.tickerwatch.domain.use_case.FetchStockChartState
 import com.example.tickerwatch.domain.use_case.SyncMarketStocks
 import com.example.tickerwatch.presentation.model.SortOption
 import com.example.tickerwatch.presentation.model.StockDialogUiState
 import com.example.tickerwatch.presentation.model.StockSheetUiState
 import com.example.tickerwatch.presentation.screen.main.component.marketlist.sectorfilter.SectorFilter
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,6 +38,7 @@ class MarketViewModel @Inject constructor(
     private val logger: Logger,
     private val fetchStockChartState: FetchStockChartState,
     private val syncMarketStocks: SyncMarketStocks,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val _selectedSymbol = MutableStateFlow<StockSymbol>(StockSymbol.Invalid)
     private val stockChartUiState = MutableStateFlow(
@@ -138,7 +140,7 @@ class MarketViewModel @Inject constructor(
 
     private fun syncBatchStocks() {
         syncJob?.cancel()
-        syncJob = viewModelScope.launch(Dispatchers.IO) {
+        syncJob = viewModelScope.launch(ioDispatcher) {
             syncMarketStocks().collect { stocks ->
                 _batchStocks.value = stocks
             }
@@ -162,7 +164,7 @@ class MarketViewModel @Inject constructor(
         val stateBeforeFetch = stockChartUiState.value
         stockChartUiState.value = stateBeforeFetch.copy(range = range, isLoading = true)
 
-        fetchStockDetailsJob = viewModelScope.launch(Dispatchers.IO) {
+        fetchStockDetailsJob = viewModelScope.launch(ioDispatcher) {
             runCatching {
                 val fetchedItem = fetchStockChartState(symbol = _selectedSymbol.value.value, range = range)
                 if (fetchedItem != null) {
